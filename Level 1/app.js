@@ -232,6 +232,28 @@ $("disconnectBtn").addEventListener("click", disconnectWallet);
 $("refreshBalanceBtn").addEventListener("click", refreshBalance);
 $("sendBtn").addEventListener("click", sendPayment);
 
+// Auto-fill recipient address from directory
+document.querySelectorAll(".select-btn").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const address = e.target.getAttribute("data-address");
+    $("destinationInput").value = address;
+    
+    // Smooth button feedback micro-animation
+    const originalText = e.target.textContent;
+    e.target.textContent = "Selected!";
+    e.target.style.background = "var(--accent-2)";
+    e.target.style.borderColor = "var(--accent-2)";
+    e.target.style.color = "#0f1420";
+    
+    setTimeout(() => {
+      e.target.textContent = originalText;
+      e.target.style.background = "";
+      e.target.style.borderColor = "";
+      e.target.style.color = "";
+    }, 1000);
+  });
+});
+
 // Pre-fill inputs in test mode for automated E2E verification
 if (isTestMode) {
   $("destinationInput").value = "GCYRYFQXKWKPI74B23SKUZXQOKIY6CZUUS7AWDGX6MRPNKGVSEKTDAEL";
