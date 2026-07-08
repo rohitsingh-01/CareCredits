@@ -193,6 +193,28 @@ function updateProgressUI() {
   $("goalBadge").classList.toggle("hidden", raisedAmount < goalAmount);
 }
 
+// Helper to decode ScVal safely across different ESM bundle versions
+function safeDecodeScVal(scVal) {
+  if (!scVal) return null;
+  
+  try {
+    const scValType = scVal.switch().name || scVal.switch().value || scVal.switch();
+    if (scValType === "scvAddress" || scValType === 18) {
+      const scAddress = scVal.address();
+      const addrType = scAddress.switch().name || scAddress.switch().value || scAddress.switch();
+      if (addrType === "scAddressTypeAccount" || addrType === 0) {
+        return StellarSdk.StrKey.encodeEd25519PublicKey(scAddress.accountId().ed25519());
+      } else if (addrType === "scAddressTypeContract" || addrType === 1) {
+        return StellarSdk.StrKey.encodeContract(scAddress.contractId());
+      }
+    }
+  } catch (e) {
+    console.warn("Failed custom address parsing, falling back to scValToNative:", e);
+  }
+
+  return StellarSdk.scValToNative(scVal);
+}
+
 // Read-only contract simulation
 async function simulateReadOnly(contractId, method, scArgs) {
   // Build a dummy transaction to simulate
@@ -213,7 +235,7 @@ async function simulateReadOnly(contractId, method, scArgs) {
 
   const response = await rpcServer.simulateTransaction(tx);
   if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(response)) {
-    return StellarSdk.scValToNative(response.result.retval);
+    return safeDecodeScVal(response.result.retval);
   } else {
     throw new Error(`Simulation failed: ${response.error || "unknown error"}`);
   }
