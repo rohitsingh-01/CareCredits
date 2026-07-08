@@ -69,12 +69,10 @@ Open the printed local URL — you'll land on the CareCredits home page.
 
 | State | Screenshot |
 |---|---|
-| Wallet connected | `screenshots/wallet-connected.png` |
-| Balance displayed | `screenshots/balance-displayed.png` |
-| Successful testnet transaction | `screenshots/transaction-success.png` |
-| Transaction result shown to user | `screenshots/transaction-result.png` |
-
-(Update the paths/embeds above once added, e.g. `![Wallet Connected](screenshots/wallet-connected.png)`.)
+| **Wallet connected** | ![Wallet Connected](screenshots/wallet-connected.png) |
+| **Balance displayed** | ![Balance Displayed](screenshots/balance-displayed.png) |
+| **Successful testnet transaction** | ![Successful Transaction](screenshots/transaction-success.png) |
+| **Transaction result shown to user** | ![Transaction Result](screenshots/transaction-result.png) |
 
 ## ⚠️ Notes
 - Runs on **Stellar Testnet only** — no real funds involved.
