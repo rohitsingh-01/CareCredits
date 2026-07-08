@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareCredits — Family Fund Pool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Polyfill Node Buffer for StellarWalletsKit dependencies in browser -->
+  <script>
+    window.lastError = null;
+    window.addEventListener('error', (e) => {
+      window.lastError = { message: e.message, filename: e.filename, lineno: e.lineno };
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      window.lastError = { message: e.reason?.message || String(e.reason) };
+    });
+    window.JS_SHA256_NO_NODE_JS = true;
+  </script>
+  <!-- Polyfill Node Buffer for StellarWalletsKit dependencies in browser -->
+  <script type="module">
+    import { Buffer } from 'https://cdn.jsdelivr.net/npm/buffer@6.0.3/+esm';
+    window.Buffer = Buffer;
+  </script>
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand-mark">💙</span> CareCredits
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallet.html">Wallet</a></li>
+        <li><a href="pool.html" class="active">Fund Pool</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero" style="padding-bottom: 20px;">
+    <div class="container">
+      <span class="eyebrow">Stellar Testnet · Soroban Smart Contract</span>
+      <h1 style="font-size: clamp(1.5rem, 4vw, 2rem);">Family Fund Pool</h1>
+      <p class="lede" style="margin-bottom: 10px;">Contribute collectively to fund a caregiver's goal via a smart contract.</p>
+
+      <div class="wallet-bar">
+        <button id="connectBtn" class="btn btn-primary">Connect Wallet</button>
+        <button id="disconnectBtn" class="btn btn-outline hidden">Disconnect</button>
+      </div>
+      <p id="walletStatus" class="status">Not connected</p>
+    </div>
+  </header>
+
+  <main class="container section" style="padding-top: 0;">
+    <div id="prefillBanner" class="prefill-banner hidden"></div>
+
+    <div class="grid">
+      <!-- Config / Load Pool Card -->
+      <section class="card wide">
+        <h2>🔧 Pool Contract Configuration</h2>
+        <div class="config-form" style="display: flex; gap: 16px; align-items: flex-end;">
+          <label style="flex: 1; margin-bottom: 0;">Contract ID
+            <input id="contractInput" type="text" placeholder="C... contract address" />
+          </label>
+          <button id="loadPoolBtn" class="btn btn-accent" style="height: 38px;">Load Pool</button>
+        </div>
+        <p id="configStatus" class="status" style="text-align: left; margin-top: 8px; min-height: 0;"></p>
+      </section>
+
+      <!-- Progress Card -->
+      <section class="card wide">
+        <h2>📊 Funding Progress</h2>
+        <div class="progress-container">
+          <div class="progress-stats" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span id="raisedValue" class="value" style="font-size: 2rem; font-weight: 700; color: var(--accent-2);">0.0000</span>
+              <span class="unit" style="color: var(--muted);"> / </span>
+              <span id="goalValue" class="unit" style="color: var(--muted); font-weight: 600;">0.0000</span>
+              <span class="unit" style="color: var(--muted); font-size: 1rem; margin-left: 4px;">XLM</span>
+            </div>
+            <span id="goalBadge" class="badge hidden" style="background: rgba(126, 231, 135, 0.1); color: var(--accent-2); border: 1px solid var(--accent-2);">Goal Reached!</span>
+          </div>
+          
+          <div class="progress-bar-bg" style="background: var(--bg); border: 1px solid var(--border); height: 20px; border-radius: 10px; margin: 16px 0; overflow: hidden;">
+            <div id="progressBar" style="background: var(--accent-2); width: 0%; height: 100%; transition: width 0.5s ease-out;"></div>
+          </div>
+
+          <p class="hint" style="margin-bottom: 0;">
+            Target Caregiver: <code id="caregiverAddr" style="font-family: monospace;">—</code>
+          </p>
+        </div>
+      </section>
+
+      <!-- Contribute Card -->
+      <section class="card">
+        <h2>💸 Contribute to Pool</h2>
+        <label>Amount (XLM)
+          <input id="contributeAmount" type="number" step="0.0000001" placeholder="10" />
+        </label>
+        <button id="contributeBtn" class="btn btn-accent btn-block" disabled>Contribute</button>
+        <p id="contributeStatus" class="status"></p>
+      </section>
+
+      <!-- Withdraw Card -->
+      <section id="withdrawSection" class="card hidden">
+        <h2>🎁 Withdraw Funds</h2>
+        <p class="hint" style="margin-bottom: 16px;">You are the caregiver for this pool. You can withdraw all contributed funds to your address.</p>
+        <button id="withdrawBtn" class="btn btn-primary btn-block">Withdraw Raised Funds</button>
+        <p id="withdrawStatus" class="status"></p>
+      </section>
+
+      <!-- Activity Feed Card -->
+      <section class="card wide">
+        <h2>⚡ Live Pool Activity</h2>
+        <p class="hint">Real-time contract events from Stellar Testnet (updated every 5s).</p>
+        <div id="activityFeed" class="result-panel empty" style="max-height: 250px; overflow-y: auto;">
+          Waiting to load pool...
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Stellar Testnet only · CareCredits · Level 2 (Yellow Belt) · Stellar Journey to Mastery</p>
+    </div>
+  </footer>
+
+  <script type="module" src="pool.js"></script>
+</body>
+</html>

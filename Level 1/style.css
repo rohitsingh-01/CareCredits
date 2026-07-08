@@ -28,6 +28,7 @@
   --radius-sm: 10px;
   --shadow: 0 4px 20px rgba(35, 48, 58, 0.06);
   --shadow-lift: 0 10px 30px rgba(35, 48, 58, 0.1);
+  --accent-2: #ff7a59;
 }
 
 * { box-sizing: border-box; }
@@ -307,3 +308,44 @@ footer {
   .wallet-bar .btn { width: 100%; }
   .hero { padding: 40px 0 30px; }
 }
+
+/* ---------- Pool Page Additions ---------- */
+.config-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+}
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.progress-bar-bg {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  height: 20px;
+  border-radius: 10px;
+  margin: 16px 0;
+  overflow: hidden;
+}
+.progress-bar {
+  background: var(--accent-2);
+  width: 0%;
+  height: 100%;
+  transition: width 0.5s ease-out;
+}
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.badge.success {
+  background: var(--success-tint);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
