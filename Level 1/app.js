@@ -1,18 +1,22 @@
 /**
- * app.js — CareCredits Simple Payment dApp
+ * app.js — CareCredits Wallet Page
  * Stellar Journey to Mastery — Level 1 (White Belt)
  *
- * Implements all Level 1 requirements:
+ * Implements all Level 1 requirements (unchanged from the original
+ * submission — only the surrounding UI/theme changed):
  *   1. Wallet Setup       — Freighter, Stellar Testnet
  *   2. Wallet Connection  — connect + disconnect
  *   3. Balance Handling   — fetch + display connected wallet's XLM balance
  *   4. Transaction Flow   — send an XLM payment, show success/failure + tx hash
  *
- * No build step required — open index.html via a static server and go.
+ * NEW in this version: reads a `?care=<id>` query param (set when the
+ * user clicks "Select" on a caregiver card on index.html) and
+ * pre-fills the recipient address + memo accordingly.
  */
 
 import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
 import actualFreighterApi from "https://esm.sh/@stellar/freighter-api";
+import { findCaregiverById } from "./caregivers.js";
 
 const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
@@ -67,6 +71,23 @@ function updateWalletUI(connected) {
   $("sendBtn").disabled = !connected;
 }
 
+// ---------- Pre-fill from Caregiver Directory selection ----------
+function applyCaregiverPrefill() {
+  const params = new URLSearchParams(window.location.search);
+  const careId = params.get("care");
+  if (!careId) return;
+
+  const caregiver = findCaregiverById(careId);
+  if (!caregiver) return;
+
+  $("destinationInput").value = caregiver.publicKey;
+  $("memoInput").value = `Care credit for ${caregiver.name}`.slice(0, 28);
+
+  const banner = $("prefillBanner");
+  banner.textContent = `${caregiver.emoji} Sending to ${caregiver.name} (${caregiver.role}) — connect your wallet below to continue.`;
+  banner.classList.remove("hidden");
+}
+
 // ---------- 1 & 2. Wallet Setup + Connect/Disconnect ----------
 async function connectWallet() {
   try {
@@ -108,7 +129,6 @@ async function connectWallet() {
       "success"
     );
 
-    // Automatically fetch balance on connect
     await refreshBalance();
   } catch (err) {
     setStatus("walletStatus", `Connection failed: ${err.message || err}`, "error");
@@ -116,10 +136,6 @@ async function connectWallet() {
 }
 
 function disconnectWallet() {
-  // Freighter doesn't expose a programmatic "revoke access" call — site
-  // access is managed from inside the extension itself. Disconnecting
-  // here means clearing all app-side wallet state, which fully logs the
-  // user out of this dApp's session.
   connectedAddress = null;
   updateWalletUI(false);
   setStatus("walletStatus", "Not connected", "");
@@ -227,36 +243,8 @@ async function sendPayment() {
 }
 
 // ---------- Wire up ----------
+applyCaregiverPrefill();
 $("connectBtn").addEventListener("click", connectWallet);
 $("disconnectBtn").addEventListener("click", disconnectWallet);
 $("refreshBalanceBtn").addEventListener("click", refreshBalance);
 $("sendBtn").addEventListener("click", sendPayment);
-
-// Auto-fill recipient address from directory
-document.querySelectorAll(".select-btn").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    const address = e.target.getAttribute("data-address");
-    $("destinationInput").value = address;
-    
-    // Smooth button feedback micro-animation
-    const originalText = e.target.textContent;
-    e.target.textContent = "Selected!";
-    e.target.style.background = "var(--accent-2)";
-    e.target.style.borderColor = "var(--accent-2)";
-    e.target.style.color = "#0f1420";
-    
-    setTimeout(() => {
-      e.target.textContent = originalText;
-      e.target.style.background = "";
-      e.target.style.borderColor = "";
-      e.target.style.color = "";
-    }, 1000);
-  });
-});
-
-// Pre-fill inputs in test mode for automated E2E verification
-if (isTestMode) {
-  $("destinationInput").value = "GCYRYFQXKWKPI74B23SKUZXQOKIY6CZUUS7AWDGX6MRPNKGVSEKTDAEL";
-  $("amountInput").value = "10";
-  $("memoInput").value = "Test Care Credit";
-}
