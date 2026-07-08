@@ -78,3 +78,33 @@ Open the printed local URL — you'll land on the CareCredits home page.
 - Runs on **Stellar Testnet only** — no real funds involved.
 - `app.js` loads `@stellar/stellar-sdk` and `@stellar/freighter-api` from the `esm.sh` CDN so there's zero install step.
 - Freighter doesn't expose a way for a site to programmatically revoke its own access — "Disconnect" clears this app's local session; full revocation happens inside the Freighter extension (Settings → Manage Connected Apps).
+
+---
+
+## 🎗 Level 2 (Yellow Belt) Smart Contract & Family Fund Pool
+
+Yellow Belt extends CareCredits by introducing a **Soroban Smart Contract-based Family Fund Pool** that allows multiple family members to pool funds together on-chain for a target caregiver's goals, which only the target caregiver can withdraw.
+
+### ⛓ Smart Contract Deployment Details
+- **Deployed Contract ID:** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
+- **Asset Token ID (XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
+- **Initial Setup/Admin Key:** `GCX7XQS7HUZRPZIUK4GLXN2WXJKEXPUFRLH7LOKPOSZ6ZCARIYZ5GGMV`
+- **Verifiable Testnet Initialization Transaction:** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
+
+### 📊 Features Added
+- **Multi-Wallet Support:** Integrated `StellarWalletsKit` supporting Freighter, xBull, and standard wallet options.
+- **On-chain State Synchronization:** Real-time progress bar (raised vs. goal amount), target caregiver validation, and 5-second ledger event polling.
+- **Security Check:** Restricts withdrawal functionality only to the validated target caregiver on-chain.
+- **Offline Test Mode:** Accessible via `?testmode=true` query string parameter to allow full E2E testing of the smart contract interface.
+
+### 🖼 Level 2 Screenshots
+
+| State | Screenshot |
+|---|---|
+| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](screenshots/wallet-options.png) |
+| **Contributor Wallet Connected** | ![Contributor Wallet Connected](screenshots/pool-connected.png) |
+| **Funding Pool Details Loaded** | ![Pool Details Loaded](screenshots/pool-loaded.png) |
+| **Contribution Success (Raised Updates & Feed Event)** | ![Contribution Success](screenshots/contribute-success.png) |
+| **Caregiver Mode Loaded (Withdraw Section Active)** | ![Caregiver Mode Loaded](screenshots/withdraw-loaded.png) |
+| **Withdrawal Success (Raised Reset & Feed Event)** | ![Withdrawal Success](screenshots/withdraw-success.png) |
+
