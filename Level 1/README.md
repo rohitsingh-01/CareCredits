@@ -1,8 +1,11 @@
 # CareCredits — Care Funding on Stellar
-### Stellar Journey to Mastery — Level 1 (White Belt) Submission
+### Stellar Journey to Mastery — Level 2 (Yellow Belt) Submission
+
+🌐 **Live Demo:** [https://care-credits.vercel.app](https://care-credits.vercel.app) · [Family Fund Pool](https://care-credits.vercel.app/pool)
 
 ## 📖 Project Description
 CareCredits lets anyone send a transparent, on-chain "care credit" — an XLM payment — directly to a caregiver, with a public directory to browse example caregivers and a dedicated wallet page to connect Freighter, check your balance, and send the payment on Stellar Testnet.
+
 
 This version reorganizes the original single-page submission into two focused pages:
 - **`index.html`** — a themed landing page explaining CareCredits and the Caregiver Directory (browse caregivers, select one to pre-fill their address).
@@ -14,6 +17,15 @@ This version reorganizes the original single-page submission into two focused pa
 - **Balance Handling** — fetches live XLM balance from Horizon, displays it clearly, with a refresh button.
 - **Transaction Flow** — builds a real Payment operation, signs via Freighter, submits to Testnet, shows a clear success/failure panel with the transaction hash and a StellarExpert link.
 - **Development Standards** — logic split across `app.js` (wallet/tx), `directory.js` (caregiver list rendering), `caregivers.js` (shared data), `style.css` (shared theme); try/catch error handling around every network call.
+
+## 🟡 Level 2 Requirements Covered
+- ✅ **StellarWalletsKit** — `pool.js` uses `StellarWalletsKit` + `allowAllModules()` to show a multi-wallet selector modal (Freighter, xBull, LOBSTR, etc.).
+- ✅ **3 Error Types Handled** — `classifyError()` in `pool.js` distinguishes `WALLET_NOT_FOUND`, `USER_REJECTED`, and `INSUFFICIENT_BALANCE`, each shown as a distinct user-friendly message.
+- ✅ **Contract Deployed on Testnet** — `CareFundPool` Soroban contract is live at `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`.
+- ✅ **Contract Called from Frontend** — `pool.js` calls `initialize`, `contribute`, and `withdraw` contract functions using `SorobanRpc.Server` and `invokeContractFunction`.
+- ✅ **Transaction Status Visible** — Contribution and withdrawal flows show **Pending → Success/Failure** status with a StellarExpert link to the transaction hash.
+- ✅ **Real-time Event Integration** — 5-second ledger polling reads on-chain `contrib` and `withdraw` events and updates the live activity feed and progress bar in real-time.
+- ✅ **Minimum 2+ Meaningful Commits** — 5 well-scoped Yellow Belt commits on `main` branch.
 
 ## 🎨 What Changed From the First Version
 | Before | Now |
