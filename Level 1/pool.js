@@ -196,7 +196,7 @@ function updateProgressUI() {
 // Read-only contract simulation
 async function simulateReadOnly(contractId, method, scArgs) {
   // Build a dummy transaction to simulate
-  const tempAccount = new StellarSdk.Account("GAAAAAAAACCCCDDDDEEEEEFFFFFGGGGGHHHHHIIIIIJJJJKKKKL", "1");
+  const tempAccount = new StellarSdk.Account("GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "1");
   const tx = new StellarSdk.TransactionBuilder(tempAccount, {
     fee: StellarSdk.BASE_FEE,
     networkPassphrase: NETWORK_PASSPHRASE,
