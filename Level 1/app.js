@@ -190,7 +190,7 @@ async function sendPayment() {
       txBuilder = txBuilder.addMemo(StellarSdk.Memo.text(memoText));
     }
 
-    const transaction = txBuilder.setTimeout(60).build();
+    const transaction = txBuilder.setTimeout(StellarSdk.TimeoutInfinite).build();
 
     setStatus("sendStatus", "Waiting for signature in Freighter...");
     const { signedTxXdr } = await freighterApi.signTransaction(transaction.toXDR(), {
