@@ -15,9 +15,14 @@ grid.innerHTML = CAREGIVERS.map(
     <span class="role">${c.role}</span>
     <p class="description">${c.description}</p>
     <span class="pubkey">${c.publicKey.slice(0, 4)}...${c.publicKey.slice(-4)}</span>
-    <a class="btn btn-accent btn-block" href="wallet.html?care=${encodeURIComponent(c.id)}">
-      Select &amp; Send Care Credit
-    </a>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
+      <a class="btn btn-accent btn-block" href="wallet.html?care=${encodeURIComponent(c.id)}">
+        Select &amp; Send Care Credit
+      </a>
+      <a class="btn btn-primary btn-block" style="text-align: center; text-decoration: none;" href="pool.html?care=${encodeURIComponent(c.id)}">
+        Contribute to Fund Pool
+      </a>
+    </div>
   </article>
 `
 ).join("");
