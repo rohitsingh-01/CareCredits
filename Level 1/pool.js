@@ -226,7 +226,7 @@ async function simulateReadOnly(contractId, method, scArgs) {
     .setTimeout(StellarSdk.TimeoutInfinite)
     .addOperation(
       StellarSdk.Operation.invokeContractFunction({
-        contractId,
+        contract: contractId,
         function: method,
         args: scArgs,
       })
@@ -343,7 +343,7 @@ async function invokeContractViaKit(contractId, method, scArgs, statusElId) {
     .setTimeout(StellarSdk.TimeoutInfinite)
     .addOperation(
       StellarSdk.Operation.invokeContractFunction({
-        contractId,
+        contract: contractId,
         function: method,
         args: scArgs,
       })
