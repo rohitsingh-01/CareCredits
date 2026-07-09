@@ -120,3 +120,52 @@ Yellow Belt extends CareCredits by introducing a **Soroban Smart Contract-based 
 | **Caregiver Mode Loaded (Withdraw Section Active)** | ![Caregiver Mode Loaded](screenshots/withdraw-loaded.png) |
 | **Withdrawal Success (Raised Reset & Feed Event)** | ![Withdrawal Success](screenshots/withdraw-success.png) |
 
+---
+
+## 🟠 Level 3 (Orange Belt) Two-Contract Compliance System
+
+Orange Belt builds on the Family Fund Pool by introducing a **Two-Contract compliance infrastructure**:
+1. **`CareRegistry` Contract** — Deployed at `CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7`. Stores admin-governed verification and paused states for caregivers.
+2. **`CareFundPool` Contract (v2)** — Deployed at `CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`. Incorporates a **dynamic cross-contract call** to `CareRegistry` inside `withdraw()` to assert that the withdrawing caregiver is verified and not paused.
+
+### ⛓ Level 3 Deployed Contracts & Live Hashes
+- **`CareRegistry` Contract ID:** `CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7`
+- **`CareFundPool` Contract ID (V2):** `CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`
+- **Verifiable Registry Set-Verified Transaction Hash:** `ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c` (Link: [StellarExpert](https://stellar.expert/explorer/testnet/tx/ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c))
+
+### 🎯 Requirements Covered
+
+- ✅ **Inter-contract Communication** — `CareFundPool` calls `CareRegistry::is_verified` and `CareRegistry::is_paused` dynamically using `env.invoke_contract`.
+- ✅ **Event Streaming & Real-Time Sync** — The polling loop inside `pool.js` syncs every 5s, polling events for **both** contracts and querying the registry dynamically to update Verified/Paused status badges in real-time.
+- ✅ **CI/CD Pipeline** — `.github/workflows/ci.yml` runs cargo checks (`cargo test`, `cargo fmt`, `cargo clippy`) and Node.js frontend tests on every push/PR.
+- ✅ **Smart Contract Deployment Workflow** — Repeatable orchestrated bash scripts (`deploy-registry.sh`, `deploy-fund-pool.sh`, `deploy-all.sh`) and PowerShell equivalents (`deploy-all.ps1`) handle compiles, deploys, and setups.
+- ✅ **Mobile Responsive UI** — Audited and styled with responsive layouts, media breakpoints for viewports down to 375px, minimum `44px` touch targets, and `16px` text input sizes to prevent auto-zooming.
+- ✅ **Explicit Loading & Error Handling** — Fullscreen loading overlay transitions, error banner classifications for Freighter errors, and gated withdraw button tooltips.
+- ✅ **Tests** — 7 Rust workspace contract tests (`cargo test --workspace`) and 7 Node.js native runner frontend unit tests (`node --test`).
+
+### 🛠 Compiling & Running Tests Locally
+
+#### Contract Build & Workspace Tests
+```bash
+cd contracts
+stellar contract build
+cargo test --workspace
+```
+
+#### Frontend Unit Tests
+```bash
+cd "Level 1"
+node --test "tests/**/*.test.js"
+```
+
+### 🖼 Level 3 Screenshots
+
+> Replace the placeholders with screenshots before final submission:
+
+| State | Screenshot |
+|---|---|
+| **Mobile Responsive Layout** | ![Mobile Responsive View](screenshots/mobile-responsive.png) |
+| **CI/CD Actions Run Passing (Green)** | ![GitHub Actions Green Build](screenshots/ci-green.png) |
+| **Passing Test Suite Output** | ![Local Unit Tests Passed](screenshots/test-results.png) |
+
+
