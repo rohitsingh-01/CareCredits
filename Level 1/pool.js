@@ -391,7 +391,11 @@ async function invokeContractViaKit(contractId, method, scArgs, statusElId) {
 
   // 4. Sign via Kit
   setStatus(statusElId, "Waiting for signature...");
-  const signedTx = await kit.signTransaction(tx);
+  const { signedTxXdr } = await kit.signTransaction(tx.toXDR(), {
+    address: connectedAddress,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  });
+  const signedTx = StellarSdk.TransactionBuilder.fromXDR(signedTxXdr, NETWORK_PASSPHRASE);
 
   // 5. Submit Transaction
   setStatus(statusElId, "Submitting to network...");
