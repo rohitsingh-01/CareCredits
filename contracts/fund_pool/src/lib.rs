@@ -1,5 +1,12 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol, IntoVal, Val, vec};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol};
+
+// Generate type-safe client for CareRegistry without linking the crate (avoiding symbol collisions in WASM build)
+#[soroban_sdk::contractclient(name = "CareRegistryClient")]
+pub trait CareRegistry {
+    fn is_verified(env: Env, caregiver: Address) -> bool;
+    fn is_paused(env: Env, caregiver: Address) -> bool;
+}
 
 #[contracttype]
 #[derive(Clone)]
@@ -19,6 +26,7 @@ pub struct CareFundPool;
 #[contractimpl]
 impl CareFundPool {
     pub fn initialize(env: Env, caregiver: Address, admin: Address, goal: i128, token: Address, registry: Address) {
+        admin.require_auth();
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
@@ -70,23 +78,14 @@ impl CareFundPool {
 
         let registry_address: Address = env.storage().instance().get(&DataKey::Registry).expect("not initialized");
 
-        // Dynamic cross-contract call check for verification status.
-        // Tradeoff: By using `env.invoke_contract` dynamically by address and Symbol rather than importing the contract client:
-        // 1. We decouple compilation dependencies between registry and fund pool.
-        // 2. We lose compile-time type checking of the method arguments and return type.
-        let is_verified: bool = env.invoke_contract(
-            &registry_address,
-            &Symbol::new(&env, "is_verified"),
-            vec![&env, caregiver.clone().into_val(&env)],
-        );
+        // Typed cross-contract call check for verification status.
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        
+        let is_verified = registry_client.is_verified(&caregiver);
         assert!(is_verified, "caregiver is not verified by the CareRegistry");
 
-        // Dynamic cross-contract call check for paused status.
-        let is_paused: bool = env.invoke_contract(
-            &registry_address,
-            &Symbol::new(&env, "is_paused"),
-            vec![&env, caregiver.clone().into_val(&env)],
-        );
+        // Typed cross-contract call check for paused status.
+        let is_paused = registry_client.is_paused(&caregiver);
         assert!(!is_paused, "caregiver is paused in the CareRegistry");
 
         let raised: i128 = env.storage().instance().get(&DataKey::Raised).unwrap_or(0);
@@ -135,7 +134,7 @@ impl CareFundPool {
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use super::{CareFundPool, CareFundPoolClient};
     use soroban_sdk::{testutils::Address as _, Env};
     use care_registry::{CareRegistry, CareRegistryClient};
 
@@ -318,5 +317,24 @@ mod test {
 
         // Withdraw should fail because caregiver is paused
         client.withdraw(&caregiver);
+    }
+
+    #[test]
+    fn test_initialize_requires_auth() {
+        let env = Env::default();
+        let admin = Address::generate(&env);
+        let caregiver = Address::generate(&env);
+        let registry_address = env.register(CareRegistry, ());
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
+
+        let contract_id = env.register(CareFundPool, ());
+        let client = CareFundPoolClient::new(&env, &contract_id);
+
+        env.mock_all_auths();
+        client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
+
+        assert!(!env.auths().is_empty(), "initialization must be authorized");
+        let auth = &env.auths()[0];
+        assert_eq!(auth.0, admin);
     }
 }

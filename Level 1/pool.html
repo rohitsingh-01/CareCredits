@@ -55,7 +55,7 @@
         <button id="connectBtn" class="btn btn-primary">Connect Wallet</button>
         <button id="disconnectBtn" class="btn btn-outline hidden">Disconnect</button>
       </div>
-      <p id="walletStatus" class="status">Not connected</p>
+      <p id="walletStatus" class="status" aria-live="polite">Not connected</p>
     </div>
   </header>
 
@@ -72,7 +72,7 @@
           </label>
           <button id="loadPoolBtn" class="btn btn-accent" style="height: 38px;">Load Pool</button>
         </div>
-        <p id="configStatus" class="status" style="text-align: left; margin-top: 8px; min-height: 0;"></p>
+        <p id="configStatus" class="status" style="text-align: left; margin-top: 8px; min-height: 0;" aria-live="polite"></p>
       </section>
 
       <!-- Progress Card -->
@@ -108,7 +108,7 @@
           <input id="contributeAmount" type="number" step="0.0000001" placeholder="10" />
         </label>
         <button id="contributeBtn" class="btn btn-accent btn-block" disabled>Contribute</button>
-        <p id="contributeStatus" class="status"></p>
+        <p id="contributeStatus" class="status" aria-live="polite"></p>
       </section>
 
       <!-- Withdraw Card -->
@@ -116,14 +116,14 @@
         <h2>🎁 Withdraw Funds</h2>
         <p class="hint" style="margin-bottom: 16px;">You are the caregiver for this pool. You can withdraw all contributed funds to your address.</p>
         <button id="withdrawBtn" class="btn btn-primary btn-block">Withdraw Raised Funds</button>
-        <p id="withdrawStatus" class="status"></p>
+        <p id="withdrawStatus" class="status" aria-live="polite"></p>
       </section>
 
       <!-- Activity Feed Card -->
       <section class="card wide">
         <h2>⚡ Live Pool Activity</h2>
         <p class="hint">Real-time contract events from Stellar Testnet (updated every 5s).</p>
-        <div id="activityFeed" class="result-panel empty" style="max-height: 250px; overflow-y: auto;">
+        <div id="activityFeed" class="result-panel empty" style="max-height: 250px; overflow-y: auto;" aria-live="polite">
           Waiting to load pool...
         </div>
       </section>

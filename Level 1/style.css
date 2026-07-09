@@ -431,3 +431,11 @@ footer {
   }
 }
 
+/* Keyboard accessibility focus outlines */
+button:focus-visible, 
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+

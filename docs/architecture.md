@@ -76,23 +76,20 @@ sequenceDiagram
 
 ---
 
-## 2. Dynamic Cross-Contract Call Trade-off
+## 2. Typed Cross-Contract Call Migration
 
-Inside `CareFundPool::withdraw`, the inter-contract communication is executed dynamically using:
+Inside `CareFundPool::withdraw`, the inter-contract communication has been migrated from dynamic invocation to typed `CareRegistryClient` calls:
 
 ```rust
-let is_verified: bool = env.invoke_contract(
-    &registry_address,
-    &Symbol::new(&env, "is_verified"),
-    vec![&env, caregiver.clone().into_val(&env)],
-);
+let registry_client = care_registry::CareRegistryClient::new(&env, &registry_address);
+let is_verified = registry_client.is_verified(&caregiver);
+let is_paused = registry_client.is_paused(&caregiver);
 ```
 
-### Trade-offs:
+### Rationale:
 
-1. **Compilation Decoupling (Pro):** By using `env.invoke_contract` (dynamic method invoking using symbol name and address parameters) rather than compiling with `soroban_sdk::contractimport!`, the two crates (`care_registry` and `care_fund_pool`) are compiled completely independently. There is no build-order coupling, which allows the registry to be updated or refactored without breaking the pool contract compilation path.
-2. **Loss of Type Safety (Con):** Dynamic invocation bypasses Rust's compile-time type checking. If the registry's method signature changes (e.g. changing the name to `check_verified` or modifying parameters), the compiler will not warn us. Any mismatches will result in runtime transaction failures on-chain.
-3. **Audit Readiness:** Code comments have been added inside `contracts/fund_pool/src/lib.rs` to explicitly document this design choice to security auditors.
+1. **Compile-Time Type Safety (Pro):** By using the compiled `CareRegistryClient` directly, the compiler enforces method names and argument/return types. Typographical errors or method signature mismatches are caught during build, not at runtime on-chain.
+2. **Close Integration:** Linking the registry crate in `CareFundPool`'s dependencies ensures that both contracts align on interface structures, making the entire compliance gating much more secure and audit-ready.
 
 ---
 

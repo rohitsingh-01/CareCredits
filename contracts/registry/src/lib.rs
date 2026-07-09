@@ -15,6 +15,7 @@ pub struct CareRegistry;
 #[contractimpl]
 impl CareRegistry {
     pub fn initialize(env: Env, admin: Address) {
+        admin.require_auth();
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
@@ -106,5 +107,20 @@ mod test {
         client.initialize(&admin);
 
         client.set_verified(&attacker, &caregiver, &true);
+    }
+
+    #[test]
+    fn test_initialize_requires_auth() {
+        let env = Env::default();
+        let admin = Address::generate(&env);
+        let contract_id = env.register(CareRegistry, ());
+        let client = CareRegistryClient::new(&env, &contract_id);
+
+        env.mock_all_auths();
+        client.initialize(&admin);
+
+        assert!(!env.auths().is_empty(), "initialization must be authorized");
+        let auth = &env.auths()[0];
+        assert_eq!(auth.0, admin);
     }
 }

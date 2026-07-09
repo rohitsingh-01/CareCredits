@@ -33,7 +33,7 @@ jobs:
 
       - name: Clippy Linter
         run: cargo clippy --all-targets --manifest-path contracts/Cargo.toml -- -D warnings
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Run Contract Tests
         run: cargo test --workspace --manifest-path contracts/Cargo.toml

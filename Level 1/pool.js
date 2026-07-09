@@ -13,9 +13,14 @@ const rpcServer = new StellarSdk.SorobanRpc.Server(RPC_URL);
 // Orange Belt registry address
 const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
 
-// Check test mode
+// Check test mode - Gated to local development only to protect production integrity
 const urlParams = new URLSearchParams(window.location.search);
-const isTestMode = urlParams.has("testmode");
+const isTestMode = urlParams.has("testmode") && (
+  window.location.hostname === "localhost" || 
+  window.location.hostname === "127.0.0.1" || 
+  window.location.hostname === "[::1]" ||
+  window.location.hostname === ""
+);
 
 let connectedAddress = null;
 let activeContractId = null;

@@ -33,7 +33,7 @@
         <button id="connectBtn" class="btn btn-primary">Connect Freighter Wallet</button>
         <button id="disconnectBtn" class="btn btn-outline hidden">Disconnect</button>
       </div>
-      <p id="walletStatus" class="status">Not connected</p>
+      <p id="walletStatus" class="status" aria-live="polite">Not connected</p>
     </div>
   </header>
 
@@ -50,7 +50,7 @@
           <span class="unit">XLM</span>
         </div>
         <button id="refreshBalanceBtn" class="btn btn-outline btn-block" disabled>Refresh Balance</button>
-        <p id="balanceStatus" class="status"></p>
+        <p id="balanceStatus" class="status" aria-live="polite"></p>
         <p class="hint">
           Need testnet funds?
           <a href="https://friendbot.stellar.org" target="_blank" rel="noopener">Fund via Friendbot</a>
@@ -71,13 +71,13 @@
           <input id="memoInput" type="text" placeholder="care credit top-up" maxlength="28" />
         </label>
         <button id="sendBtn" class="btn btn-accent btn-block" disabled>Send Payment</button>
-        <p id="sendStatus" class="status"></p>
+        <p id="sendStatus" class="status" aria-live="polite"></p>
       </section>
 
       <!-- Transaction Result Card -->
       <section class="card wide">
         <h2>🧾 Transaction Result</h2>
-        <div id="resultPanel" class="result-panel empty">
+        <div id="resultPanel" class="result-panel empty" aria-live="polite">
           No transaction submitted yet.
         </div>
       </section>

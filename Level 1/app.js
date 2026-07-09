@@ -22,9 +22,14 @@ const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
 let server = new StellarSdk.Horizon.Server(HORIZON_URL);
 
-// Mock mode for testing without extension
+// Mock mode for testing without extension - Gated to local development only to protect production integrity
 const urlParams = new URLSearchParams(window.location.search);
-const isTestMode = urlParams.has("testmode");
+const isTestMode = urlParams.has("testmode") && (
+  window.location.hostname === "localhost" || 
+  window.location.hostname === "127.0.0.1" || 
+  window.location.hostname === "[::1]" ||
+  window.location.hostname === ""
+);
 
 const freighterApi = isTestMode ? {
   isConnected: async () => ({ isConnected: true }),

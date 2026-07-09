@@ -4,3 +4,4 @@ build_target/
 node_modules/
 .agents/
 skills-lock.json
+scratch/
