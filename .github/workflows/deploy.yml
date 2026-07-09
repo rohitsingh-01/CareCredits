@@ -1,0 +1,44 @@
+name: Deploy Contracts
+
+on:
+  workflow_dispatch:
+    inputs:
+      caregiver_address:
+        description: 'Caregiver Public Key (G...)'
+        required: true
+        default: 'GCYRYFQXKWKPI74B23SKUZXQOKIY6CZUUS7AWDGX6MRPNKGVSEKTDAEL'
+      goal_stroops:
+        description: 'Goal amount in Stroops (1 XLM = 10,000,000 Stroops)'
+        required: true
+        default: '1000000000'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: wasm32v1-none
+
+      - name: Install Stellar CLI
+        run: |
+          cargo install --locked stellar-cli
+
+      - name: Import Deployer Key
+        env:
+          DEPLOYER_SECRET: ${{ secrets.STELLAR_DEPLOYER_SECRET_KEY }}
+        run: |
+          if [ -z "$DEPLOYER_SECRET" ]; then
+            echo "Error: STELLAR_DEPLOYER_SECRET_KEY secret is not set!"
+            exit 1
+          fi
+          stellar keys add carecredits-deployer --secret-key "$DEPLOYER_SECRET"
+
+      - name: Run Orchestrated Deployment
+        run: |
+          chmod +x scripts/*.sh
+          ./scripts/deploy-all.sh "${{ github.event.inputs.caregiver_address }}" "${{ github.event.inputs.goal_stroops }}"
