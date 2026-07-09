@@ -26,6 +26,12 @@
   </script>
 </head>
 <body>
+  <!-- Loading Spinner Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loadingMessage">Loading on-chain state...</p>
+  </div>
+
   <nav class="site-nav">
     <div class="container">
       <a href="index.html" class="brand">
@@ -87,8 +93,10 @@
             <div id="progressBar" style="background: var(--accent-2); width: 0%; height: 100%; transition: width 0.5s ease-out;"></div>
           </div>
 
-          <p class="hint" style="margin-bottom: 0;">
+          <p class="hint" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
             Target Caregiver: <code id="caregiverAddr" style="font-family: monospace;">—</code>
+            <span id="verifiedBadge" class="badge hidden" style="background: rgba(126, 231, 135, 0.1); color: var(--accent-2); border: 1px solid var(--accent-2);">Verified</span>
+            <span id="pausedBadge" class="badge hidden" style="background: rgba(231, 126, 126, 0.1); color: #e77e7e; border: 1px solid #e77e7e;">Paused</span>
           </p>
         </div>
       </section>
@@ -124,7 +132,7 @@
 
   <footer>
     <div class="container">
-      <p>Stellar Testnet only · CareCredits · Level 2 (Yellow Belt) · Stellar Journey to Mastery</p>
+      <p>Stellar Testnet only · CareCredits · Level 3 (Orange Belt) · Stellar Journey to Mastery</p>
     </div>
   </footer>
 

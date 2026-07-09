@@ -1,16 +1,13 @@
 /**
  * caregivers.js — Shared caregiver directory data.
- * CareCredits — Level 1 (White Belt)
+ * CareCredits — Level 3 (Orange Belt)
  *
  * Single source of truth used by both index.html (renders the
  * directory cards) and wallet.html (looks up a caregiver's display
  * name when arriving via a "Select" link with a `?care=<id>` param).
- *
- * ⚠️ TODO: `publicKey` values below are PLACEHOLDERS. Replace them with
- * real Stellar TESTNET public keys (e.g. accounts you control in
- * Freighter, funded via Friendbot) before recording your submission
- * screenshots/video — a payment to a placeholder key will fail.
  */
+
+export const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
 
 export const CAREGIVERS = [
   {

@@ -1,6 +1,7 @@
 import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
 import { StellarWalletsKit, WalletNetwork, allowAllModules } from "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle";
 import { findCaregiverById } from "./caregivers.js";
+import { stroopsToXlm, xlmToStroops, calculateProgressPercent, truncateAddress, classifyError, errorMessageFor } from "./utils.js";
 
 const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const RPC_URL = "https://soroban-testnet.stellar.org";
@@ -8,6 +9,9 @@ const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
 
 const server = new StellarSdk.Horizon.Server(HORIZON_URL);
 const rpcServer = new StellarSdk.SorobanRpc.Server(RPC_URL);
+
+// Orange Belt registry address
+const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
 
 // Check test mode
 const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +22,8 @@ let activeContractId = null;
 let raisedAmount = 0;
 let goalAmount = 0;
 let caregiverAddress = null;
+let isVerified = false;
+let isPaused = false;
 let lastCheckedLedger = 0;
 let eventInterval = null;
 
@@ -28,6 +34,15 @@ const kit = new StellarWalletsKit({
 });
 
 const $ = (id) => document.getElementById(id);
+
+function showLoading(msg = "Loading on-chain state...") {
+  $("loadingMessage").textContent = msg;
+  $("loadingOverlay").classList.remove("hidden");
+}
+
+function hideLoading() {
+  $("loadingOverlay").classList.add("hidden");
+}
 
 function setStatus(elId, message, kind = "") {
   const el = $(elId);
@@ -50,38 +65,11 @@ function updateWalletUI(connected) {
   $("connectBtn").classList.toggle("hidden", connected);
   $("disconnectBtn").classList.toggle("hidden", !connected);
   $("contributeBtn").disabled = !connected || !activeContractId;
-  $("withdrawBtn").disabled = !connected || !activeContractId;
-}
-
-// 1. Error Classification (3 required types)
-function classifyError(err) {
-  const m = (err?.message || String(err)).toLowerCase();
-  if (m.includes("not installed") || m.includes("not found") || m.includes("no wallet") || m.includes("install it")) {
-    return "WALLET_NOT_FOUND";
-  }
-  if (m.includes("declin") || m.includes("reject") || m.includes("cancel") || m.includes("denied") || m.includes("user reject")) {
-    return "USER_REJECTED";
-  }
-  if (m.includes("insufficient") || m.includes("underfunded") || m.includes("balance") || m.includes("op_underfunded")) {
-    return "INSUFFICIENT_BALANCE";
-  }
-  return "UNKNOWN";
 }
 
 function showErrorBanner(sectionId, err) {
   const code = classifyError(err);
-  let friendlyMessage = "An unknown error occurred.";
-  
-  if (code === "WALLET_NOT_FOUND") {
-    friendlyMessage = "❌ Error: Target wallet extension not found or not installed.";
-  } else if (code === "USER_REJECTED") {
-    friendlyMessage = "❌ Error: Transaction signature request rejected by the user.";
-  } else if (code === "INSUFFICIENT_BALANCE") {
-    friendlyMessage = "❌ Error: Insufficient XLM balance to cover payment and network fee.";
-  } else {
-    friendlyMessage = `❌ Error: ${err.message || String(err)}`;
-  }
-  
+  const friendlyMessage = "❌ Error: " + errorMessageFor(code) + (code === "UNKNOWN_ERROR" ? ` (${err.message || String(err)})` : "");
   setStatus(sectionId, friendlyMessage, "error");
 }
 
@@ -124,11 +112,24 @@ function disconnectWallet() {
   setStatus("walletStatus", "Not connected", "");
 }
 
-// Update Withdraw Card visibility
+// Update Withdraw Card visibility and check registry rules
 function updateWithdrawUI() {
   const section = $("withdrawSection");
   if (connectedAddress && caregiverAddress && connectedAddress === caregiverAddress) {
     section.classList.remove("hidden");
+    
+    // Gating check
+    const withdrawBtn = $("withdrawBtn");
+    if (!isVerified) {
+      withdrawBtn.disabled = true;
+      setStatus("withdrawStatus", "⚠️ Caregiver is not verified in the CareRegistry. Withdrawal blocked.", "error");
+    } else if (isPaused) {
+      withdrawBtn.disabled = true;
+      setStatus("withdrawStatus", "⚠️ Caregiver is paused in the CareRegistry. Withdrawal blocked.", "error");
+    } else {
+      withdrawBtn.disabled = false;
+      setStatus("withdrawStatus", "", "");
+    }
   } else {
     section.classList.add("hidden");
   }
@@ -143,16 +144,20 @@ async function loadPool() {
   }
   activeContractId = inputId;
   setStatus("configStatus", "Loading pool details...", "success");
+  showLoading("Fetching contract state...");
 
   if (isTestMode) {
     caregiverAddress = "GCYRYFQXKWKPI74B23SKUZXQOKIY6CZUUS7AWDGX6MRPNKGVSEKTDAEL";
     goalAmount = 100;
     raisedAmount = 40;
+    isVerified = true;
+    isPaused = false;
     lastCheckedLedger = 1000;
     updateProgressUI();
     updateWalletUI(!!connectedAddress);
     updateWithdrawUI();
     startMockEvents();
+    hideLoading();
     setStatus("configStatus", "✅ Pool loaded successfully (Mock Mode).", "success");
     return;
   }
@@ -168,6 +173,9 @@ async function loadPool() {
     goalAmount = Number(goalVal) / 10000000;
     caregiverAddress = careVal;
 
+    // Fetch verified/paused status from CareRegistry
+    await refreshRegistryStatus();
+
     updateProgressUI();
     updateWalletUI(!!connectedAddress);
     updateWithdrawUI();
@@ -178,6 +186,21 @@ async function loadPool() {
     updateWalletUI(false);
     updateWithdrawUI();
     setStatus("configStatus", `Failed to load contract: ${err.message || err}`, "error");
+  } finally {
+    hideLoading();
+  }
+}
+
+async function refreshRegistryStatus() {
+  if (!caregiverAddress) return;
+  try {
+    const caregiverVal = StellarSdk.xdr.ScVal.scvAddress(
+      StellarSdk.Address.fromString(caregiverAddress).toScAddress()
+    );
+    isVerified = await simulateReadOnly(REGISTRY_CONTRACT_ID, "is_verified", [caregiverVal]);
+    isPaused = await simulateReadOnly(REGISTRY_CONTRACT_ID, "is_paused", [caregiverVal]);
+  } catch (err) {
+    console.error("Failed to query CareRegistry status:", err);
   }
 }
 
@@ -185,12 +208,19 @@ async function loadPool() {
 function updateProgressUI() {
   $("raisedValue").textContent = raisedAmount.toFixed(4);
   $("goalValue").textContent = goalAmount.toFixed(4);
-  $("caregiverAddr").textContent = caregiverAddress;
+  $("caregiverAddr").textContent = truncateAddress(caregiverAddress);
+  $("caregiverAddr").title = caregiverAddress; // Show full address on hover
 
-  const pct = goalAmount > 0 ? Math.min(100, (raisedAmount / goalAmount) * 100) : 0;
+  const pct = calculateProgressPercent(raisedAmount, goalAmount);
   $("progressBar").style.width = `${pct}%`;
   
   $("goalBadge").classList.toggle("hidden", raisedAmount < goalAmount);
+
+  // Update verified/paused badges
+  const verifiedEl = $("verifiedBadge");
+  const pausedEl = $("pausedBadge");
+  if (verifiedEl) verifiedEl.classList.toggle("hidden", !isVerified);
+  if (pausedEl) pausedEl.classList.toggle("hidden", !isPaused);
 }
 
 // Helper to decode ScVal safely across different ESM bundle versions
@@ -250,12 +280,14 @@ async function contributeToPool() {
   }
   
   setStatus("contributeStatus", "Building transaction...");
+  showLoading("Submitting contribution to ledger...");
 
   if (isTestMode) {
     raisedAmount += Number(amount);
     updateProgressUI();
     addActivityFeedEvent("GA6I3N...5ROCG4", `contributed ${amount} XLM`);
     setStatus("contributeStatus", "✅ Contribution successful (Mock).", "success");
+    hideLoading();
     return;
   }
 
@@ -270,7 +302,7 @@ async function contributeToPool() {
       throw new Error("insufficient balance");
     }
 
-    const stroops = BigInt(Math.floor(Number(amount) * 10000000));
+    const stroops = BigInt(xlmToStroops(amount));
     const contributorVal = StellarSdk.xdr.ScVal.scvAddress(
       StellarSdk.Address.fromString(connectedAddress).toScAddress()
     );
@@ -293,12 +325,15 @@ async function contributeToPool() {
     updateProgressUI();
   } catch (err) {
     showErrorBanner("contributeStatus", err);
+  } finally {
+    hideLoading();
   }
 }
 
 // 5. Withdraw (Write Operation)
 async function withdrawFromPool() {
   setStatus("withdrawStatus", "Building transaction...");
+  showLoading("Withdrawing funds from ledger...");
 
   if (isTestMode) {
     addActivityFeedEvent("Caregiver", `withdrew all raised funds!`);
@@ -306,6 +341,7 @@ async function withdrawFromPool() {
     updateProgressUI();
     updateWithdrawUI();
     setStatus("withdrawStatus", "✅ Withdrawal successful (Mock).", "success");
+    hideLoading();
     return;
   }
 
@@ -327,6 +363,8 @@ async function withdrawFromPool() {
     updateWithdrawUI();
   } catch (err) {
     showErrorBanner("withdrawStatus", err);
+  } finally {
+    hideLoading();
   }
 }
 
@@ -397,6 +435,11 @@ function startEventPolling() {
 
   eventInterval = setInterval(async () => {
     try {
+      // 1. Sync registry verified/paused status
+      await refreshRegistryStatus();
+      updateWithdrawUI();
+
+      // 2. Poll contract events
       const latestLedgerResponse = await rpcServer.getLatestLedger();
       const latestLedger = latestLedgerResponse.sequence;
       
@@ -406,13 +449,20 @@ function startEventPolling() {
 
       if (lastCheckedLedger >= latestLedger) return;
 
+      // Listen to events on both CareFundPool AND CareRegistry
       const response = await rpcServer.getEvents({
         startLedger: lastCheckedLedger + 1,
-        filters: [{
-          type: "contract",
-          contractIds: [activeContractId]
-        }],
-        limit: 10
+        filters: [
+          {
+            type: "contract",
+            contractIds: [activeContractId]
+          },
+          {
+            type: "contract",
+            contractIds: [REGISTRY_CONTRACT_ID]
+          }
+        ],
+        limit: 15
       });
 
       lastCheckedLedger = latestLedger;
@@ -422,12 +472,12 @@ function startEventPolling() {
           // Parse topics and value
           const topics = evt.topic.map(t => StellarSdk.scValToNative(t));
           const value = StellarSdk.scValToNative(evt.value);
-          const type = topics[0]; // e.g. "contrib" or "withdraw"
+          const type = topics[0]; // e.g. "contrib", "withdraw", "verified", "paused"
 
           if (type === "contrib") {
             const contributor = topics[1];
             const amount = Number(value[0]) / 10000000;
-            addActivityFeedEvent(contributor, `contributed ${amount.toFixed(4)} XLM`);
+            addActivityFeedEvent(truncateAddress(contributor), `contributed ${amount.toFixed(4)} XLM`);
             
             // Refresh total raised
             raisedAmount = Number(value[1]) / 10000000;
@@ -435,12 +485,30 @@ function startEventPolling() {
           } else if (type === "withdraw") {
             const caregiver = topics[1];
             const amount = Number(value) / 10000000;
-            addActivityFeedEvent(caregiver, `withdrew ${amount.toFixed(4)} XLM`);
+            addActivityFeedEvent(truncateAddress(caregiver), `withdrew ${amount.toFixed(4)} XLM`);
             
             // Reset raised amount
             raisedAmount = 0;
             updateProgressUI();
             updateWithdrawUI();
+          } else if (type === "verified") {
+            const caregiver = topics[1];
+            const verifiedStatus = value;
+            addActivityFeedEvent("Admin", `updated verified status of ${truncateAddress(caregiver)} to ${verifiedStatus}`);
+            if (caregiver === caregiverAddress) {
+              isVerified = verifiedStatus;
+              updateProgressUI();
+              updateWithdrawUI();
+            }
+          } else if (type === "paused") {
+            const caregiver = topics[1];
+            const pausedStatus = value;
+            addActivityFeedEvent("Admin", `updated paused status of ${truncateAddress(caregiver)} to ${pausedStatus}`);
+            if (caregiver === caregiverAddress) {
+              isPaused = pausedStatus;
+              updateProgressUI();
+              updateWithdrawUI();
+            }
           }
         });
       }
@@ -521,9 +589,9 @@ $("loadPoolBtn").addEventListener("click", loadPool);
 $("contributeBtn").addEventListener("click", contributeToPool);
 $("withdrawBtn").addEventListener("click", withdrawFromPool);
 
-// Pre-fill fields
+// Pre-fill fields with Level 3 Contract ID
 if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
-  $("contractInput").value = "CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ";
+  $("contractInput").value = "CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO";
 }
