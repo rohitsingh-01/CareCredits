@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol, IntoVal, Val, vec};
 
 #[contracttype]
 #[derive(Clone)]
@@ -8,6 +8,7 @@ pub enum DataKey {
     Caregiver,
     Goal,
     Token,
+    Registry,
     Raised,
     Withdrawn,
 }
@@ -17,7 +18,7 @@ pub struct CareFundPool;
 
 #[contractimpl]
 impl CareFundPool {
-    pub fn initialize(env: Env, caregiver: Address, admin: Address, goal: i128, token: Address) {
+    pub fn initialize(env: Env, caregiver: Address, admin: Address, goal: i128, token: Address, registry: Address) {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
@@ -28,6 +29,7 @@ impl CareFundPool {
         env.storage().instance().set(&DataKey::Caregiver, &caregiver);
         env.storage().instance().set(&DataKey::Goal, &goal);
         env.storage().instance().set(&DataKey::Token, &token);
+        env.storage().instance().set(&DataKey::Registry, &registry);
         env.storage().instance().set(&DataKey::Raised, &0i128);
         env.storage().instance().set(&DataKey::Withdrawn, &0i128);
         env.storage().instance().extend_ttl(100, 518400);
@@ -65,6 +67,27 @@ impl CareFundPool {
         if caregiver != care {
             panic!("only caregiver can withdraw");
         }
+
+        let registry_address: Address = env.storage().instance().get(&DataKey::Registry).expect("not initialized");
+
+        // Dynamic cross-contract call check for verification status.
+        // Tradeoff: By using `env.invoke_contract` dynamically by address and Symbol rather than importing the contract client:
+        // 1. We decouple compilation dependencies between registry and fund pool.
+        // 2. We lose compile-time type checking of the method arguments and return type.
+        let is_verified: bool = env.invoke_contract(
+            &registry_address,
+            &Symbol::new(&env, "is_verified"),
+            vec![&env, caregiver.clone().into_val(&env)],
+        );
+        assert!(is_verified, "caregiver is not verified by the CareRegistry");
+
+        // Dynamic cross-contract call check for paused status.
+        let is_paused: bool = env.invoke_contract(
+            &registry_address,
+            &Symbol::new(&env, "is_paused"),
+            vec![&env, caregiver.clone().into_val(&env)],
+        );
+        assert!(!is_paused, "caregiver is paused in the CareRegistry");
 
         let raised: i128 = env.storage().instance().get(&DataKey::Raised).unwrap_or(0);
         let withdrawn: i128 = env.storage().instance().get(&DataKey::Withdrawn).unwrap_or(0);
@@ -114,6 +137,7 @@ impl CareFundPool {
 mod test {
     use super::*;
     use soroban_sdk::{testutils::Address as _, Env};
+    use care_registry::{CareRegistry, CareRegistryClient};
 
     #[test]
     fn test_contribute_and_withdraw() {
@@ -124,6 +148,14 @@ mod test {
         let caregiver = Address::generate(&env);
         let contributor_1 = Address::generate(&env);
         let contributor_2 = Address::generate(&env);
+
+        // Register CareRegistry
+        let registry_address = env.register(CareRegistry, ());
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        registry_client.initialize(&admin);
+        
+        // Verify caregiver on registry
+        registry_client.set_verified(&admin, &caregiver, &true);
 
         // Register the Stellar Asset Contract (native XLM SAC test double)
         let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
@@ -137,7 +169,7 @@ mod test {
         // Register and initialize contract
         let contract_id = env.register(CareFundPool, ());
         let client = CareFundPoolClient::new(&env, &contract_id);
-        client.initialize(&caregiver, &admin, &1200, &token_address);
+        client.initialize(&caregiver, &admin, &1200, &token_address, &registry_address);
 
         assert_eq!(client.goal(), 1200);
         assert_eq!(client.caregiver(), caregiver);
@@ -178,13 +210,18 @@ mod test {
         let attacker = Address::generate(&env);
         let contributor = Address::generate(&env);
 
+        let registry_address = env.register(CareRegistry, ());
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        registry_client.initialize(&admin);
+        registry_client.set_verified(&admin, &caregiver, &true);
+
         let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register(CareFundPool, ());
         let client = CareFundPoolClient::new(&env, &contract_id);
-        client.initialize(&caregiver, &admin, &1000, &token_address);
+        client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
         client.contribute(&contributor, &500);
 
@@ -202,13 +239,18 @@ mod test {
         let caregiver = Address::generate(&env);
         let contributor = Address::generate(&env);
 
+        let registry_address = env.register(CareRegistry, ());
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        registry_client.initialize(&admin);
+        registry_client.set_verified(&admin, &caregiver, &true);
+
         let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register(CareFundPool, ());
         let client = CareFundPoolClient::new(&env, &contract_id);
-        client.initialize(&caregiver, &admin, &1000, &token_address);
+        client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
         client.contribute(&contributor, &500);
 
@@ -216,6 +258,65 @@ mod test {
         client.withdraw(&caregiver);
 
         // Second withdraw should panic
+        client.withdraw(&caregiver);
+    }
+
+    #[test]
+    #[should_panic(expected = "caregiver is not verified by the CareRegistry")]
+    fn test_withdraw_blocked_when_not_verified() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let caregiver = Address::generate(&env);
+        let contributor = Address::generate(&env);
+
+        let registry_address = env.register(CareRegistry, ());
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        registry_client.initialize(&admin);
+        // Leave caregiver unverified
+
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
+        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        token_admin.mint(&contributor, &500);
+
+        let contract_id = env.register(CareFundPool, ());
+        let client = CareFundPoolClient::new(&env, &contract_id);
+        client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
+
+        client.contribute(&contributor, &500);
+
+        // Withdraw should fail because caregiver is not verified
+        client.withdraw(&caregiver);
+    }
+
+    #[test]
+    #[should_panic(expected = "caregiver is paused in the CareRegistry")]
+    fn test_withdraw_blocked_when_paused_even_if_verified() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let caregiver = Address::generate(&env);
+        let contributor = Address::generate(&env);
+
+        let registry_address = env.register(CareRegistry, ());
+        let registry_client = CareRegistryClient::new(&env, &registry_address);
+        registry_client.initialize(&admin);
+        registry_client.set_verified(&admin, &caregiver, &true);
+        registry_client.set_paused(&admin, &caregiver, &true);
+
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
+        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        token_admin.mint(&contributor, &500);
+
+        let contract_id = env.register(CareFundPool, ());
+        let client = CareFundPoolClient::new(&env, &contract_id);
+        client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
+
+        client.contribute(&contributor, &500);
+
+        // Withdraw should fail because caregiver is paused
         client.withdraw(&caregiver);
     }
 }
