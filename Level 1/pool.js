@@ -199,9 +199,7 @@ async function loadPool() {
 async function refreshRegistryStatus() {
   if (!caregiverAddress) return;
   try {
-    const caregiverVal = StellarSdk.xdr.ScVal.scvAddress(
-      StellarSdk.Address.fromString(caregiverAddress).toScAddress()
-    );
+    const caregiverVal = StellarSdk.nativeToScVal(caregiverAddress, { type: "address" });
     isVerified = await simulateReadOnly(REGISTRY_CONTRACT_ID, "is_verified", [caregiverVal]);
     isPaused = await simulateReadOnly(REGISTRY_CONTRACT_ID, "is_paused", [caregiverVal]);
   } catch (err) {
@@ -308,12 +306,8 @@ async function contributeToPool() {
     }
 
     const stroops = BigInt(xlmToStroops(amount));
-    const contributorVal = StellarSdk.xdr.ScVal.scvAddress(
-      StellarSdk.Address.fromString(connectedAddress).toScAddress()
-    );
-    const amountVal = StellarSdk.xdr.ScVal.scvI128(
-      StellarSdk.xdr.Int128Parts.fromBigInt(stroops)
-    );
+    const contributorVal = StellarSdk.nativeToScVal(connectedAddress, { type: "address" });
+    const amountVal = StellarSdk.nativeToScVal(stroops, { type: "i128" });
 
     const result = await invokeContractViaKit(
       activeContractId,
@@ -351,9 +345,7 @@ async function withdrawFromPool() {
   }
 
   try {
-    const caregiverVal = StellarSdk.xdr.ScVal.scvAddress(
-      StellarSdk.Address.fromString(connectedAddress).toScAddress()
-    );
+    const caregiverVal = StellarSdk.nativeToScVal(connectedAddress, { type: "address" });
 
     const result = await invokeContractViaKit(
       activeContractId,
