@@ -1,5 +1,5 @@
 # CareCredits — Family Fund Pool
-### Stellar Journey to Mastery — Level 2 (Yellow Belt) Submission
+### Stellar Journey to Mastery — Level 2 (Yellow Belt) & Level 3 (Orange Belt) Submission
 
 🌐 **Live Vercel Site:** [https://care-credits.vercel.app](https://care-credits.vercel.app) (Direct Fund Pool Link: [https://care-credits.vercel.app/pool](https://care-credits.vercel.app/pool))
 💻 **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
@@ -67,6 +67,44 @@ CareCredits/
 - **Frontend that calls this contract:** `Level 2/pool.js` and `Level 2/pool.html` (formerly `Level 1/pool.js` and `Level 1/pool.html` — multi-wallet connect via StellarWalletsKit, contribute/withdraw calls, live event polling)
 - **Wallet connect for this level:** `Level 2/pool.html` + `Level 2/pool.js` — StellarWalletsKit modal (Freighter, xBull, etc.)
 - 📄 [View CareFundPool contract source](contracts/fund_pool/src/lib.rs)
+
+---
+
+## 🟠 Level 3 (Orange Belt) — Advanced Smart Contract System
+
+Two-contract compliance architecture built on top of the Level 2 CareFundPool:
+
+- **`CareRegistry` Contract** (compliance/admin layer)
+  - **Contract ID (Testnet Address):** `CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7`
+  - **Source:** [contracts/registry/src/lib.rs](contracts/registry/src/lib.rs)
+  - **Purpose:** admin-governed verified/paused status per caregiver
+
+- **`CareFundPool` Contract (V2)** (funding + inter-contract compliance check)
+  - **Contract ID (Testnet Address):** `CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`
+  - **Source:** [contracts/fund_pool/src/lib.rs](contracts/fund_pool/src/lib.rs)
+  - **Purpose:** on withdrawal, calls `CareRegistry::is_verified` / `is_paused` before releasing funds (inter-contract communication requirement)
+
+- **Verifiable Transaction Hashes (Stellar Expert):**
+  - **Registry Verification Call (Admin pre-verifying a caregiver):** `73be04f4a3de07b629b359df30ee1d62eb7851240c5dd6a2cb187a718c5e6fb4`
+    → [StellarExpert Link](https://stellar.expert/explorer/testnet/tx/73be04f4a3de07b629b359df30ee1d62eb7851240c5dd6a2cb187a718c5e6fb4)
+  - **Pool Initialization (Registering native asset + target caregiver):** `cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679`
+    → [StellarExpert Link](https://stellar.expert/explorer/testnet/tx/cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679)
+  - **Successful Cross-Contract Withdrawal (Verified & Active caregiver):** `adcebc4c34a2e2dbebcabdfd04ac8b48f5a65342a1ec0ea597f7ab18c9cfdd9e`
+    → [StellarExpert Link](https://stellar.expert/explorer/testnet/tx/adcebc4c34a2e2dbebcabdfd04ac8b48f5a65342a1ec0ea597f7ab18c9cfdd9e)
+  - **Blocked Withdrawal Attempt (Caregiver paused on Registry):** `dfca635cbf43eef1b053cf5c2a1adcebcbf43a2bd7f8e811ac47fbdbfb6c0ac4` (contribution hash preceding simulation blockage)
+    → [StellarExpert Link](https://stellar.expert/explorer/testnet/tx/dfca635cbf43eef1b053cf5c2a1adcebcbf43a2bd7f8e811ac47fbdbfb6c0ac4)
+
+- **Demo Video Walkthrough:** [Demo Video Link] *(Placeholder to be filled after recording)*
+
+### Level 3 Screenshots Reference
+
+All required compliance and platform states are documented below and can be verified:
+
+| Requirement | Screenshot |
+|---|---|
+| **Mobile responsive UI** | ![Mobile Responsive](Level%202/screenshots/mobile-responsive.png) |
+| **CI/CD pipeline running** | ![CI Green](Level%202/screenshots/ci-green.png) |
+| **Test output with 3+ passing tests** | ![Test Results](Level%202/screenshots/test-results.png) |
 
 ---
 
