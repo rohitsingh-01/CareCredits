@@ -39,7 +39,7 @@
 
 ```
 CareCredits/
-├── Level 1/            # Frontend Web App Folder (Vercel Root)
+├── Level 2/            # Frontend Web App Folder (Vercel Root)
 │   ├── index.html      # Landing Page + Caregiver Directory
 │   ├── wallet.html     # Wallet direct payment page
 │   ├── pool.html       # Family Fund Pool page
@@ -70,7 +70,7 @@ CareCredits/
     ```
 2.  Start the static local development server:
     ```bash
-    npx serve "Level 1"
+    npx serve "Level 2"
     ```
 3.  Open `http://localhost:3000` in your browser.
     *   *Tip:* Append `?testmode=true` to run offline E2E checks with mocked wallet connections.
@@ -83,9 +83,9 @@ All required E2E states are documented below and can be verified on the live sit
 
 | State / Step | Screenshot |
 |---|---|
-| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](Level%201/screenshots/wallet-options.png) |
-| **Contributor Wallet Connected** | ![Contributor Wallet Connected](Level%201/screenshots/pool-connected.png) |
-| **Funding Pool Details Loaded** | ![Pool Details Loaded](Level%201/screenshots/pool-loaded.png) |
-| **Contribution Success (Raised Updates & Feed Event)** | ![Contribution Success](Level%201/screenshots/contribute-success.png) |
-| **Caregiver Mode Loaded (Withdraw Section Active)** | ![Caregiver Mode Loaded](Level%201/screenshots/withdraw-loaded.png) |
-| **Withdrawal Success (Raised Reset & Feed Event)** | ![Withdrawal Success](Level%201/screenshots/withdraw-success.png) |
+| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](Level%202/screenshots/wallet-options.png) |
+| **Contributor Wallet Connected** | ![Contributor Wallet Connected](Level%202/screenshots/pool-connected.png) |
+| **Funding Pool Details Loaded** | ![Pool Details Loaded](Level%202/screenshots/pool-loaded.png) |
+| **Contribution Success (Raised Updates & Feed Event)** | ![Contribution Success](Level%202/screenshots/contribute-success.png) |
+| **Caregiver Mode Loaded (Withdraw Section Active)** | ![Caregiver Mode Loaded](Level%202/screenshots/withdraw-loaded.png) |
+| **Withdrawal Success (Raised Reset & Feed Event)** | ![Withdrawal Success](Level%202/screenshots/withdraw-success.png) |
