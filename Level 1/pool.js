@@ -1,5 +1,5 @@
-import * as StellarSdk from "https://esm.sh/@stellar/stellar-sdk";
-import { StellarWalletsKit, WalletNetwork, allowAllModules } from "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle";
+import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
+import { StellarWalletsKit, WalletNetwork, allowAllModules } from "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle&deps=@stellar/stellar-sdk@12.3.0";
 import { findCaregiverById } from "./caregivers.js";
 import { stroopsToXlm, xlmToStroops, calculateProgressPercent, truncateAddress, classifyError, errorMessageFor } from "./utils.js";
 

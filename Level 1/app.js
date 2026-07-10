@@ -14,7 +14,7 @@
  * pre-fills the recipient address + memo accordingly.
  */
 
-import * as StellarSdk from "https://esm.sh/@stellar/stellar-sdk";
+import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
 import actualFreighterApi from "https://esm.sh/@stellar/freighter-api";
 import { findCaregiverById } from "./caregivers.js";
 
