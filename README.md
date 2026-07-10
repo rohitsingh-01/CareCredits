@@ -1,17 +1,17 @@
 # CareCredits — Family Fund Pool
 ### Stellar Journey to Mastery — Level 2 (Yellow Belt) Submission
 
-🌐 **Live Vercel Site:** [https://care-credits.vercel.app](https://care-credits.vercel.app)
+🌐 **Live Vercel Site:** [https://care-credits.vercel.app](https://care-credits.vercel.app) (Direct Fund Pool Link: [https://care-credits.vercel.app/pool](https://care-credits.vercel.app/pool))
 💻 **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
 
 ---
 
 ## ⛓ Deployed Smart Contract Details (Stellar Testnet)
 
-*   **Deployed Contract ID:** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
+*   **Deployed Contract ID (Testnet Address):** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
 *   **Asset Token ID (XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
 *   **Initial Setup/Admin Key:** `GCX7XQS7HUZRPZIUK4GLXN2WXJKEXPUFRLH7LOKPOSZ6ZCARIYZ5GGMV`
-*   **Verifiable Pool Initialization Transaction Hash:** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
+*   **Verifiable Transaction Hash of a Contract Call (Initialization):** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
     *   *Link:* [StellarExpert Explorer](https://stellar.expert/explorer/testnet/tx/7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed)
 
 ---
@@ -60,9 +60,9 @@ CareCredits/
 
 - **Contract:** `CareFundPool` (Soroban / Rust)
 - **Source:** `contracts/fund_pool/src/lib.rs`
-- **Deployed Contract ID (Testnet):** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
+- **Deployed Contract ID (Testnet Address):** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
 - **Asset Token ID (XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
-- **Verifiable Initialization Transaction:** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
+- **Verifiable Transaction Hash of a Contract Call (Initialization):** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
   → https://stellar.expert/explorer/testnet/tx/7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed
 - **Frontend that calls this contract:** `Level 2/pool.js` and `Level 2/pool.html` (formerly `Level 1/pool.js` and `Level 1/pool.html` — multi-wallet connect via StellarWalletsKit, contribute/withdraw calls, live event polling)
 - **Wallet connect for this level:** `Level 2/pool.html` + `Level 2/pool.js` — StellarWalletsKit modal (Freighter, xBull, etc.)
