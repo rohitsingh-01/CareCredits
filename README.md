@@ -8,11 +8,11 @@
 
 ## ⛓ Deployed Smart Contract Details (Stellar Testnet)
 
-*   **Deployed Contract ID:** `CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`
+*   **Deployed Contract ID:** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
 *   **Asset Token ID (XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
 *   **Initial Setup/Admin Key:** `GCX7XQS7HUZRPZIUK4GLXN2WXJKEXPUFRLH7LOKPOSZ6ZCARIYZ5GGMV`
-*   **Verifiable Pool Initialization Transaction Hash:** `cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168`
-    *   *Link:* [StellarExpert Explorer](https://stellar.expert/explorer/testnet/tx/cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168)
+*   **Verifiable Pool Initialization Transaction Hash:** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
+    *   *Link:* [StellarExpert Explorer](https://stellar.expert/explorer/testnet/tx/7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed)
 
 ---
 
@@ -53,6 +53,20 @@ CareCredits/
 │       └── src/lib.rs  # Rust implementation of the funding logic
 └── README.md           # This Level 2 Submission documentation
 ```
+
+---
+
+## 🟡 Level 2 (Yellow Belt) — Smart Contract Submission
+
+- **Contract:** `CareFundPool` (Soroban / Rust)
+- **Source:** `contracts/fund_pool/src/lib.rs`
+- **Deployed Contract ID (Testnet):** `CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ`
+- **Asset Token ID (XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
+- **Verifiable Initialization Transaction:** `7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed`
+  → https://stellar.expert/explorer/testnet/tx/7d25e0b82f1b8001d2d3e414c5520979ebc9ff2456341ca8847fbddfc6964ed
+- **Frontend that calls this contract:** `Level 2/pool.js` and `Level 2/pool.html` (formerly `Level 1/pool.js` and `Level 1/pool.html` — multi-wallet connect via StellarWalletsKit, contribute/withdraw calls, live event polling)
+- **Wallet connect for this level:** `Level 2/pool.html` + `Level 2/pool.js` — StellarWalletsKit modal (Freighter, xBull, etc.)
+- 📄 [View CareFundPool contract source](contracts/fund_pool/src/lib.rs)
 
 ---
 

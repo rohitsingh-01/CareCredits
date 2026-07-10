@@ -590,9 +590,9 @@ $("loadPoolBtn").addEventListener("click", loadPool);
 $("contributeBtn").addEventListener("click", contributeToPool);
 $("withdrawBtn").addEventListener("click", withdrawFromPool);
 
-// Pre-fill fields with Level 3 Contract ID
+// Pre-fill fields with Level 2 Contract ID
 if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
-  $("contractInput").value = "CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO";
+  $("contractInput").value = "CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ";
 }
