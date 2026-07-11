@@ -13,22 +13,52 @@ const RPC_URL = "https://soroban-testnet.stellar.org";
 grid.innerHTML = CAREGIVERS.map(
   (c) => `
   <article class="caregiver-card" id="card-${c.id}">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-      <div class="avatar">${c.emoji}</div>
-      <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-        <span id="verified-${c.id}" class="badge hidden" style="background: rgba(126, 231, 135, 0.1); color: var(--accent-2); border: 1px solid var(--accent-2); font-size: 0.7rem; padding: 2px 6px;">Verified</span>
-        <span id="paused-${c.id}" class="badge hidden" style="background: rgba(231, 126, 126, 0.1); color: #e77e7e; border: 1px solid #e77e7e; font-size: 0.7rem; padding: 2px 6px;">Paused</span>
+    <div class="caregiver-card-header">
+      ${c.avatar 
+        ? `<div class="avatar-wrapper"><img src="${c.avatar}" alt="${c.name}" class="avatar-img" /></div>` 
+        : `<div class="avatar-fallback">${c.emoji}</div>`
+      }
+      <div>
+        <h3>${c.name}</h3>
+        <span class="role">${c.role}</span>
+        <div class="badge-group">
+          <span id="verified-${c.id}" class="badge success hidden">Verified</span>
+          <span id="paused-${c.id}" class="badge danger hidden">Paused</span>
+        </div>
       </div>
     </div>
-    <h3>${c.name}</h3>
-    <span class="role">${c.role}</span>
+    
+    <div class="caregiver-meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Specialty</span>
+        <span class="meta-value">${c.specialization || 'Palliative Care'}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Experience</span>
+        <span class="meta-value">${c.experience || 'N/A'}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Location</span>
+        <span class="meta-value">${c.location || 'Remote'}</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Rating</span>
+        <span class="meta-value">⭐ ${c.rating.split(' ')[0] || 'N/A'}</span>
+      </div>
+    </div>
+
     <p class="description">${c.description}</p>
-    <span class="pubkey">${c.publicKey.slice(0, 4)}...${c.publicKey.slice(-4)}</span>
+    
+    <div class="pubkey-wrapper">
+      <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; margin-right: 4px;">Stellar:</span>
+      <span class="pubkey">${c.publicKey.slice(0, 6)}...${c.publicKey.slice(-6)}</span>
+    </div>
+
     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
       <a class="btn btn-accent btn-block" href="wallet.html?care=${encodeURIComponent(c.id)}">
         Select &amp; Send Care Credit
       </a>
-      <a class="btn btn-primary btn-block" style="text-align: center; text-decoration: none;" href="pool.html?care=${encodeURIComponent(c.id)}">
+      <a class="btn btn-outline btn-block" style="text-align: center;" href="pool.html?care=${encodeURIComponent(c.id)}">
         Contribute to Fund Pool
       </a>
     </div>

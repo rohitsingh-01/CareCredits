@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CareCredits — Family Fund Pool</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <!-- Polyfill Node Buffer for StellarWalletsKit dependencies in browser -->
   <script>
@@ -24,18 +21,27 @@
     import { Buffer } from 'https://cdn.jsdelivr.net/npm/buffer@6.0.3/+esm';
     window.Buffer = Buffer;
   </script>
+  <!-- Canvas Confetti Library from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+  <!-- Reactive Interactive Dotted Canvas -->
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-radial-gradients"></div>
+
   <!-- Loading Spinner Overlay -->
   <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="spinner"></div>
-    <p id="loadingMessage">Loading on-chain state...</p>
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p id="loadingMessage">Loading on-chain state...</p>
+    </div>
   </div>
 
+  <!-- Navbar -->
   <nav class="site-nav">
     <div class="container">
       <a href="index.html" class="brand">
-        <span class="brand-mark">💙</span> CareCredits
+        <span class="brand-mark-logo">💙</span> CareCredits
       </a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -45,11 +51,14 @@
     </div>
   </nav>
 
-  <header class="hero" style="padding-bottom: 20px;">
-    <div class="container">
-      <span class="eyebrow">Stellar Testnet · Soroban Smart Contract</span>
-      <h1 style="font-size: clamp(1.5rem, 4vw, 2rem);">Family Fund Pool</h1>
-      <p class="lede" style="margin-bottom: 10px;">Contribute collectively to fund a caregiver's goal via a smart contract.</p>
+  <!-- Hero Header -->
+  <header class="hero" style="padding-bottom: 24px;">
+    <div class="container" style="text-align: center;">
+      <span class="eyebrow">Soroban Smart Contract</span>
+      <h1 style="font-size: clamp(1.8rem, 4vw, 2.4rem); margin: 0 auto 12px; max-width: 600px;">Family Fund Pool</h1>
+      <p class="lede" style="margin: 0 auto 24px; max-width: 540px;">
+        Contribute collectively using a secure, verified Soroban smart contract to fund a caregiver's health-support goal.
+      </p>
 
       <div class="wallet-bar">
         <button id="connectBtn" class="btn btn-primary">Connect Wallet</button>
@@ -59,6 +68,7 @@
     </div>
   </header>
 
+  <!-- Main Grid -->
   <main class="container section" style="padding-top: 0;">
     <div id="prefillBanner" class="prefill-banner hidden"></div>
 
@@ -66,76 +76,167 @@
       <!-- Config / Load Pool Card -->
       <section class="card wide">
         <h2>🔧 Pool Contract Configuration</h2>
-        <div class="config-form" style="display: flex; gap: 16px; align-items: flex-end;">
+        <p class="hint" style="margin-bottom: 16px;">Specify the active Soroban Smart Contract ID to load target raised details and sync events.</p>
+        <div class="config-form">
           <label style="flex: 1; margin-bottom: 0;">Contract ID
             <input id="contractInput" type="text" placeholder="C... contract address" />
           </label>
-          <button id="loadPoolBtn" class="btn btn-accent" style="height: 38px;">Load Pool</button>
+          <button id="loadPoolBtn" class="btn btn-accent" style="height: 48px;">Load Pool</button>
         </div>
-        <p id="configStatus" class="status" style="text-align: left; margin-top: 8px; min-height: 0;" aria-live="polite"></p>
+        <p id="configStatus" class="status" style="text-align: left; margin-top: 12px; min-height: 0;" aria-live="polite"></p>
       </section>
 
-      <!-- Progress Card -->
+      <!-- Redesigned Progress Card -->
       <section class="card wide">
         <h2>📊 Funding Progress</h2>
-        <div class="progress-container">
-          <div class="progress-stats" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <span id="raisedValue" class="value" style="font-size: 2rem; font-weight: 700; color: var(--accent-2);">0.0000</span>
-              <span class="unit" style="color: var(--muted);"> / </span>
-              <span id="goalValue" class="unit" style="color: var(--muted); font-weight: 600;">0.0000</span>
-              <span class="unit" style="color: var(--muted); font-size: 1rem; margin-left: 4px;">XLM</span>
+        <div class="progress-card-content" style="margin-top: 16px;">
+          <!-- SVG Progress Ring -->
+          <div class="progress-ring-container">
+            <svg width="140" height="140">
+              <circle class="progress-ring-circle-bg" cx="70" cy="70" r="60"></circle>
+              <circle id="progressRingCircle" class="progress-ring-circle" cx="70" cy="70" r="60" stroke-dasharray="377" stroke-dashoffset="377"></circle>
+            </svg>
+            <div class="progress-ring-text">
+              <span id="progressPercent" class="percentage">0%</span>
+              <span class="label">Funded</span>
             </div>
-            <span id="goalBadge" class="badge hidden" style="background: rgba(126, 231, 135, 0.1); color: var(--accent-2); border: 1px solid var(--accent-2);">Goal Reached!</span>
-          </div>
-          
-          <div class="progress-bar-bg" style="background: var(--bg); border: 1px solid var(--border); height: 20px; border-radius: 10px; margin: 16px 0; overflow: hidden;">
-            <div id="progressBar" style="background: var(--accent-2); width: 0%; height: 100%; transition: width 0.5s ease-out;"></div>
           </div>
 
-          <p class="hint" style="margin-bottom: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-            Target Caregiver: <code id="caregiverAddr" style="font-family: monospace;">—</code>
-            <span id="verifiedBadge" class="badge hidden" style="background: rgba(126, 231, 135, 0.1); color: var(--accent-2); border: 1px solid var(--accent-2);">Verified</span>
-            <span id="pausedBadge" class="badge hidden" style="background: rgba(231, 126, 126, 0.1); color: #e77e7e; border: 1px solid #e77e7e;">Paused</span>
-          </p>
+          <!-- Progress Details -->
+          <div class="progress-details">
+            <div class="progress-stats-numbers">
+              <span id="raisedValue" class="raised">0.0000</span>
+              <span style="color: var(--text-muted); font-size: 1.15rem; font-weight: 600;"> / </span>
+              <span id="goalValue" class="goal">0.0000</span>
+              <span style="color: var(--text-muted); font-size: 0.95rem; font-weight: 700; margin-left: 2px;">XLM</span>
+            </div>
+
+            <!-- Horizontal backup/support progress bar -->
+            <div class="progress-bar-bg">
+              <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div class="progress-details-meta">
+              <p class="hint" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                Target Caregiver: <code id="caregiverAddr" style="font-family: monospace; background: var(--primary-light); color: var(--primary); padding: 4px 10px; border-radius: 99px; font-weight: 600;">—</code>
+                <span id="verifiedBadge" class="badge success hidden">Verified</span>
+                <span id="pausedBadge" class="badge danger hidden">Paused</span>
+                <span id="goalBadge" class="badge success hidden">Goal Reached!</span>
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       <!-- Contribute Card -->
       <section class="card">
         <h2>💸 Contribute to Pool</h2>
-        <label>Amount (XLM)
-          <input id="contributeAmount" type="number" step="0.0000001" placeholder="10" />
-        </label>
-        <button id="contributeBtn" class="btn btn-accent btn-block" disabled>Contribute</button>
-        <p id="contributeStatus" class="status" aria-live="polite"></p>
+        <div style="margin-top: 16px;">
+          <label>Amount (XLM)
+            <input id="contributeAmount" type="number" step="0.0000001" placeholder="10.0" />
+          </label>
+          <button id="contributeBtn" class="btn btn-accent btn-block" disabled>Contribute</button>
+          <p id="contributeStatus" class="status" aria-live="polite"></p>
+        </div>
       </section>
 
       <!-- Withdraw Card -->
       <section id="withdrawSection" class="card hidden">
         <h2>🎁 Withdraw Funds</h2>
-        <p class="hint" style="margin-bottom: 16px;">You are the caregiver for this pool. You can withdraw all contributed funds to your address.</p>
+        <p class="hint" style="margin-bottom: 20px; line-height: 1.6;">
+          You are recognized as the caregiver for this pool. You can claim and transfer all raised funds directly to your connected wallet.
+        </p>
         <button id="withdrawBtn" class="btn btn-primary btn-block">Withdraw Raised Funds</button>
         <p id="withdrawStatus" class="status" aria-live="polite"></p>
       </section>
 
       <!-- Activity Feed Card -->
       <section class="card wide">
-        <h2>⚡ Live Pool Activity</h2>
-        <p class="hint">Real-time contract events from Stellar Testnet (updated every 5s).</p>
-        <div id="activityFeed" class="result-panel empty" style="max-height: 250px; overflow-y: auto;" aria-live="polite">
-          Waiting to load pool...
+        <h2>⚡ Live Pool Activity Feed</h2>
+        <p class="hint" style="margin-bottom: 16px;">On-chain contract events synced automatically from the Stellar network.</p>
+        <div id="activityFeed" class="result-panel empty" aria-live="polite">
+          Waiting to load pool state...
         </div>
       </section>
     </div>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
-      <p>Stellar Testnet only · CareCredits · Level 2 (Yellow Belt) · Stellar Journey to Mastery</p>
+      <p>Stellar Testnet Only · CareCredits · Journey to Mastery submission · Built on Soroban Smart Contracts</p>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script type="module" src="pool.js"></script>
+
+  <script>
+    // Sticky Floating Navbar Transition
+    window.addEventListener("scroll", () => {
+      const nav = document.querySelector(".site-nav");
+      if (window.scrollY > 24) {
+        nav.classList.add("scrolled");
+      } else {
+        nav.classList.remove("scrolled");
+      }
+    });
+
+    // Reactive Dotted Background Canvas Animation
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mouse = { x: null, y: null };
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener("mouseleave", () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    const spacing = 36;
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+      const cols = Math.ceil(width / spacing);
+      const rows = Math.ceil(height / spacing);
+
+      ctx.fillStyle = "rgba(100, 116, 139, 0.12)";
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          const x = c * spacing;
+          const y = r * spacing;
+
+          let dx = 0;
+          let dy = 0;
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const distDx = mouse.x - x;
+            const distDy = mouse.y - y;
+            const dist = Math.sqrt(distDx * distDx + distDy * distDy);
+            if (dist < 100) {
+              const force = (100 - dist) / 100;
+              dx = -(distDx / dist) * force * 4;
+              dy = -(distDy / dist) * force * 4;
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(x + dx, y + dy, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(drawGrid);
+    }
+    drawGrid();
+  </script>
 </body>
 </html>

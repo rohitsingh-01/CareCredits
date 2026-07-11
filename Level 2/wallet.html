@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CareCredits — Wallet</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <title>CareCredits — Wallet Direct Transfer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Reactive Interactive Dotted Canvas -->
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-radial-gradients"></div>
+
+  <!-- Navbar -->
   <nav class="site-nav">
     <div class="container">
       <a href="index.html" class="brand">
-        <span class="brand-mark">💙</span> CareCredits
+        <span class="brand-mark-logo">💙</span> CareCredits
       </a>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -23,11 +25,14 @@
     </div>
   </nav>
 
-  <header class="hero" style="padding-bottom: 20px;">
-    <div class="container">
-      <span class="eyebrow">Stellar Testnet</span>
-      <h1 style="font-size: clamp(1.5rem, 4vw, 2rem);">Your CareCredits Wallet</h1>
-      <p class="lede" style="margin-bottom: 10px;">Connect Freighter, check your balance, and send a care credit — all on Stellar Testnet.</p>
+  <!-- Hero Header -->
+  <header class="hero" style="padding-bottom: 24px;">
+    <div class="container" style="text-align: center;">
+      <span class="eyebrow">Stellar Testnet Integration</span>
+      <h1 style="font-size: clamp(1.8rem, 4vw, 2.4rem); margin: 0 auto 12px; max-width: 600px;">Direct Care Transfer</h1>
+      <p class="lede" style="margin: 0 auto 24px; max-width: 540px;">
+        Connect your Freighter wallet, inspect your balance on-chain, and send direct Care Credits with a custom memo.
+      </p>
 
       <div class="wallet-bar">
         <button id="connectBtn" class="btn btn-primary">Connect Freighter Wallet</button>
@@ -37,6 +42,7 @@
     </div>
   </header>
 
+  <!-- Main Forms and Panels -->
   <main class="container section" style="padding-top: 0;">
     <div id="prefillBanner" class="prefill-banner hidden"></div>
 
@@ -44,52 +50,126 @@
       <!-- Balance Card -->
       <section class="card">
         <h2>📊 Wallet Balance</h2>
-        <p class="hint">Your connected wallet's XLM balance on Stellar Testnet.</p>
+        <p class="hint" style="margin-bottom: 12px;">Your connected account balance on the Stellar Testnet.</p>
         <div class="balance-display">
           <span id="balanceValue" class="value">—</span>
           <span class="unit">XLM</span>
         </div>
         <button id="refreshBalanceBtn" class="btn btn-outline btn-block" disabled>Refresh Balance</button>
         <p id="balanceStatus" class="status" aria-live="polite"></p>
-        <p class="hint">
-          Need testnet funds?
-          <a href="https://friendbot.stellar.org" target="_blank" rel="noopener">Fund via Friendbot</a>
-          (paste your public key there), or use Freighter's built-in "Fund with Friendbot" option.
+        <p class="hint" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 12px;">
+          Need testnet funds? Paste your public key into the 
+          <a href="https://friendbot.stellar.org" target="_blank" rel="noopener" style="font-weight: 700;">Friendbot Tool</a> 
+          to fund your account automatically.
         </p>
       </section>
 
       <!-- Send Payment Card -->
       <section class="card">
-        <h2>💸 Send Care Credit (XLM)</h2>
-        <label>Recipient Address
-          <input id="destinationInput" type="text" placeholder="G... caregiver public key" />
-        </label>
-        <label>Amount (XLM)
-          <input id="amountInput" type="number" step="0.0000001" placeholder="10" />
-        </label>
-        <label>Memo (optional)
-          <input id="memoInput" type="text" placeholder="care credit top-up" maxlength="28" />
-        </label>
-        <button id="sendBtn" class="btn btn-accent btn-block" disabled>Send Payment</button>
-        <p id="sendStatus" class="status" aria-live="polite"></p>
+        <h2>💸 Send Care Credit</h2>
+        <div style="margin-top: 16px;">
+          <label>Recipient Public Address
+            <input id="destinationInput" type="text" placeholder="G... caregiver public key" />
+          </label>
+          <label>Amount (XLM)
+            <input id="amountInput" type="number" step="0.0000001" placeholder="10.0" />
+          </label>
+          <label>Memo (Optional description)
+            <input id="memoInput" type="text" placeholder="e.g. Care credit top-up" maxlength="28" />
+          </label>
+          <button id="sendBtn" class="btn btn-accent btn-block" disabled>Send Payment</button>
+          <p id="sendStatus" class="status" aria-live="polite"></p>
+        </div>
       </section>
 
       <!-- Transaction Result Card -->
       <section class="card wide">
-        <h2>🧾 Transaction Result</h2>
-        <div id="resultPanel" class="result-panel empty" aria-live="polite">
-          No transaction submitted yet.
+        <h2>🧾 Transaction Audit Trail</h2>
+        <div style="margin-top: 12px;">
+          <div id="resultPanel" class="result-panel empty" aria-live="polite">
+            No transaction submitted yet. Ready to record ledger confirmations.
+          </div>
         </div>
       </section>
     </div>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
-      <p>Stellar Testnet only · CareCredits · Level 2 (Yellow Belt) · Stellar Journey to Mastery</p>
+      <p>Stellar Testnet Only · CareCredits · Journey to Mastery submission · Built on Soroban Smart Contracts</p>
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script type="module" src="app.js"></script>
+
+  <script>
+    // Sticky Floating Navbar Transition
+    window.addEventListener("scroll", () => {
+      const nav = document.querySelector(".site-nav");
+      if (window.scrollY > 24) {
+        nav.classList.add("scrolled");
+      } else {
+        nav.classList.remove("scrolled");
+      }
+    });
+
+    // Reactive Dotted Background Canvas Animation
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mouse = { x: null, y: null };
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener("mouseleave", () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    const spacing = 36;
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+      const cols = Math.ceil(width / spacing);
+      const rows = Math.ceil(height / spacing);
+
+      ctx.fillStyle = "rgba(100, 116, 139, 0.12)";
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          const x = c * spacing;
+          const y = r * spacing;
+
+          let dx = 0;
+          let dy = 0;
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const distDx = mouse.x - x;
+            const distDy = mouse.y - y;
+            const dist = Math.sqrt(distDx * distDx + distDy * distDy);
+            if (dist < 100) {
+              const force = (100 - dist) / 100;
+              dx = -(distDx / dist) * force * 4;
+              dy = -(distDy / dist) * force * 4;
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(x + dx, y + dy, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(drawGrid);
+    }
+    drawGrid();
+  </script>
 </body>
 </html>

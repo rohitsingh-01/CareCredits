@@ -215,7 +215,20 @@ function updateProgressUI() {
   $("caregiverAddr").title = caregiverAddress; // Show full address on hover
 
   const pct = calculateProgressPercent(raisedAmount, goalAmount);
-  $("progressBar").style.width = `${pct}%`;
+  
+  // Update linear progress bar
+  const progressBar = $("progressBar");
+  if (progressBar) progressBar.style.width = `${pct}%`;
+  
+  // Update circular progress ring
+  const circle = $("progressRingCircle");
+  const percentText = $("progressPercent");
+  if (circle && percentText) {
+    // Circumference = 2 * pi * r = 2 * 3.14159 * 60 = 376.99 ~ 377
+    const offset = 377 - (pct / 100) * 377;
+    circle.style.strokeDashoffset = offset;
+    percentText.textContent = `${pct}%`;
+  }
   
   $("goalBadge").classList.toggle("hidden", raisedAmount < goalAmount);
 
@@ -290,6 +303,13 @@ async function contributeToPool() {
     updateProgressUI();
     addActivityFeedEvent("GA6I3N...5ROCG4", `contributed ${amount} XLM`);
     setStatus("contributeStatus", "✅ Contribution successful (Mock).", "success");
+    if (typeof confetti === "function") {
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+    }
     hideLoading();
     return;
   }
@@ -322,6 +342,15 @@ async function contributeToPool() {
     // Instantly refresh balance & progress
     raisedAmount = Number(StellarSdk.scValToNative(result.returnValue)) / 10000000;
     updateProgressUI();
+
+    // Trigger subtle success confetti
+    if (typeof confetti === "function") {
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+    }
   } catch (err) {
     showErrorBanner("contributeStatus", err);
   } finally {
@@ -549,13 +578,19 @@ function addActivityFeedEvent(actor, actionText) {
   const feed = $("activityFeed");
   if (feed.textContent.includes("Waiting to load") || feed.textContent.includes("Listening to")) {
     feed.innerHTML = "";
+    feed.className = "result-panel";
   }
   
   const timestamp = new Date().toLocaleTimeString();
   const eventItem = document.createElement("div");
-  eventItem.style.borderBottom = "1px solid var(--border)";
-  eventItem.style.padding = "6px 0";
-  eventItem.innerHTML = `<span style="color: var(--muted); margin-right: 8px;">[${timestamp}]</span> <strong>${actor}</strong> ${actionText}`;
+  eventItem.className = "feed-event-item";
+  eventItem.innerHTML = `
+    <div class="feed-event-actor">
+      <div class="feed-event-dot"></div>
+      <div><strong>${actor}</strong> ${actionText}</div>
+    </div>
+    <div class="feed-event-time">${timestamp}</div>
+  `;
   
   feed.prepend(eventItem);
 }
