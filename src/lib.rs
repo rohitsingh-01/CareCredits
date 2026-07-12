@@ -25,14 +25,7 @@ pub struct CareFundPool;
 
 #[contractimpl]
 impl CareFundPool {
-    pub fn initialize(
-        env: Env,
-        caregiver: Address,
-        admin: Address,
-        goal: i128,
-        token: Address,
-        registry: Address,
-    ) {
+    pub fn initialize(env: Env, caregiver: Address, admin: Address, goal: i128, token: Address, registry: Address) {
         admin.require_auth();
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
@@ -41,9 +34,7 @@ impl CareFundPool {
             panic!("goal must be positive");
         }
         env.storage().instance().set(&DataKey::Admin, &admin);
-        env.storage()
-            .instance()
-            .set(&DataKey::Caregiver, &caregiver);
+        env.storage().instance().set(&DataKey::Caregiver, &caregiver);
         env.storage().instance().set(&DataKey::Goal, &goal);
         env.storage().instance().set(&DataKey::Token, &token);
         env.storage().instance().set(&DataKey::Registry, &registry);
@@ -85,15 +76,11 @@ impl CareFundPool {
             panic!("only caregiver can withdraw");
         }
 
-        let registry_address: Address = env
-            .storage()
-            .instance()
-            .get(&DataKey::Registry)
-            .expect("not initialized");
+        let registry_address: Address = env.storage().instance().get(&DataKey::Registry).expect("not initialized");
 
         // Typed cross-contract call check for verification status.
         let registry_client = CareRegistryClient::new(&env, &registry_address);
-
+        
         let is_verified = registry_client.is_verified(&caregiver);
         assert!(is_verified, "caregiver is not verified by the CareRegistry");
 
@@ -102,11 +89,7 @@ impl CareFundPool {
         assert!(!is_paused, "caregiver is paused in the CareRegistry");
 
         let raised: i128 = env.storage().instance().get(&DataKey::Raised).unwrap_or(0);
-        let withdrawn: i128 = env
-            .storage()
-            .instance()
-            .get(&DataKey::Withdrawn)
-            .unwrap_or(0);
+        let withdrawn: i128 = env.storage().instance().get(&DataKey::Withdrawn).unwrap_or(0);
         let withdrawable = raised - withdrawn;
 
         if withdrawable <= 0 {
@@ -118,14 +101,14 @@ impl CareFundPool {
         token_client.transfer(&env.current_contract_address(), &caregiver, &withdrawable);
 
         let new_withdrawn = withdrawn + withdrawable;
-        env.storage()
-            .instance()
-            .set(&DataKey::Withdrawn, &new_withdrawn);
+        env.storage().instance().set(&DataKey::Withdrawn, &new_withdrawn);
         env.storage().instance().extend_ttl(100, 518400);
 
         // Emit withdraw event
-        env.events()
-            .publish((symbol_short!("withdraw"), caregiver), withdrawable);
+        env.events().publish(
+            (symbol_short!("withdraw"), caregiver),
+            withdrawable,
+        );
 
         withdrawable
     }
@@ -152,8 +135,8 @@ impl CareFundPool {
 #[cfg(test)]
 mod test {
     use super::{CareFundPool, CareFundPoolClient};
-    use care_registry::{CareRegistry, CareRegistryClient};
     use soroban_sdk::{testutils::Address as _, Env};
+    use care_registry::{CareRegistry, CareRegistryClient};
 
     #[test]
     fn test_contribute_and_withdraw() {
@@ -169,14 +152,12 @@ mod test {
         let registry_address = env.register(CareRegistry, ());
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
-
+        
         // Verify caregiver on registry
         registry_client.set_verified(&admin, &caregiver, &true);
 
         // Register the Stellar Asset Contract (native XLM SAC test double)
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_client = soroban_sdk::token::Client::new(&env, &token_address);
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
 
@@ -233,9 +214,7 @@ mod test {
         registry_client.initialize(&admin);
         registry_client.set_verified(&admin, &caregiver, &true);
 
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
@@ -264,9 +243,7 @@ mod test {
         registry_client.initialize(&admin);
         registry_client.set_verified(&admin, &caregiver, &true);
 
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
@@ -298,9 +275,7 @@ mod test {
         registry_client.initialize(&admin);
         // Leave caregiver unverified
 
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
@@ -330,9 +305,7 @@ mod test {
         registry_client.set_verified(&admin, &caregiver, &true);
         registry_client.set_paused(&admin, &caregiver, &true);
 
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
@@ -352,9 +325,7 @@ mod test {
         let admin = Address::generate(&env);
         let caregiver = Address::generate(&env);
         let registry_address = env.register(CareRegistry, ());
-        let token_address = env
-            .register_stellar_asset_contract_v2(admin.clone())
-            .address();
+        let token_address = env.register_stellar_asset_contract_v2(admin.clone()).address();
 
         let contract_id = env.register(CareFundPool, ());
         let client = CareFundPoolClient::new(&env, &contract_id);

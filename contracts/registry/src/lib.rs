@@ -28,14 +28,16 @@ impl CareRegistry {
         let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         assert_eq!(admin, stored_admin, "only admin can set verified status");
 
-        env.storage().persistent().set(&DataKey::Verified(caregiver.clone()), &verified);
-        env.storage().persistent().extend_ttl(&DataKey::Verified(caregiver.clone()), 100, 518400);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Verified(caregiver.clone()), &verified);
+        env.storage()
+            .persistent()
+            .extend_ttl(&DataKey::Verified(caregiver.clone()), 100, 518400);
 
         // Emit event
-        env.events().publish(
-            (symbol_short!("verified"), caregiver),
-            verified,
-        );
+        env.events()
+            .publish((symbol_short!("verified"), caregiver), verified);
     }
 
     pub fn set_paused(env: Env, admin: Address, caregiver: Address, paused: bool) {
@@ -43,22 +45,30 @@ impl CareRegistry {
         let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         assert_eq!(admin, stored_admin, "only admin can set paused status");
 
-        env.storage().persistent().set(&DataKey::Paused(caregiver.clone()), &paused);
-        env.storage().persistent().extend_ttl(&DataKey::Paused(caregiver.clone()), 100, 518400);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Paused(caregiver.clone()), &paused);
+        env.storage()
+            .persistent()
+            .extend_ttl(&DataKey::Paused(caregiver.clone()), 100, 518400);
 
         // Emit event
-        env.events().publish(
-            (symbol_short!("paused"), caregiver),
-            paused,
-        );
+        env.events()
+            .publish((symbol_short!("paused"), caregiver), paused);
     }
 
     pub fn is_verified(env: Env, caregiver: Address) -> bool {
-        env.storage().persistent().get(&DataKey::Verified(caregiver)).unwrap_or(false)
+        env.storage()
+            .persistent()
+            .get(&DataKey::Verified(caregiver))
+            .unwrap_or(false)
     }
 
     pub fn is_paused(env: Env, caregiver: Address) -> bool {
-        env.storage().persistent().get(&DataKey::Paused(caregiver)).unwrap_or(false)
+        env.storage()
+            .persistent()
+            .get(&DataKey::Paused(caregiver))
+            .unwrap_or(false)
     }
 }
 
