@@ -58,6 +58,42 @@ CareCredits/
 └── docs/               # System architecture and specifications
 ```
 
+# White Belt (Level 1)
+
+## 📋 Project Overview
+The White Belt submission focuses on implementing a direct peer-to-peer Care Credit transfer using the Freighter Wallet extension. This allows families to send direct, immediate native XLM payments with descriptive memos directly to caregivers, establishing a public, verifiable transaction on the Stellar Testnet ledger.
+
+## 🔌 Freighter Wallet Setup & Connect / Disconnect
+*   **Freighter Installation:** Make sure you have the [Freighter browser extension](https://www.freighter.app/) installed.
+*   **Stellar Testnet Setup:** Configure the extension network selection to **Testnet**.
+*   **Connect Wallet:** Click the **Connect Freighter Wallet** button. The application calls `window.freighterApi.requestAccess()` to request account access, and retrieves the active account address using `window.freighterApi.getAddress()`.
+*   **Disconnect Wallet:** Click the **Disconnect** button to disconnect the active session and clear all local UI states.
+
+## 📊 Balance Display & Fetching
+*   **Address Display:** Displays the full connected public key.
+*   **XLM Balance Display:** Automatically queries the Horizon Testnet Server using `StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org")` to fetch the account details and displays the current XLM balance.
+*   **Error & Loading States:**
+    *   *Loading:* Displays visual loading feedback when querying balance or submitting transactions.
+    *   *Wallet Unavailable:* Displays an error message if the Freighter extension is not installed.
+    *   *Rejected Connection:* Handles connection request rejections gracefully and updates the status.
+    *   *Network/Unfunded Account:* Detects unfunded accounts (new keys) and directs the user to the Friendbot tool.
+
+## 💸 Send XLM & Transaction Flow
+*   **Recipient & Amount Input:** Enter the target caregiver public address (pre-filled automatically when clicking "Select" in the Caregiver Directory) and the amount of XLM to send.
+*   **Memo Field:** Add an optional text memo of up to 28 characters to describe the transaction.
+*   **Transaction Submission:** The application builds a native Stellar payment operation, requests a signature via `window.freighterApi.signTransaction(xdr)`, and submits it to the Horizon Testnet network.
+*   **Ledger Status Visibility:**
+    *   *Pending:* Shows a processing loader.
+    *   *Success:* Displays a success banner and a link to the transaction audit details.
+    *   *Failure:* Catches any submission errors (e.g. transaction timeout, bad sequence) and displays a descriptive failure message.
+    *   *Transaction Hash:* Provides a clickable audit trail showing the finalized transaction hash linked to StellarExpert.
+
+## 🖼️ White Belt Screenshots Checklist
+*   **Freighter Wallet Connected:** `Level 2/screenshots/wallet-connected.png`
+*   **XLM Balance Loaded:** `Level 2/screenshots/balance-displayed.png`
+*   **Payment Success State:** `Level 2/screenshots/transaction-success.png`
+*   **Transaction Audit Result:** `Level 2/screenshots/transaction-result.png`
+
 ---
 
 ## 🛠 Local Setup Instructions

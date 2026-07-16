@@ -1,0 +1,11 @@
+{
+  "name": "carecredits",
+  "version": "1.0.0",
+  "description": "On-Chain Caregiver Funding & Compliance on Stellar",
+  "type": "module",
+  "dependencies": {
+    "@stellar/freighter-api": "^2.0.0",
+    "@stellar/stellar-sdk": "^12.3.0",
+    "@creit.tech/stellar-wallets-kit": "^1.1.2"
+  }
+}
