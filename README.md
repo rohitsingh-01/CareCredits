@@ -1,116 +1,106 @@
 # CareCredits — On-Chain Caregiver Funding & Compliance on Stellar
 
-CareCredits is a healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network.
+[![CI Pipeline](https://github.com/rohitsingh-01/CareCredits/actions/workflows/ci.yml/badge.svg)](https://github.com/rohitsingh-01/CareCredits/actions/workflows/ci.yml)
+[![Vercel Deployment](https://img.shields.io/badge/deployment-vercel-blue)](https://care-credits.vercel.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Belt Claimed: Orange](https://img.shields.io/badge/Belt%20Claimed-Orange%20(Level%203)-orange)](#-submission-portals-journey-to-mastery)
 
-This repository holds the implementation, smart contracts, and documentation for the **Stellar Journey to Mastery** belt submissions.
-
-🌐 **Live Vercel Site:** [https://care-credits.vercel.app](https://care-credits.vercel.app)  
-💻 **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)  
-📄 **Smart Contract Entry Point:** [lib.rs](./lib.rs) and [src/lib.rs](./src/lib.rs) (exposing the Soroban smart contract logic at the root)
-
----
-
-## 💡 The Core Idea
-
-In healthcare and family caregiver systems, transparency, compliance, and ease of funding are critical. CareCredits addresses this by leveraging the Stellar network to build a trustless payment and compliance gateway:
-
-1.  **Direct Transfers**: Families can send immediate native XLM payments with descriptive memos directly to caregivers.
-2.  **Shared Family Fund Pools**: Communities can pool money together on-chain to cover ongoing caregiver services, releasing funds only when specific milestones/goals are met.
-3.  **On-Chain Compliance Gating**: Funding pools check caregiver credentials dynamically against a central verified registry before executing withdrawals.
+CareCredits is an open-source, healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network with on-chain compliance controls.
 
 ---
 
-## 🥋 Submission Portals (Belt READMEs)
+## 🌐 Live Resources & Portals
 
-For detailed evidence, screenshots, deployment transaction hashes, and requirements met for each level, please visit the respective submission documents:
-
-*   ⚪ **[Level 1 (White Belt) README](./README_LEVEL1.md)** — Core Freighter wallet connection, balance fetching, and direct payment flow.
-*   🟡 **[Level 2 (Yellow Belt) README](./README_LEVEL2.md)** — Shared CareFundPool contract, StellarWalletsKit multi-wallet modal, and real-time RPC event polling.
-*   🟠 **[Level 3 (Orange Belt) README](./README_LEVEL3.md)** — Two-contract gating compliance (`CareRegistry` $\rightarrow$ `CareFundPool` V2), automated test suite, and CI/CD pipeline integration.
+*   **Live Application:** [https://care-credits.vercel.app](https://care-credits.vercel.app)
+*   **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
 
 ---
 
-## 📁 Repository Structure
+## 🥋 Submission Portals (Journey to Mastery)
 
-```
-CareCredits/
-├── Cargo.toml          # Workspace Cargo configuration (root)
-├── lib.rs              # Smart Contract Source (root copy)
-├── src/
-│   └── lib.rs          # Smart Contract Source (root copy)
-├── Level 2/            # Frontend Web App Folder
-│   ├── index.html      # Landing Page + Caregiver Directory
-│   ├── wallet.html     # Wallet direct payment page
-│   ├── pool.html       # Family Fund Pool page
-│   ├── pool.js         # Multi-wallet & Soroban Contract integrations
-│   ├── app.js          # Direct payment Freighter integration
-│   ├── utils.js        # Math and helper functions
-│   ├── style.css       # Premium visual theme and styles
-│   ├── screenshots/    # UI screenshots
-│   └── tests/          # Node.js frontend unit tests
-├── contracts/          # Soroban smart contract source code (Rust)
-│   ├── Cargo.toml      # Workspaces Cargo configuration
-│   ├── fund_pool/      # CareFundPool Contract crate
-│   │   └── src/lib.rs  # Rust implementation of the funding logic
-│   └── registry/       # CareRegistry Contract crate
-│       └── src/lib.rs  # Rust implementation of the registry logic
-├── scripts/            # Orchestrated bash & powershell deployment scripts
-└── docs/               # System architecture and specifications
-```
+For detailed evidence, step-by-step requirements, screenshots, and transaction proofs for each belt level, please visit the dedicated documentation pages:
 
-# White Belt (Level 1)
-
-## 📋 Project Overview
-The White Belt submission focuses on implementing a direct peer-to-peer Care Credit transfer using the Freighter Wallet extension. This allows families to send direct, immediate native XLM payments with descriptive memos directly to caregivers, establishing a public, verifiable transaction on the Stellar Testnet ledger.
-
-## 🔌 Freighter Wallet Setup & Connect / Disconnect
-*   **Freighter Installation:** Make sure you have the [Freighter browser extension](https://www.freighter.app/) installed.
-*   **Stellar Testnet Setup:** Configure the extension network selection to **Testnet**.
-*   **Connect Wallet:** Click the **Connect Freighter Wallet** button. The application calls `window.freighterApi.requestAccess()` to request account access, and retrieves the active account address using `window.freighterApi.getAddress()`.
-*   **Disconnect Wallet:** Click the **Disconnect** button to disconnect the active session and clear all local UI states.
-
-## 📊 Balance Display & Fetching
-*   **Address Display:** Displays the full connected public key.
-*   **XLM Balance Display:** Automatically queries the Horizon Testnet Server using `StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org")` to fetch the account details and displays the current XLM balance.
-*   **Error & Loading States:**
-    *   *Loading:* Displays visual loading feedback when querying balance or submitting transactions.
-    *   *Wallet Unavailable:* Displays an error message if the Freighter extension is not installed.
-    *   *Rejected Connection:* Handles connection request rejections gracefully and updates the status.
-    *   *Network/Unfunded Account:* Detects unfunded accounts (new keys) and directs the user to the Friendbot tool.
-
-## 💸 Send XLM & Transaction Flow
-*   **Recipient & Amount Input:** Enter the target caregiver public address (pre-filled automatically when clicking "Select" in the Caregiver Directory) and the amount of XLM to send.
-*   **Memo Field:** Add an optional text memo of up to 28 characters to describe the transaction.
-*   **Transaction Submission:** The application builds a native Stellar payment operation, requests a signature via `window.freighterApi.signTransaction(xdr)`, and submits it to the Horizon Testnet network.
-*   **Ledger Status Visibility:**
-    *   *Pending:* Shows a processing loader.
-    *   *Success:* Displays a success banner and a link to the transaction audit details.
-    *   *Failure:* Catches any submission errors (e.g. transaction timeout, bad sequence) and displays a descriptive failure message.
-    *   *Transaction Hash:* Provides a clickable audit trail showing the finalized transaction hash linked to StellarExpert.
-
-## 🖼️ White Belt Screenshots Checklist
-*   **Freighter Wallet Connected:** `Level 2/screenshots/wallet-connected.png`
-*   **XLM Balance Loaded:** `Level 2/screenshots/balance-displayed.png`
-*   **Payment Success State:** `Level 2/screenshots/transaction-success.png`
-*   **Transaction Audit Result:** `Level 2/screenshots/transaction-result.png`
+*   ⚪ **[White Belt (Level 1) — Direct P2P Care Transfer](docs/README_WHITE_BELT.md)**
+    - *Features:* Freighter wallet connection, Horizon balance fetching, direct payment flows, and audit panels.
+*   🟡 **[Yellow Belt (Level 2) — CareFundPool Contract](docs/README_YELLOW_BELT.md)**
+    - *Features:* Multi-wallet support (StellarWalletsKit), Soroban RPC calls (read/write), error classifications, and real-time event polling.
+*   🟠 **[Orange Belt (Level 3) — Decoupled Compliance Gating](docs/README_ORANGE_BELT.md)**
+    - *Features:* Two-contract compliance model (`CareRegistry` $\rightarrow$ `CareFundPool`), type-safe cross-contract calls, automated CI/CD pipeline, and mobile responsiveness.
 
 ---
 
-## 🛠 Local Setup Instructions
+## 📖 Main Documentation Index
 
-### Prerequisites
-*   [Freighter wallet browser extension](https://www.freighter.app/) set to **Testnet**.
-*   A modern Node.js environment.
+To explore the architecture, deployment, and security of the system, navigate through the specialized documents below:
 
-### Steps to Run Locally
-1.  Clone the repository:
+| Page | Description |
+|---|---|
+| 🏛️ **[System Architecture](docs/ARCHITECTURE.md)** | Technical data flows, Mermaid sequence diagrams, and design trade-offs. |
+| 🛠️ **[Deployment Guide](docs/DEPLOYMENT.md)** | Local compiling, deployer setups, shell scripts, and Vercel hosting. |
+| 🛡️ **[Security Specification](docs/SECURITY.md)** | `require_auth` models, cross-contract verification gates, input audits, and storage rent (TTL). |
+| 🤝 **[Contributing Guidelines](docs/CONTRIBUTING.md)** | Development environment setup, workflow rules, and Git commit conventions. |
+| 📄 **[MIT License](LICENSE)** | Open-source terms and permissions. |
+
+---
+
+## 💡 System Architecture Summary
+
+The CareCredits system consists of a static web frontend integrated with two smart contracts on the Stellar Testnet:
+1.  **`CareRegistry` Contract:** Stores administrator-managed verification and pause states for caregivers.
+2.  **`CareFundPool` Contract:** Processes contributions and gates withdrawals by dynamically querying `CareRegistry` credentials on-chain during the withdrawal sequence.
+
+For a complete data flow layout, see the [Architecture Document](docs/ARCHITECTURE.md).
+
+---
+
+## 🛠️ Technology Stack
+
+*   **Smart Contracts:** Rust, [Soroban Smart Contract SDK](https://soroban.stellar.org/) (Protocol 21/27 compatible).
+*   **Web Frontend:** HTML5, Vanilla JavaScript, CSS3 (Glassmorphism, custom breakpoints).
+*   **Wallet Integration:** `@stellar/freighter-api`, `@creit.tech/stellar-wallets-kit` (Freighter, xBull, Albedo).
+*   **Ledger Services:** Stellar Horizon API, Soroban RPC Server.
+*   **CI/CD:** GitHub Actions (Cargo fmt, Clippy lints, Rust workspace tests, Node.js unit tests).
+
+---
+
+## 🚀 Quick Start (Run Locally)
+
+1.  **Clone the Repository:**
     ```bash
     git clone https://github.com/rohitsingh-01/CareCredits.git
     cd CareCredits
     ```
-2.  Start the static local development server:
+2.  **Launch a Dev Server:**
     ```bash
     npx serve "Level 2"
     ```
-3.  Open `http://localhost:3000/index.html` in your browser.
-    - *Tip:* Append `?testmode=true` to any page to test Freighter and wallet connections offline.
+3.  **Access the App:**
+    - Navigate to `http://localhost:3000/index.html` (Caregiver Directory).
+    - Navigate to `http://localhost:3000/pool.html` (Fund Pool page).
+    - Navigate to `http://localhost:3000/wallet.html` (Direct Transfer page).
+    - *Tip:* Append `?testmode=true` to test the wallet interfaces offline.
+
+---
+
+## 🧪 Testing Summary
+
+We run automated tests across both backend and frontend layers:
+
+*   **Rust Contract Workspace Tests:** 9 test cases asserting administrative controls, contributions, and negative scenarios (unverified/paused caregivers, unauthorized initialization):
+    ```bash
+    cargo test --workspace --manifest-path contracts/Cargo.toml
+    ```
+*   **Frontend Helper Tests:** 6 Node test blocks validating math conversions and error parsers:
+    ```bash
+    node --test "Level 2/tests/**/*.test.js"
+    ```
+
+---
+
+## 🤖 CI/CD Build Summary
+
+Our GitHub Actions workspace performs the following actions on every push or pull request to the `main` branch:
+1.  Verify code formatting (`cargo fmt`).
+2.  Run strict quality checks and lints (`cargo clippy -- -D warnings`).
+3.  Execute all workspace contract tests (`cargo test`).
+4.  Run all frontend Javascript tests (`node --test`).
