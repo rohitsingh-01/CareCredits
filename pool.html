@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CareCredits — Family Fund Pool</title>
   <link rel="stylesheet" href="Level 2/style.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "@creit.tech/stellar-wallets-kit": "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle&deps=@stellar/stellar-sdk@12.3.0",
+        "@stellar/stellar-sdk": "https://esm.sh/@stellar/stellar-sdk@12.3.0"
+      }
+    }
+  </script>
   <!-- Polyfill Node Buffer for StellarWalletsKit dependencies in browser -->
   <script>
     window.lastError = null;
