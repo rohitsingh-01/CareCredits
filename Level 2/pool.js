@@ -190,7 +190,11 @@ async function loadPool() {
     activeContractId = null;
     updateWalletUI(false);
     updateWithdrawUI();
-    setStatus("configStatus", `Failed to load contract: ${err.message || err}`, "error");
+    let msg = err.message || String(err);
+    if (msg.includes("Bad union switch") || msg.includes("union switch")) {
+      msg = "This contract appears to be incompatible with the current Soroban SDK or RPC. Please use a contract deployed with the current SDK.";
+    }
+    setStatus("configStatus", `Failed to load contract: ${msg}`, "error");
   } finally {
     hideLoading();
   }
@@ -629,5 +633,5 @@ $("withdrawBtn").addEventListener("click", withdrawFromPool);
 if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
-  $("contractInput").value = "CDX2BJAFJ63Q4Q5ZWEIBIVDZXNE6ND236LAP2BL4NRYLU3TUTY2JBGFQ";
+  $("contractInput").value = "CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO";
 }
