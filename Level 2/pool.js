@@ -1,5 +1,5 @@
-import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
-import { StellarWalletsKit, WalletNetwork, allowAllModules } from "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle&deps=@stellar/stellar-sdk@12.3.0";
+import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@14.0.0";
+import { StellarWalletsKit, WalletNetwork, allowAllModules } from "https://esm.sh/@creit.tech/stellar-wallets-kit@1.7.5?bundle&deps=@stellar/stellar-sdk@14.0.0";
 import { findCaregiverById } from "./caregivers.js";
 import { stroopsToXlm, xlmToStroops, calculateProgressPercent, truncateAddress, classifyError, errorMessageFor } from "./utils.js";
 
@@ -7,8 +7,9 @@ const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const RPC_URL = "https://soroban-testnet.stellar.org";
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
 
+const rpcNamespace = StellarSdk.SorobanRpc || StellarSdk.rpc;
 const server = new StellarSdk.Horizon.Server(HORIZON_URL);
-const rpcServer = new StellarSdk.SorobanRpc.Server(RPC_URL);
+const rpcServer = new rpcNamespace.Server(RPC_URL);
 
 // Orange Belt registry address
 const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
@@ -190,11 +191,7 @@ async function loadPool() {
     activeContractId = null;
     updateWalletUI(false);
     updateWithdrawUI();
-    let msg = err.message || String(err);
-    if (msg.includes("Bad union switch") || msg.includes("union switch")) {
-      msg = "This contract appears to be incompatible with the current Soroban SDK or RPC. Please use a contract deployed with the current SDK.";
-    }
-    setStatus("configStatus", `Failed to load contract: ${msg}`, "error");
+    setStatus("configStatus", `Failed to load contract: ${err.message || err}`, "error");
   } finally {
     hideLoading();
   }
@@ -284,7 +281,7 @@ async function simulateReadOnly(contractId, method, scArgs) {
     .build();
 
   const response = await rpcServer.simulateTransaction(tx);
-  if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(response)) {
+  if (rpcNamespace.Api.isSimulationSuccess(response)) {
     return safeDecodeScVal(response.result.retval);
   } else {
     throw new Error(`Simulation failed: ${response.error || "unknown error"}`);

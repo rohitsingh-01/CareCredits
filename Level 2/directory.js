@@ -4,7 +4,7 @@
  * wallet.html?care=<id> so the wallet page can pre-fill the recipient.
  */
 import { CAREGIVERS } from "./caregivers.js";
-import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@12.3.0";
+import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@14.0.0";
 
 const grid = document.getElementById("caregiverGrid");
 const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
@@ -69,7 +69,8 @@ grid.innerHTML = CAREGIVERS.map(
 // Asynchronously fetch Verified/Paused statuses from CareRegistry contract
 async function queryRegistry(caregiverPubKey) {
   try {
-    const rpcServer = new StellarSdk.SorobanRpc.Server(RPC_URL);
+    const rpcNamespace = StellarSdk.SorobanRpc || StellarSdk.rpc;
+    const rpcServer = new rpcNamespace.Server(RPC_URL);
     const tempAccount = new StellarSdk.Account("GA6I3NHCV6MZWTUVZYACWYFAQXQXV24IE5XTTOMPWAVNHR4MZN5ROCG4", "1");
     
     const caregiverVal = StellarSdk.xdr.ScVal.scvAddress(
@@ -91,7 +92,7 @@ async function queryRegistry(caregiverPubKey) {
         )
         .build();
       const response = await rpcServer.simulateTransaction(tx);
-      if (StellarSdk.SorobanRpc.Api.isSimulationSuccess(response)) {
+      if (rpcNamespace.Api.isSimulationSuccess(response)) {
         return StellarSdk.scValToNative(response.result.retval);
       }
       return false;
