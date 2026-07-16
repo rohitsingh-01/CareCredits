@@ -58,6 +58,14 @@ function setStatus(elId, message, kind = "") {
   }
 }
 
+function setStatusHtml(elId, html, kind = "") {
+  const el = $(elId);
+  if (el) {
+    el.innerHTML = html;
+    el.className = `status ${kind}`;
+  }
+}
+
 function setResultPanel(html, kind) {
   const el = $("activityFeed");
   if (el) {
@@ -337,7 +345,11 @@ async function contributeToPool() {
       "contributeStatus"
     );
 
-    setStatus("contributeStatus", "✅ Contribution successful!", "success");
+    setStatusHtml(
+      "contributeStatus",
+      `✅ Contribution successful! <a href="https://stellar.expert/explorer/testnet/tx/${result.hash}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline; font-weight: 600;">View on StellarExpert</a>`,
+      "success"
+    );
     $("contributeAmount").value = "";
     
     // Instantly refresh balance & progress
@@ -384,7 +396,11 @@ async function withdrawFromPool() {
       "withdrawStatus"
     );
 
-    setStatus("withdrawStatus", "✅ Withdrawal successful! Funds transferred.", "success");
+    setStatusHtml(
+      "withdrawStatus",
+      `✅ Withdrawal successful! Funds transferred. <a href="https://stellar.expert/explorer/testnet/tx/${result.hash}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline; font-weight: 600;">View on StellarExpert</a>`,
+      "success"
+    );
     raisedAmount = 0; // Set local raised amount to 0 since it has been withdrawn
     updateProgressUI();
     updateWithdrawUI();
@@ -443,6 +459,7 @@ async function invokeContractViaKit(contractId, method, scArgs, statusElId) {
   while (count < 20) {
     response = await rpcServer.getTransaction(txHash);
     if (response.status === "SUCCESS") {
+      response.hash = txHash;
       return response;
     }
     if (response.status === "FAILED") {
