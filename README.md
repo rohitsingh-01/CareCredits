@@ -18,28 +18,18 @@ CareCredits is an open-source, healthcare-focused Web3 platform where families c
 
 ## 🥋 Submission Portals (Journey to Mastery)
 
-For detailed evidence, step-by-step requirements, screenshots, and transaction proofs for each belt level, please visit the dedicated documentation pages:
+For detailed evidence, step-by-step requirements, screenshots, and security analyses, use the following navigation index:
 
-*   ⚪ **[White Belt (Level 1) — Direct P2P Care Transfer](docs/README_WHITE_BELT.md)**
-    - *Features:* Freighter wallet connection, Horizon balance fetching, direct payment flows, and audit panels.
-*   🟡 **[Yellow Belt (Level 2) — CareFundPool Contract](docs/README_YELLOW_BELT.md)**
-    - *Features:* Multi-wallet support (StellarWalletsKit), Soroban RPC calls (read/write), error classifications, and real-time event polling.
-*   🟠 **[Orange Belt (Level 3) — Decoupled Compliance Gating](docs/README_ORANGE_BELT.md)**
-    - *Features:* Two-contract compliance model (`CareRegistry` $\rightarrow$ `CareFundPool`), type-safe cross-contract calls, automated CI/CD pipeline, and mobile responsiveness.
-
----
-
-## 📖 Main Documentation Index
-
-To explore the architecture, deployment, and security of the system, navigate through the specialized documents below:
-
-| Page | Description |
+| Documentation | Description |
 |---|---|
-| 🏛️ **[System Architecture](docs/ARCHITECTURE.md)** | Technical data flows, Mermaid sequence diagrams, and design trade-offs. |
-| 🛠️ **[Deployment Guide](docs/DEPLOYMENT.md)** | Local compiling, deployer setups, shell scripts, and Vercel hosting. |
-| 🛡️ **[Security Specification](docs/SECURITY.md)** | `require_auth` models, cross-contract verification gates, input audits, and storage rent (TTL). |
-| 🤝 **[Contributing Guidelines](docs/CONTRIBUTING.md)** | Development environment setup, workflow rules, and Git commit conventions. |
-| 📄 **[MIT License](LICENSE)** | Open-source terms and permissions. |
+| **[README_WHITE_BELT.md](docs/README_WHITE_BELT.md)** | White Belt implementation |
+| **[README_YELLOW_BELT.md](docs/README_YELLOW_BELT.md)** | Yellow Belt implementation |
+| **[README_ORANGE_BELT.md](docs/README_ORANGE_BELT.md)** | Orange Belt implementation |
+| **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System architecture |
+| **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Deployment guide |
+| **[SECURITY.md](docs/SECURITY.md)** | Security model |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution guide |
+| **[LICENSE](LICENSE)** | Open-source MIT License |
 
 ---
 
