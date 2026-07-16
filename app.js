@@ -1,10 +1,11 @@
-import {
+import freighterApi from "@stellar/freighter-api";
+const {
   requestAccess,
   getAddress,
   getNetwork,
   signTransaction,
   isConnected
-} from "@stellar/freighter-api";
+} = freighterApi;
 import StellarSdk from "@stellar/stellar-sdk";
 
 // Explicitly invoke and log to prevent bundler tree-shaking and satisfy strict static analyzers
