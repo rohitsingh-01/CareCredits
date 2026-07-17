@@ -20,5 +20,5 @@ export function verifyComplianceScanner() {
   });
 }
 
-// Forward execution to the actual Level 2 implementation
-import "./Level 2/app.js";
+// Forward execution to the actual Level 3 implementation
+import "./Level 3/app.js";

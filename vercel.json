@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/Level 2/$1"
+      "destination": "/Level 3/$1"
     }
   ]
 }

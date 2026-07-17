@@ -54,7 +54,7 @@ The application implements a 5-second polling loop using `rpcServer.getEvents`:
 
 ## 🛠️ 5. Error Classification & UX Gating
 
-We implement robust error classification inside `Level 2/utils.js`:
+We implement robust error classification inside `Level 3/utils.js`:
 *   `WALLET_NOT_FOUND`: Directs the user to download a supported wallet extension.
 *   `USER_REJECTED`: Handles connection or signing cancels gracefully without freezing loading indicators.
 *   `INSUFFICIENT_BALANCE`: Proactively compares the user's balance with the target amount and transaction fee reserves.
@@ -67,17 +67,17 @@ All E2E states of the pool interaction flow can be verified on the live site:
 
 | State / Step | Screenshot | Screenshot Description |
 |---|---|---|
-| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](../Level%202/screenshots/wallet-options.png) | Displays multi-wallet connection modal overlay. |
-| **Wallet Connected** | ![Wallet Connected](../Level%202/screenshots/pool-connected.png) | Displays connected account and active caregiver interface. |
-| **Funding Pool Details Loaded** | ![Pool Details Loaded](../Level%202/screenshots/pool-loaded.png) | Renders goal, raised amounts, and the SVG circular progress ring. |
-| **Contribution Success & Feed Event** | ![Contribution Success](../Level%202/screenshots/contribute-success.png) | Displays the success confetti explosion and live event feed item. |
-| **Caregiver Mode Active** | ![Caregiver Mode Loaded](../Level%202/screenshots/withdraw-loaded.png) | Renders the caregiver-specific "Withdraw Funds" action button. |
-| **Withdrawal Success & Transfer** | ![Withdrawal Success](../Level%202/screenshots/withdraw-success.png) | Displays transaction success confirmation for the withdrawal. |
+| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](../Level%203/screenshots/wallet-options.png) | Displays multi-wallet connection modal overlay. |
+| **Wallet Connected** | ![Wallet Connected](../Level%203/screenshots/pool-connected.png) | Displays connected account and active caregiver interface. |
+| **Funding Pool Details Loaded** | ![Pool Details Loaded](../Level%203/screenshots/pool-loaded.png) | Renders goal, raised amounts, and the SVG circular progress ring. |
+| **Contribution Success & Feed Event** | ![Contribution Success](../Level%203/screenshots/contribute-success.png) | Displays the success confetti explosion and live event feed item. |
+| **Caregiver Mode Active** | ![Caregiver Mode Loaded](../Level%203/screenshots/withdraw-loaded.png) | Renders the caregiver-specific "Withdraw Funds" action button. |
+| **Withdrawal Success & Transfer** | ![Withdrawal Success](../Level%203/screenshots/withdraw-success.png) | Displays transaction success confirmation for the withdrawal. |
 
 ---
 
 ## 🧪 7. Local Testing
 
 We write comprehensive unit tests to verify the math and utility functions supporting the Yellow Belt UI:
-*   **Frontend Tests:** Located in `Level 2/tests/utils.test.js`.
-*   **Execution:** Run `node --test "Level 2/tests/**/*.test.js"` to run the 6 unit test blocks (verifying stroop conversions, error classification, and percentage bounds).
+*   **Frontend Tests:** Located in `Level 3/tests/utils.test.js`.
+*   **Execution:** Run `node --test "Level 3/tests/**/*.test.js"` to run the 6 unit test blocks (verifying stroop conversions, error classification, and percentage bounds).

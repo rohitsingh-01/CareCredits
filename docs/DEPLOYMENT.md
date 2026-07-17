@@ -42,7 +42,7 @@ For Windows users, we provide equivalent PowerShell scripts:
 
 ## 🌐 3. Frontend Deployment
 
-The frontend consists of static HTML5 and Vanilla JS files located inside the `Level 2/` folder. It can be hosted on any static file provider.
+The frontend consists of static HTML5 and Vanilla JS files located inside the `Level 3/` folder. It can be hosted on any static file provider.
 
 ### Vercel Hosting Configuration
 We use `vercel.json` to handle redirects, rewrites, and custom headers.
@@ -52,12 +52,12 @@ We use `vercel.json` to handle redirects, rewrites, and custom headers.
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/(.*)", "destination": "/Level 2/$1" }
+    { "source": "/(.*)", "destination": "/Level 3/$1" }
   ]
 }
 ```
 *   `cleanUrls`: Removes the `.html` extension from URLs.
-*   `rewrites`: Automatically routes all root traffic (e.g. `/`, `/wallet`, `/pool`) into the `Level 2/` directory, keeping URLs clean and user-friendly.
+*   `rewrites`: Automatically routes all root traffic (e.g. `/`, `/wallet`, `/pool`) into the `Level 3/` directory, keeping URLs clean and user-friendly.
 
 ### Manual Vercel Deployment Steps
 1.  Install the Vercel CLI:
@@ -84,7 +84,7 @@ Runs formatting audits, lints, and test runners:
 -   **Rust Lints:** Performs formatting checks and strict Clippy quality checks (`cargo clippy -- -D warnings`).
 -   **Contract Tests:** Executes all Rust workspace contract tests (`cargo test --workspace`).
 -   **WASM Build:** Verifies compiled Wasm integrity.
--   **Node Tests:** Runs native JS unit tests (`node --test "Level 2/tests/**/*.test.js"`).
+-   **Node Tests:** Runs native JS unit tests (`node --test "Level 3/tests/**/*.test.js"`).
 
 ### Continuous Deployment (`deploy.yml`)
 Deploys the smart contracts and publishes updated addresses to the codebase when the repository is tagged:

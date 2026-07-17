@@ -643,7 +643,7 @@ $("loadPoolBtn").addEventListener("click", loadPool);
 $("contributeBtn").addEventListener("click", contributeToPool);
 $("withdrawBtn").addEventListener("click", withdrawFromPool);
 
-// Pre-fill fields with Level 2 Contract ID
+// Pre-fill fields with Level 3 Contract ID
 if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
