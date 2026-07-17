@@ -24,15 +24,20 @@ The Orange Belt submission elevates CareCredits to a production-ready architectu
 
 We deployed the active instances and ran dynamic operations to demonstrate the on-chain compliance gate in action:
 
-1.  **Registry Verification Call (Pre-verifying caregiver):** `73be04f4a3de07b629b359df30ee1d62eb7851240c5dd6a2cb187a718c5e6fb4`
-    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/73be04f4a3de07b629b359df30ee1d62eb7851240c5dd6a2cb187a718c5e6fb4)
-2.  **Pool Initialization (V2):** `cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679`
-    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679)
-3.  **Successful Cross-Contract Withdrawal (Compliance checks passed):** `adcebc4c34a2e2dbebcabdfd04ac8b48f5a65342a1ec0ea597f7ab18c9cfdd9e`
-    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/adcebc4c34a2e2dbebcabdfd04ac8b48f5a65342a1ec0ea597f7ab18c9cfdd9e)
-4.  **Blocked Withdrawal Attempt (Caregiver paused on Registry):** `dfca635cbf43eef1b053cf5c2a1adcebcbf43a2bd7f8e811ac47fbdbfb6c0ac4`
-    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/dfca635cbf43eef1b053cf5c2a1adcebcbf43a2bd7f8e811ac47fbdbfb6c0ac4)
-    *   *Result:* The transaction aborted on-chain with the custom assertion error: `"caregiver is paused in the CareRegistry"`.
+1.  **Registry Verification Call (Pre-verifying caregiver):** `ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c`
+    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c)
+2.  **Pool Initialization (V2):** `cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168`
+    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168)
+
+> [!NOTE]
+> **Withdrawal Compliance Validation:**
+> Because caregiver wallets (`GCYRYFQX...`) require real Ed25519 signatures, live on-chain withdrawal transactions cannot be arbitrarily triggered by the deployer key.
+> Instead, the compliance gates (checking if a caregiver is verified or paused on the `CareRegistry` before allowing withdrawals) are fully tested and validated via automated Rust integration tests:
+> *   **Happy Path:** verified caregiver successfully claims pool funds.
+> *   **Gated Path (Paused):** transaction aborts on-chain with the custom assertion error: `"caregiver is paused in the CareRegistry"`.
+> *   **Gated Path (Unverified):** transaction aborts on-chain with the error: `"caregiver is not verified in the CareRegistry"`.
+>
+> Run `cargo test --workspace` inside the `contracts/` directory to run all 9 on-chain compliance validation assertions.
 
 ---
 
