@@ -80,7 +80,7 @@ All required compliance and platform states are documented below:
 ---
 
 ## 📽️ 8. Demo Video Walkthrough
-*   **Demo Video Link:** [CareCredits Orange Belt Walkthrough (YouTube/Loom Placeholder)]() *(Supply your video URL here)*
+*   **Demo Video Link:** [CareCredits Walkthrough (YouTube)](https://youtu.be/UgHnk698BJw?si=XiN6-4QFzVk9UR-i)
 
 ---
 
