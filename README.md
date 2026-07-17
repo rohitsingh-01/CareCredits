@@ -12,6 +12,7 @@ CareCredits is an open-source, healthcare-focused Web3 platform where families c
 ## 🌐 Live Resources & Portals
 
 *   **Live Application:** [https://care-credits.vercel.app](https://care-credits.vercel.app)
+*   **Demo Video Walkthrough:** [CareCredits Walkthrough (YouTube)](https://youtu.be/UgHnk698BJw?si=XiN6-4QFzVk9UR-i)
 *   **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
 
 ---
@@ -94,3 +95,67 @@ Our GitHub Actions workspace performs the following actions on every push or pul
 2.  Run strict quality checks and lints (`cargo clippy -- -D warnings`).
 3.  Execute all workspace contract tests (`cargo test`).
 4.  Run all frontend Javascript tests (`node --test`).
+
+---
+
+## 📁 Project Repository Structure
+
+```
+CareCredits/
+├── .github/workflows/          # CI/CD pipelines (ci.yml, deploy.yml)
+├── contracts/                  # Rust Smart Contracts Workspace
+│   ├── registry/               # CareRegistry crate
+│   └── fund_pool/              # CareFundPool crate
+├── docs/                       # Comprehensive documentation index
+│   ├── ARCHITECTURE.md         # Architecture data flows & sequence diagrams
+│   ├── DEPLOYMENT.md           # Local compiling and Vercel hosting guides
+│   ├── README_ORANGE_BELT.md   # Orange Belt requirements evidence
+│   ├── README_WHITE_BELT.md    # White Belt requirements evidence
+│   ├── README_YELLOW_BELT.md   # Yellow Belt requirements evidence
+│   └── SECURITY.md             # Gas, memory, and authorization specifications
+├── Level 2/                    # Static Web Application Frontend (HTML, CSS, JS)
+│   ├── index.html              # Caregiver Directory (main page)
+│   ├── pool.html               # Family Fund Pool page
+│   ├── wallet.html             # Direct Transfer page
+│   ├── pool.js                 # Pool page logic & wallet kit
+│   ├── app.js                  # Direct transfer wallet logic
+│   └── screenshots/            # Verified E2E proof screenshots
+├── CONTRIBUTING.md             # Development workflow & git conventions
+├── LICENSE                     # MIT Open Source License
+└── README.md                   # Repository homepage & index
+```
+
+---
+
+## ⛓️ Deployed Contract Addresses (Stellar Testnet)
+
+*   **CareRegistry ID (Compliance/Admin Layer):** [`CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7`](https://stellar.expert/explorer/testnet/contract/CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7)
+*   **CareFundPool (V2 Funding Layer):** [`CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`](https://stellar.expert/explorer/testnet/contract/CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO)
+
+---
+
+## 🔒 Verification & Compliance Proofs
+
+We deployed the active instances and ran dynamic operations to demonstrate the on-chain compliance gate in action:
+
+1.  **Registry Verification Call (Pre-verifying caregiver):** [`ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c`](https://stellar.expert/explorer/testnet/tx/ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c)
+2.  **Pool Initialization (V2):** [`cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168`](https://stellar.expert/explorer/testnet/tx/cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168)
+
+---
+
+## 🖼️ Verified E2E Screenshot Previews
+
+All screenshots are stored inside the [`Level 2/screenshots/`](Level%202/screenshots) directory:
+
+| State / View | Screenshot |
+|---|---|
+| **Freighter Connected & Balance Loaded** | ![Wallet Connected](Level%202/screenshots/wallet-connected.png) |
+| **Family Fund Pool details loaded** | ![Pool Loaded](Level%202/screenshots/pool-loaded.png) |
+| **Mobile responsive UI layout** | ![Mobile Responsive](Level%202/screenshots/mobile-responsive.png) |
+
+---
+
+## 📄 License & Credits
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Built with 💙 for the Stellar Journey to Mastery.
