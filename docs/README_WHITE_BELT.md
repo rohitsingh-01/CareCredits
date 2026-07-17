@@ -59,12 +59,12 @@ The application integrates the official `@stellar/freighter-api` package to secu
 
 All E2E states of the direct transfer flow can be verified on the live site:
 
-| State / Screen | File Path | Screenshot Description |
+| State / Screen | Screenshot | Screenshot Description |
 |---|---|---|
-| **Freighter Wallet Connected** | `Level 2/screenshots/wallet-connected.png` | Displays connected account public address and UI layout. |
-| **XLM Balance Loaded** | `Level 2/screenshots/balance-displayed.png` | Displays formatted native XLM balance. |
-| **Payment Success State** | `Level 2/screenshots/transaction-success.png` | Displays green success notification and feedback panel. |
-| **Transaction Audit Result** | `Level 2/screenshots/transaction-result.png` | Renders the transaction hash and a clickable link to StellarExpert. |
+| **Freighter Wallet Connected** | ![Wallet Connected](../Level%202/screenshots/wallet-connected.png) | Displays connected account public address and UI layout. |
+| **XLM Balance Loaded** | ![Balance Displayed](../Level%202/screenshots/balance-displayed.png) | Displays formatted native XLM balance. |
+| **Payment Success State** | ![Payment Success](../Level%202/screenshots/transaction-success.png) | Displays green success notification and feedback panel. |
+| **Transaction Audit Result** | ![Audit Trail](../Level%202/screenshots/transaction-result.png) | Renders the transaction hash and a clickable link to StellarExpert. |
 
 ---
 

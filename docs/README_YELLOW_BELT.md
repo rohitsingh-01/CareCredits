@@ -65,14 +65,14 @@ We implement robust error classification inside `Level 2/utils.js`:
 
 All E2E states of the pool interaction flow can be verified on the live site:
 
-| State / Step | File Path | Screenshot Description |
+| State / Step | Screenshot | Screenshot Description |
 |---|---|---|
-| **StellarWalletsKit Modal Options** | `Level 2/screenshots/wallet-options.png` | Displays multi-wallet connection modal overlay. |
-| **Wallet Connected** | `Level 2/screenshots/pool-connected.png` | Displays connected account and active caregiver interface. |
-| **Funding Pool Details Loaded** | `Level 2/screenshots/pool-loaded.png` | Renders goal, raised amounts, and the SVG circular progress ring. |
-| **Contribution Success & Feed Event** | `Level 2/screenshots/contribute-success.png` | Displays the success confetti explosion and live event feed item. |
-| **Caregiver Mode Active** | `Level 2/screenshots/withdraw-loaded.png` | Renders the caregiver-specific "Withdraw Funds" action button. |
-| **Withdrawal Success & Transfer** | `Level 2/screenshots/withdraw-success.png` | Displays transaction success confirmation for the withdrawal. |
+| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](../Level%202/screenshots/wallet-options.png) | Displays multi-wallet connection modal overlay. |
+| **Wallet Connected** | ![Wallet Connected](../Level%202/screenshots/pool-connected.png) | Displays connected account and active caregiver interface. |
+| **Funding Pool Details Loaded** | ![Pool Details Loaded](../Level%202/screenshots/pool-loaded.png) | Renders goal, raised amounts, and the SVG circular progress ring. |
+| **Contribution Success & Feed Event** | ![Contribution Success](../Level%202/screenshots/contribute-success.png) | Displays the success confetti explosion and live event feed item. |
+| **Caregiver Mode Active** | ![Caregiver Mode Loaded](../Level%202/screenshots/withdraw-loaded.png) | Renders the caregiver-specific "Withdraw Funds" action button. |
+| **Withdrawal Success & Transfer** | ![Withdrawal Success](../Level%202/screenshots/withdraw-success.png) | Displays transaction success confirmation for the withdrawal. |
 
 ---
 

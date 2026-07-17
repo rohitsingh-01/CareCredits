@@ -71,11 +71,11 @@ The styling system provides an optimized mobile interface:
 
 All required compliance and platform states are documented below:
 
-| Requirement | File Path | Screenshot Description |
+| Requirement | Screenshot | Screenshot Description |
 |---|---|---|
-| **Mobile Responsive UI** | `Level 2/screenshots/mobile-responsive.png` | Renders a clean interface layout on a narrow viewport width. |
-| **CI/CD Pipeline Running** | `Level 2/screenshots/ci-green.png` | Verifies a green, successful automated build pipeline run. |
-| **Test Output (3+ Passing Tests)** | `Level 2/screenshots/test-results.png` | Displays terminal test runner logs verifying all Rust contract tests pass. |
+| **Mobile Responsive UI** | ![Mobile Responsive](../Level%202/screenshots/mobile-responsive.png) | Renders a clean interface layout on a narrow viewport width. |
+| **CI/CD Pipeline Running** | ![CI Green](../Level%202/screenshots/ci-green.png) | Verifies a green, successful automated build pipeline run. |
+| **Test Output (3+ Passing Tests)** | ![Test Results](../Level%202/screenshots/test-results.png) | Displays terminal test runner logs verifying all Rust contract tests pass. |
 
 ---
 
