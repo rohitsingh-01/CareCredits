@@ -55,7 +55,7 @@ grid.innerHTML = CAREGIVERS.map(
     </div>
 
     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; width: 100%;">
-      <a class="btn btn-accent btn-block" href="wallet.html?care=${encodeURIComponent(c.id)}">
+      <a class="btn btn-accent btn-block" href="Level 1/wallet.html?care=${encodeURIComponent(c.id)}">
         Select &amp; Send Care Credit
       </a>
       <a class="btn btn-outline btn-block" style="text-align: center;" href="pool.html?care=${encodeURIComponent(c.id)}">

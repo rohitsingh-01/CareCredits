@@ -15,42 +15,12 @@
  */
 
 import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@14.0.0";
-import actualFreighterApi from "https://esm.sh/@stellar/freighter-api";
-import { findCaregiverById } from "./caregivers.js";
+import freighterApi from "https://esm.sh/@stellar/freighter-api";
+import { findCaregiverById } from "../caregivers.js";
 
 const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
-let server = new StellarSdk.Horizon.Server(HORIZON_URL);
-
-// Mock mode for testing without extension - Gated to local development only to protect production integrity
-const urlParams = new URLSearchParams(window.location.search);
-const isTestMode = urlParams.has("testmode") && (
-  window.location.hostname === "localhost" || 
-  window.location.hostname === "127.0.0.1" || 
-  window.location.hostname === "[::1]" ||
-  window.location.hostname === ""
-);
-
-const freighterApi = isTestMode ? {
-  isConnected: async () => ({ isConnected: true }),
-  requestAccess: async () => ({ address: "GA6I3NHCV6MZWTUVZYACWYFAQXQXV24IE5XTTOMPWAVNHR4MZN5ROCG4" }),
-  getAddress: async () => ({ address: "GA6I3NHCV6MZWTUVZYACWYFAQXQXV24IE5XTTOMPWAVNHR4MZN5ROCG4" }),
-  getNetwork: async () => ({ network: "TESTNET" }),
-  signTransaction: async (xdr) => ({ signedTxXdr: xdr }),
-} : actualFreighterApi;
-
-if (isTestMode) {
-  server = {
-    loadAccount: async (address) => {
-      const acc = new StellarSdk.Account(address, "1");
-      acc.balances = [{ asset_type: "native", balance: "100.0000000" }];
-      return acc;
-    },
-    submitTransaction: async (tx) => ({
-      hash: "mock_tx_hash_1234567890abcdef1234567890abcdef",
-    }),
-  };
-}
+const server = new StellarSdk.Horizon.Server(HORIZON_URL);
 
 let connectedAddress = null;
 

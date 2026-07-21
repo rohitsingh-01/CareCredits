@@ -7,6 +7,11 @@
 
 CareCredits is an open-source, healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network with on-chain compliance controls.
 
+## Level 1 (White Belt) — Wallet Integration
+*   **[Level 1/wallet.html](Level%201/wallet.html):** The primary user interface for peer-to-peer care credit direct transfers.
+*   **[Level 1/app.js](Level%201/app.js):** Production logic implementing Freighter wallet connection, account balance fetching, and transaction signing.
+*   **[Level 1/index.html](Level%201/index.html):** The landing page displaying the caregiver directory.
+
 ---
 
 ## 🌐 Live Resources & Portals
