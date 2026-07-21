@@ -63,7 +63,7 @@ For a complete data flow layout, see the [Architecture Document](docs/ARCHITECTU
     ```
 2.  **Launch a Dev Server:**
     ```bash
-    npx serve "Level 3"
+    npx serve .
     ```
 3.  **Access the App:**
     - Navigate to `http://localhost:3000/index.html` (Caregiver Directory).
@@ -83,7 +83,7 @@ We run automated tests across both backend and frontend layers:
     ```
 *   **Frontend Helper Tests:** 6 Node test blocks validating math conversions and error parsers:
     ```bash
-    node --test "Level 3/tests/**/*.test.js"
+    node --test "tests/**/*.test.js"
     ```
 
 ---
@@ -113,13 +113,16 @@ CareCredits/
 │   ├── README_WHITE_BELT.md    # White Belt requirements evidence
 │   ├── README_YELLOW_BELT.md   # Yellow Belt requirements evidence
 │   └── SECURITY.md             # Gas, memory, and authorization specifications
-├── Level 3/                    # Static Web Application Frontend (HTML, CSS, JS)
-│   ├── index.html              # Caregiver Directory (main page)
-│   ├── pool.html               # Family Fund Pool page
-│   ├── wallet.html             # Direct Transfer page
-│   ├── pool.js                 # Pool page logic & wallet kit
-│   ├── app.js                  # Direct transfer wallet logic
-│   └── screenshots/            # Verified E2E proof screenshots
+├── index.html                  # Caregiver Directory (main page)
+├── pool.html                   # Family Fund Pool page
+├── wallet.html                 # Direct Transfer page
+├── pool.js                     # Pool page logic & wallet kit
+├── app.js                      # Direct transfer wallet logic
+├── style.css                   # Custom global styles
+├── utils.js                    # Math, format, and error helpers
+├── caregivers.js               # In-memory caregiver profiles
+├── screenshots/                # Verified E2E proof screenshots
+├── tests/                      # Frontend unit tests
 ├── CONTRIBUTING.md             # Development workflow & git conventions
 ├── LICENSE                     # MIT Open Source License
 └── README.md                   # Repository homepage & index
@@ -145,13 +148,13 @@ We deployed the active instances and ran dynamic operations to demonstrate the o
 
 ## 🖼️ Verified E2E Screenshot Previews
 
-All screenshots are stored inside the [`Level 3/screenshots/`](Level%203/screenshots) directory:
+All screenshots are stored inside the [`screenshots/`](screenshots) directory:
 
 | State / View | Screenshot |
 |---|---|
-| **Freighter Connected & Balance Loaded** | ![Wallet Connected](Level%203/screenshots/wallet-connected.png) |
-| **Family Fund Pool details loaded** | ![Pool Loaded](Level%203/screenshots/pool-loaded.png) |
-| **Mobile responsive UI layout** | ![Mobile Responsive](Level%203/screenshots/mobile-responsive.png) |
+| **Freighter Connected & Balance Loaded** | ![Wallet Connected](screenshots/wallet-connected.png) |
+| **Family Fund Pool details loaded** | ![Pool Loaded](screenshots/pool-loaded.png) |
+| **Mobile responsive UI layout** | ![Mobile Responsive](screenshots/mobile-responsive.png) |
 
 ---
 

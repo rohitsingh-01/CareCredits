@@ -1,9 +1,3 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/Level 3/$1"
-    }
-  ]
+  "cleanUrls": true
 }

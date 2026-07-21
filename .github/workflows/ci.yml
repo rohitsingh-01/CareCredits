@@ -53,7 +53,7 @@ jobs:
           node-version: 20
 
       - name: Run Frontend Tests
-        run: node --test "Level 2/tests/**/*.test.js"
+        run: node --test "tests/**/*.test.js"
 
   summary:
     needs: [contract-tests, frontend-tests]

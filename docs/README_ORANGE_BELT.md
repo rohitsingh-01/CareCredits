@@ -78,9 +78,9 @@ All required compliance and platform states are documented below:
 
 | Requirement | Screenshot | Screenshot Description |
 |---|---|---|
-| **Mobile Responsive UI** | ![Mobile Responsive](../Level%203/screenshots/mobile-responsive.png) | Renders a clean interface layout on a narrow viewport width. |
-| **CI/CD Pipeline Running** | ![CI Green](../Level%203/screenshots/ci-green.png) | Verifies a green, successful automated build pipeline run. |
-| **Test Output (3+ Passing Tests)** | ![Test Results](../Level%203/screenshots/test-results.png) | Displays terminal test runner logs verifying all Rust contract tests pass. |
+| **Mobile Responsive UI** | ![Mobile Responsive](../screenshots/mobile-responsive.png) | Renders a clean interface layout on a narrow viewport width. |
+| **CI/CD Pipeline Running** | ![CI Green](../screenshots/ci-green.png) | Verifies a green, successful automated build pipeline run. |
+| **Test Output (3+ Passing Tests)** | ![Test Results](../screenshots/test-results.png) | Displays terminal test runner logs verifying all Rust contract tests pass. |
 
 ---
 

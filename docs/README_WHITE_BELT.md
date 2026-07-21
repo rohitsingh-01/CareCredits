@@ -61,10 +61,10 @@ All E2E states of the direct transfer flow can be verified on the live site:
 
 | State / Screen | Screenshot | Screenshot Description |
 |---|---|---|
-| **Freighter Wallet Connected** | ![Wallet Connected](../Level%203/screenshots/wallet-connected.png) | Displays connected account public address and UI layout. |
-| **XLM Balance Loaded** | ![Balance Displayed](../Level%203/screenshots/balance-displayed.png) | Displays formatted native XLM balance. |
-| **Payment Success State** | ![Payment Success](../Level%203/screenshots/transaction-success.png) | Displays green success notification and feedback panel. |
-| **Transaction Audit Result** | ![Audit Trail](../Level%203/screenshots/transaction-result.png) | Renders the transaction hash and a clickable link to StellarExpert. |
+| **Freighter Wallet Connected** | ![Wallet Connected](../screenshots/wallet-connected.png) | Displays connected account public address and UI layout. |
+| **XLM Balance Loaded** | ![Balance Displayed](../screenshots/balance-displayed.png) | Displays formatted native XLM balance. |
+| **Payment Success State** | ![Payment Success](../screenshots/transaction-success.png) | Displays green success notification and feedback panel. |
+| **Transaction Audit Result** | ![Audit Trail](../screenshots/transaction-result.png) | Renders the transaction hash and a clickable link to StellarExpert. |
 
 ---
 
