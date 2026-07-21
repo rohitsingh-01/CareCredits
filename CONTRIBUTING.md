@@ -71,7 +71,7 @@ cargo test --workspace --manifest-path contracts/Cargo.toml
 ### Frontend Unit Tests
 Run the Node.js native test runner to verify math, conversion, and error classification utilities:
 ```bash
-node --test "Level 3/tests/**/*.test.js"
+node --test "tests/**/*.test.js"
 ```
 
 ---
