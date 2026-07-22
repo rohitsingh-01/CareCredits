@@ -1,3 +1,9 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/Level 1/index.html" },
+    { "source": "/wallet.html", "destination": "/Level 1/wallet.html" },
+    { "source": "/wallet", "destination": "/Level 1/wallet.html" },
+    { "source": "/pool.html", "destination": "/pool.html" }
+  ]
 }
