@@ -2,8 +2,11 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/Level 1/index.html" },
-    { "source": "/wallet.html", "destination": "/Level 1/wallet.html" },
+    { "source": "/index.html", "destination": "/Level 1/index.html" },
     { "source": "/wallet", "destination": "/Level 1/wallet.html" },
+    { "source": "/wallet.html", "destination": "/Level 1/wallet.html" },
+    { "source": "/style.css", "destination": "/Level 1/style.css" },
+    { "source": "/app.js", "destination": "/Level 1/app.js" },
     { "source": "/pool.html", "destination": "/pool.html" }
   ]
 }
