@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareCredits — On-Chain Caregiver Funding on Stellar</title>
+  <meta name="description" content="CareCredits allows families to support caregivers directly and transparently through Stellar Testnet blockchain." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Reactive Interactive Dotted Canvas -->
+  <canvas id="bgCanvas"></canvas>
+  <div class="bg-radial-gradients"></div>
+
+  <!-- Nav Bar -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand-mark-logo">💙</span> CareCredits
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="wallet.html">Wallet</a></li>
+        <li><a href="pool.html">Fund Pool</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <span class="eyebrow">
+            <span style="display:inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); animation: pulse-slow 1s infinite alternate;"></span>
+            Stellar Testnet Compliance Platform
+          </span>
+          <h1>Send care credits directly to the people doing the caring.</h1>
+          <p class="lede">
+            CareCredits turns payments into transparent, on-chain top-ups—enabling families and communities to support caregivers with public, verifiable transactions.
+          </p>
+          <div class="hero-actions">
+            <a href="wallet.html" class="btn btn-primary">Open Wallet</a>
+            <a href="#directory" class="btn btn-outline">Browse Caregivers</a>
+          </div>
+        </div>
+
+        <!-- Hero Visual (Interactive Floating Cards) -->
+        <div class="hero-visual">
+          <div class="visual-center-circle"></div>
+          
+          <div class="floating-mock floating-mock-1">
+            <div class="icon-wrapper">📊</div>
+            <div class="details">
+              <span class="title-text">Fund Progress</span>
+              <span class="subtitle-text">74.2% Completed</span>
+              <div class="progress-mini-bar">
+                <div class="progress-mini-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="floating-mock floating-mock-2">
+            <div class="icon-wrapper">✅</div>
+            <div class="details">
+              <span class="title-text">Caregiver Verified</span>
+              <span class="subtitle-text">Registry Checked</span>
+            </div>
+          </div>
+
+          <div class="floating-mock floating-mock-3">
+            <div class="icon-wrapper">💙</div>
+            <div class="details">
+              <span class="title-text">Donation Success</span>
+              <span class="subtitle-text">+100.00 XLM Received</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- How It Works -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2>How CareCredits Works</h2>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Connect Wallet</h3>
+          <p>Link your Freighter or browser wallet on Stellar Testnet securely in one click.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Select Caregiver</h3>
+          <p>Browse our directory of verified caregivers and load their direct payment info or fund pool.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Fund On-Chain</h3>
+          <p>Submit your contribution directly into the Soroban smart contract, with real-time settlement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Directory Section -->
+  <section class="section" id="directory">
+    <div class="container">
+      <div class="section-header">
+        <h2>👩‍⚕️ Caregiver Directory</h2>
+        <p>Choose a caregiver below to view their profile, send direct care credits, or contribute to their family fund pool.</p>
+      </div>
+      <div id="caregiverGrid" class="caregiver-grid">
+        <!-- Renders dynamically from directory.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>Stellar Testnet Only · CareCredits · Journey to Mastery submission · Built on Soroban Smart Contracts</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="directory.js"></script>
+  
+  <script>
+    // Sticky Floating Navbar Transition
+    window.addEventListener("scroll", () => {
+      const nav = document.querySelector(".site-nav");
+      if (window.scrollY > 24) {
+        nav.classList.add("scrolled");
+      } else {
+        nav.classList.remove("scrolled");
+      }
+    });
+
+    // Reactive Dotted Background Canvas Animation
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    let mouse = { x: null, y: null };
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener("mouseleave", () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    const spacing = 36;
+    function drawGrid() {
+      ctx.clearRect(0, 0, width, height);
+      const cols = Math.ceil(width / spacing);
+      const rows = Math.ceil(height / spacing);
+
+      ctx.fillStyle = "rgba(100, 116, 139, 0.12)";
+      for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < rows; r++) {
+          const x = c * spacing;
+          const y = r * spacing;
+
+          let dx = 0;
+          let dy = 0;
+
+          if (mouse.x !== null && mouse.y !== null) {
+            const distDx = mouse.x - x;
+            const distDy = mouse.y - y;
+            const dist = Math.sqrt(distDx * distDx + distDy * distDy);
+            if (dist < 100) {
+              const force = (100 - dist) / 100;
+              dx = -(distDx / dist) * force * 4;
+              dy = -(distDy / dist) * force * 4;
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(x + dx, y + dy, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      requestAnimationFrame(drawGrid);
+    }
+    drawGrid();
+  </script>
+</body>
+</html>
