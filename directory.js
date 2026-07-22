@@ -7,7 +7,7 @@ import { CAREGIVERS } from "./caregivers.js";
 import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@14.0.0";
 
 const grid = document.getElementById("caregiverGrid");
-const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
+const REGISTRY_CONTRACT_ID = "CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224";
 const RPC_URL = "https://soroban-testnet.stellar.org";
 
 grid.innerHTML = CAREGIVERS.map(

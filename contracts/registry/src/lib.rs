@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env};
 
 #[contracttype]
 #[derive(Clone)]
@@ -85,7 +85,7 @@ mod test {
         let admin = Address::generate(&env);
         let caregiver = Address::generate(&env);
 
-        let contract_id = env.register(CareRegistry, ());
+        let contract_id = env.register_contract(None, CareRegistry);
         let client = CareRegistryClient::new(&env, &contract_id);
         client.initialize(&admin);
 
@@ -112,7 +112,7 @@ mod test {
         let attacker = Address::generate(&env);
         let caregiver = Address::generate(&env);
 
-        let contract_id = env.register(CareRegistry, ());
+        let contract_id = env.register_contract(None, CareRegistry);
         let client = CareRegistryClient::new(&env, &contract_id);
         client.initialize(&admin);
 
@@ -123,7 +123,7 @@ mod test {
     fn test_initialize_requires_auth() {
         let env = Env::default();
         let admin = Address::generate(&env);
-        let contract_id = env.register(CareRegistry, ());
+        let contract_id = env.register_contract(None, CareRegistry);
         let client = CareRegistryClient::new(&env, &contract_id);
 
         env.mock_all_auths();

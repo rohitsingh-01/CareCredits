@@ -12,7 +12,7 @@ const server = new StellarSdk.Horizon.Server(HORIZON_URL);
 const rpcServer = new rpcNamespace.Server(RPC_URL);
 
 // Orange Belt registry address
-const REGISTRY_CONTRACT_ID = "CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7";
+const REGISTRY_CONTRACT_ID = "CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224";
 
 // Check test mode - Gated to local development only to protect production integrity
 const urlParams = new URLSearchParams(window.location.search);
@@ -647,5 +647,5 @@ $("withdrawBtn").addEventListener("click", withdrawFromPool);
 if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
-  $("contractInput").value = "CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO";
+  $("contractInput").value = "CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN";
 }

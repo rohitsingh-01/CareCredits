@@ -1,5 +1,5 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env};
 
 // Generate type-safe client for CareRegistry without linking the crate (avoiding symbol collisions in WASM build)
 #[soroban_sdk::contractclient(name = "CareRegistryClient")]
@@ -166,7 +166,7 @@ mod test {
         let contributor_2 = Address::generate(&env);
 
         // Register CareRegistry
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
 
@@ -185,7 +185,7 @@ mod test {
         token_admin.mint(&contributor_2, &500);
 
         // Register and initialize contract
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
         client.initialize(&caregiver, &admin, &1200, &token_address, &registry_address);
 
@@ -228,7 +228,7 @@ mod test {
         let attacker = Address::generate(&env);
         let contributor = Address::generate(&env);
 
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
         registry_client.set_verified(&admin, &caregiver, &true);
@@ -239,7 +239,7 @@ mod test {
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
         client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
@@ -259,7 +259,7 @@ mod test {
         let caregiver = Address::generate(&env);
         let contributor = Address::generate(&env);
 
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
         registry_client.set_verified(&admin, &caregiver, &true);
@@ -270,7 +270,7 @@ mod test {
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
         client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
@@ -293,7 +293,7 @@ mod test {
         let caregiver = Address::generate(&env);
         let contributor = Address::generate(&env);
 
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
         // Leave caregiver unverified
@@ -304,7 +304,7 @@ mod test {
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
         client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
@@ -324,7 +324,7 @@ mod test {
         let caregiver = Address::generate(&env);
         let contributor = Address::generate(&env);
 
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let registry_client = CareRegistryClient::new(&env, &registry_address);
         registry_client.initialize(&admin);
         registry_client.set_verified(&admin, &caregiver, &true);
@@ -336,7 +336,7 @@ mod test {
         let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
         client.initialize(&caregiver, &admin, &1000, &token_address, &registry_address);
 
@@ -351,12 +351,12 @@ mod test {
         let env = Env::default();
         let admin = Address::generate(&env);
         let caregiver = Address::generate(&env);
-        let registry_address = env.register(CareRegistry, ());
+        let registry_address = env.register_contract(None, CareRegistry);
         let token_address = env
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
 
-        let contract_id = env.register(CareFundPool, ());
+        let contract_id = env.register_contract(None, CareFundPool);
         let client = CareFundPoolClient::new(&env, &contract_id);
 
         env.mock_all_auths();

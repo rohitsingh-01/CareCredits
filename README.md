@@ -137,8 +137,8 @@ CareCredits/
 
 ## ⛓️ Deployed Contract Addresses (Stellar Testnet)
 
-*   **CareRegistry ID (Compliance/Admin Layer):** [`CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7`](https://stellar.expert/explorer/testnet/contract/CBHFP5CZ7JMWIBL4CT4HCSIWWEACQQOQJPPN3YWXCIJOMVNYISXU24U7)
-*   **CareFundPool (V2 Funding Layer):** [`CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`](https://stellar.expert/explorer/testnet/contract/CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO)
+*   **CareRegistry ID (Compliance/Admin Layer):** [`CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224`](https://stellar.expert/explorer/testnet/contract/CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224)
+*   **CareFundPool ID (Funding Layer):** [`CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN`](https://stellar.expert/explorer/testnet/contract/CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN)
 
 ---
 
@@ -146,8 +146,9 @@ CareCredits/
 
 We deployed the active instances and ran dynamic operations to demonstrate the on-chain compliance gate in action:
 
-1.  **Registry Verification Call (Pre-verifying caregiver):** [`ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c`](https://stellar.expert/explorer/testnet/tx/ceebf9f01c8b7ed7a7f7c48f53e757c3ec08df6ae5c3c92f93a56418d985d65c)
-2.  **Pool Initialization (V2):** [`cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168`](https://stellar.expert/explorer/testnet/tx/cdfbc06cc5a27d5e2e844b898248b71ec7144e628deb7d983b4e116fa9d3b168)
+1.  **Registry Initialization (`admin.require_auth()` enforced):** [`8b30409d6a83700d7f036e7cd02ec77cfe4137cf5b35607b9c9ae73c8974ea0e`](https://stellar.expert/explorer/testnet/tx/8b30409d6a83700d7f036e7cd02ec77cfe4137cf5b35607b9c9ae73c8974ea0e)
+2.  **Pool Initialization (`admin.require_auth()` enforced):** [`9b5ae056136987d1810cb41931c4957f709b964bd12ff6278cdadcd0bfeed2d1`](https://stellar.expert/explorer/testnet/tx/9b5ae056136987d1810cb41931c4957f709b964bd12ff6278cdadcd0bfeed2d1)
+3.  **Registry Verification Call (Pre-verifying caregiver):** [`b6443f939d206b99b01c7152917cfbda4fe53cb9c56c16a3cec7567ef30eaf18`](https://stellar.expert/explorer/testnet/tx/b6443f939d206b99b01c7152917cfbda4fe53cb9c56c16a3cec7567ef30eaf18)
 
 ---
 
