@@ -106,11 +106,18 @@ async function connectWallet() {
           kit.setWallet(option.id);
           const { address } = await kit.getAddress();
           connectedAddress = address;
-          setStatus("walletStatus", `Connected: ${address.slice(0, 6)}...${address.slice(-6)} (Testnet)`, "success");
           updateWalletUI(true);
           updateWithdrawUI();
+          setStatus(
+            "walletStatus",
+            `Connected: ${address.slice(0, 6)}...${address.slice(-6)} (Testnet)`,
+            "success"
+          );
+
+          if (window.CareAnalytics) window.CareAnalytics.trackConnect(connectedAddress);
         } catch (err) {
-          showErrorBanner("walletStatus", err);
+          if (window.CareAnalytics && connectedAddress) window.CareAnalytics.trackError(connectedAddress, "connection_error", { message: err.message });
+          setStatus("walletStatus", `Connection failed: ${err.message || err}`, "error");
         }
       },
     });
@@ -120,6 +127,7 @@ async function connectWallet() {
 }
 
 function disconnectWallet() {
+  if (connectedAddress && window.CareAnalytics) window.CareAnalytics.trackDisconnect(connectedAddress);
   connectedAddress = null;
   updateWalletUI(false);
   updateWithdrawUI();
@@ -324,6 +332,8 @@ async function contributeToPool() {
   }
 
   try {
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeStart(connectedAddress, amount);
+
     // Proactive balance check (Requirement 3: Insufficient Balance)
     const account = await server.loadAccount(connectedAddress);
     const nativeBal = account.balances.find(b => b.asset_type === "native");
@@ -345,6 +355,8 @@ async function contributeToPool() {
       "contributeStatus"
     );
 
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeSuccess(connectedAddress, amount, result.hash);
+
     setStatusHtml(
       "contributeStatus",
       `✅ Contribution successful! <a href="https://stellar.expert/explorer/testnet/tx/${result.hash}" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: underline; font-weight: 600;">View on StellarExpert</a>`,
@@ -365,6 +377,7 @@ async function contributeToPool() {
       });
     }
   } catch (err) {
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeFailed(connectedAddress, amount, err.message);
     showErrorBanner("contributeStatus", err);
   } finally {
     hideLoading();
@@ -387,6 +400,8 @@ async function withdrawFromPool() {
   }
 
   try {
+    if (window.CareAnalytics) window.CareAnalytics.trackWithdrawStart(connectedAddress, raisedAmount);
+
     const caregiverVal = StellarSdk.nativeToScVal(connectedAddress, { type: "address" });
 
     const result = await invokeContractViaKit(
@@ -395,6 +410,8 @@ async function withdrawFromPool() {
       [caregiverVal],
       "withdrawStatus"
     );
+
+    if (window.CareAnalytics) window.CareAnalytics.trackWithdrawSuccess(connectedAddress, raisedAmount, result.hash);
 
     setStatusHtml(
       "withdrawStatus",
@@ -405,6 +422,7 @@ async function withdrawFromPool() {
     updateProgressUI();
     updateWithdrawUI();
   } catch (err) {
+    if (window.CareAnalytics) window.CareAnalytics.trackWithdrawFailed(connectedAddress, raisedAmount, err.message);
     showErrorBanner("withdrawStatus", err);
   } finally {
     hideLoading();

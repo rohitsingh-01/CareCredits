@@ -104,13 +104,17 @@ async function connectWallet() {
       "success"
     );
 
+    if (window.CareAnalytics) window.CareAnalytics.trackConnect(connectedAddress);
+
     await refreshBalance();
   } catch (err) {
+    if (window.CareAnalytics && connectedAddress) window.CareAnalytics.trackError(connectedAddress, "connection_error", { message: err.message });
     setStatus("walletStatus", `Connection failed: ${err.message || err}`, "error");
   }
 }
 
 function disconnectWallet() {
+  if (connectedAddress && window.CareAnalytics) window.CareAnalytics.trackDisconnect(connectedAddress);
   connectedAddress = null;
   updateWalletUI(false);
   setStatus("walletStatus", "Not connected", "");
@@ -163,6 +167,7 @@ async function sendPayment() {
 
   try {
     setStatus("sendStatus", "Building transaction...");
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeStart(connectedAddress, amount);
 
     const sourceAccount = await server.loadAccount(connectedAddress);
 
@@ -194,6 +199,8 @@ async function sendPayment() {
     setStatus("sendStatus", "Submitting to Stellar Testnet...");
     const result = await server.submitTransaction(signedTransaction);
 
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeSuccess(connectedAddress, amount, result.hash);
+
     setStatus("sendStatus", "✅ Payment sent!", "success");
     setResultPanel(
       `✅ SUCCESS\n\n` +
@@ -211,6 +218,8 @@ async function sendPayment() {
     const details = err?.response?.data?.extras?.result_codes
       ? JSON.stringify(err.response.data.extras.result_codes)
       : err.message || String(err);
+
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeFailed(connectedAddress, amount, details);
 
     setStatus("sendStatus", "❌ Payment failed.", "error");
     setResultPanel(`❌ FAILURE\n\nReason: ${details}`, "error");

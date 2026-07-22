@@ -152,6 +152,72 @@ We deployed the active instances and ran dynamic operations to demonstrate the o
 
 ---
 
+## 📊 Analytics & Interaction Tracking Backend (Level 4 - Milestone 2)
+
+CareCredits includes a production-ready Express + PostgreSQL analytics service located in `/backend` to record wallet interactions, payments, pool contributions, withdrawals, and RPC errors non-blockingly.
+
+### 📁 Backend Architecture & Folder Structure
+```
+backend/
+├── config/
+│   ├── db.js                   # PostgreSQL connection pool & health ping
+│   └── env.js                  # Centralized environment variable validation
+├── db/
+│   └── migrations/
+│       ├── 001_create_wallet_interactions.sql  # Database table & indexes
+│       └── migrate.js          # Automated migration runner
+├── middleware/
+│   ├── errorHandler.js         # Centralized error handler
+│   ├── rateLimiter.js          # IP rate limiting via express-rate-limit
+│   └── validator.js           # Stellar Ed25519 address & payload validation
+├── controllers/
+│   ├── analyticsController.js  # Analytics HTTP request handlers
+│   └── healthController.js     # Health check handler
+├── routes/
+│   ├── analyticsRoutes.js     # Express analytics router
+│   └── healthRoutes.js        # Health check router
+├── services/
+│   └── analyticsService.js    # SQL query layer & fallback store
+├── utils/
+│   └── logger.js               # Structured Winston logger
+├── server.js                   # Express application entrypoint
+└── package.json                # Dependencies (express, pg, helmet, winston)
+```
+
+### 🗄️ PostgreSQL Database Schema (`wallet_interactions`)
+- `id` (BIGSERIAL PRIMARY KEY)
+- `wallet_address` (VARCHAR(56) NOT NULL — Indexed)
+- `event_type` (VARCHAR(50) NOT NULL — Indexed)
+- `transaction_hash` (VARCHAR(64) NULL)
+- `status` (VARCHAR(20) NOT NULL DEFAULT 'success')
+- `amount` (NUMERIC(30, 7) NULL)
+- `metadata` (JSONB NULL)
+- `created_at` (TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP — Indexed)
+
+### 🔌 REST API Endpoints
+- `POST /api/analytics/connect` — Logs wallet connection events
+- `POST /api/analytics/contribute` — Logs contribution started/success/failure events
+- `POST /api/analytics/withdraw` — Logs withdrawal started/success/failure events
+- `POST /api/analytics/error` — Logs RPC & transaction simulation errors
+- `GET /api/health` — Returns system uptime, version, and database connection status
+
+### 🚀 Running the Analytics Backend
+```bash
+# Install dependencies
+npm --prefix backend install
+
+# Run database migrations
+npm --prefix backend run migrate
+
+# Start backend server (Port 5000)
+npm --prefix backend start
+
+# Run API test suite
+npm --prefix backend test
+```
+
+---
+
 ## 🖼️ Verified E2E Screenshot Previews
 
 All screenshots are stored inside the [`screenshots/`](screenshots) directory:
