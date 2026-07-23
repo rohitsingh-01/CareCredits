@@ -217,19 +217,23 @@ The repository contains a complete production documentation package:
 
 ## 🖼️ Feature Screenshots
 
-All screenshots are stored in the [`screenshots/`](screenshots) directory:
+All screenshots are stored in the [`screenshots/`](../screenshots) directory:
 
-| Feature / Journey | Screenshot | Path |
+| Feature / Journey | Screenshot Preview | Relative Path |
 |---|---|---|
-| **Freighter Wallet Connected & Balance** | ![Wallet Connected](screenshots/wallet-connected.png) | `screenshots/wallet-connected.png` |
-| **Family Fund Pool State Loaded** | ![Pool Loaded](screenshots/pool-loaded.png) | `screenshots/pool-loaded.png` |
-| **Deposit XLM Transaction Success** | ![Contribution Success](screenshots/contribute-success.png) | `screenshots/contribute-success.png` |
-| **Caregiver Withdrawal Verification** | ![Withdrawal Loaded](screenshots/withdraw-loaded.png) | `screenshots/withdraw-loaded.png` |
-| **Automated Test Results (58/58 Passing)** | ![Test Results](screenshots/test-results.png) | `screenshots/test-results.png` |
-| **Mobile Responsive Layout** | ![Mobile Layout](screenshots/mobile-responsive.png) | `screenshots/mobile-responsive.png` |
-| **Onboarding Modal Flow** | *(Rendered interactively via onboarding.js)* | `screenshots/pool-loaded.png` |
-| **Feedback Experience Center** | *(Rendered interactively via feedback.js)* | `screenshots/contribute-success.png` |
-| **Admin Console & System Monitoring** | *(Rendered interactively via admin.html)* | `screenshots/pool-connected.png` |
+| **Home Page** | ![Home Page](../screenshots/home-page.png) | `screenshots/home-page.png` |
+| **Wallet Connection & Balance** | ![Wallet Connection](../screenshots/wallet-connection.png) | `screenshots/wallet-connection.png` |
+| **Caregiver Directory** | ![Caregiver Directory](../screenshots/caregiver-directory.png) | `screenshots/caregiver-directory.png` |
+| **Donation Flow** | ![Donation Flow](../screenshots/donation-flow.png) | `screenshots/donation-flow.png` |
+| **Pool Contribution** | ![Pool Contribution](../screenshots/pool-contribution.png) | `screenshots/pool-contribution.png` |
+| **Onboarding Modal Flow** | ![Onboarding Modal](../screenshots/onboarding-modal.png) | `screenshots/onboarding-modal.png` |
+| **Feedback Experience Center** | ![Feedback Modal](../screenshots/feedback-modal.png) | `screenshots/feedback-modal.png` |
+| **Admin Overview Dashboard** | ![Admin Dashboard](../screenshots/admin-dashboard.png) | `screenshots/admin-dashboard.png` |
+| **Admin Analytics Trends** | ![Admin Analytics](../screenshots/admin-analytics.png) | `screenshots/admin-analytics.png` |
+| **System Health & Infrastructure** | ![System Health](../screenshots/system-health.png) | `screenshots/system-health.png` |
+| **Multi-Pool Manager Registry** | ![Multi-Pool Manager](../screenshots/multi-pool-manager.png) | `screenshots/multi-pool-manager.png` |
+| **Mobile View Responsive** | ![Mobile View](../screenshots/mobile-view.png) | `screenshots/mobile-view.png` |
+| **Automated Test Results (58/58 Passing)** | ![Test Results](../screenshots/test-results.png) | `screenshots/test-results.png` |
 
 ---
 

@@ -30,6 +30,7 @@ CareCredits is an open-source, healthcare-focused Web3 platform where families c
 
 | Documentation Guide | Description |
 |---|---|
+| **[`docs/README_LEVEL4_GREEN_BELT.md`](docs/README_LEVEL4_GREEN_BELT.md)** | **Official Rise In Level 4 Green Belt Submission Document** |
 | **[`ARCHITECTURE.md`](ARCHITECTURE.md)** | Technical system architecture with Mermaid diagrams |
 | **[`SECURITY.md`](SECURITY.md)** | Security architecture report & Helmet protections |
 | **[`DEPLOYMENT.md`](DEPLOYMENT.md)** | Production deployment guide (Vercel, Railway, PostgreSQL) |
