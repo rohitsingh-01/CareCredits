@@ -78,6 +78,7 @@
       <button class="admin-tab-btn" data-tab="feedback">💬 Feedback Submissions</button>
       <button class="admin-tab-btn" data-tab="caregivers">👩‍⚕️ Caregiver Directory</button>
       <button class="admin-tab-btn" data-tab="pools">🏊 Funding Pools</button>
+      <button class="admin-tab-btn" data-tab="system">🖥️ System Monitoring</button>
     </div>
 
     <!-- Tab 1: Overview -->
@@ -274,6 +275,50 @@
             </tbody>
           </table>
         </div>
+      </section>
+    </div>
+
+    <!-- Tab 6: System Monitoring & Health Diagnostics -->
+    <div id="adminTabSystem" class="admin-tab-pane">
+      <section class="card wide">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3>🖥️ Infrastructure & System Health Diagnostics</h3>
+          <span id="systemHealthScore" style="background: var(--accent-light); color: var(--accent); padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.9rem;">
+            Health Score: 100 / 100
+          </span>
+        </div>
+
+        <!-- Metric Grid -->
+        <div class="caregiver-meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px;">
+          <div class="meta-item-card" style="padding: 16px;">
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">PostgreSQL Connection</div>
+            <div id="systemDbStatus" style="font-size: 1.2rem; font-weight: 800; color: var(--accent); margin-top: 4px;">🟢 Connected</div>
+            <div id="systemDbLatency" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Latency: 4 ms</div>
+          </div>
+
+          <div class="meta-item-card" style="padding: 16px;">
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Express Process Uptime</div>
+            <div id="systemUptime" style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-top: 4px;">0h 14m 22s</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Continuous Process Run</div>
+          </div>
+
+          <div class="meta-item-card" style="padding: 16px;">
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Memory Heap Usage</div>
+            <div id="systemHeapMem" style="font-size: 1.2rem; font-weight: 800; color: var(--text); margin-top: 4px;">24.5 MB</div>
+            <div id="systemRssMem" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">RSS: 68.2 MB</div>
+          </div>
+
+          <div class="meta-item-card" style="padding: 16px;">
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Runtime & Node.js</div>
+            <div id="systemNodeVer" style="font-size: 1.2rem; font-weight: 800; color: var(--primary); margin-top: 4px;">v25.8.1</div>
+            <div id="systemEnvMode" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">ENV: production</div>
+          </div>
+        </div>
+
+        <h4 style="margin-bottom: 8px;">📡 Live Diagnostic Stream (/api/health)</h4>
+        <pre id="systemHealthRawJson" style="background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; font-family: monospace; font-size: 0.82rem; overflow-x: auto; color: var(--text); min-height: 120px;">
+Fetching system health stream...
+        </pre>
       </section>
     </div>
 

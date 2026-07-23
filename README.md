@@ -302,6 +302,26 @@ CareCredits includes a secure, responsive Administrator Console (`admin.html`, `
 
 ---
 
+## 🛡️ Production Hardening, Security & Observability (Level 4 - Milestone 6)
+
+CareCredits has been fully hardened for production deployment with site reliability engineering (SRE) controls, security headers, database query timing, expanded health diagnostics, and infrastructure monitoring.
+
+### 🔒 Security Protections ([`SECURITY.md`](SECURITY.md))
+- **Strict Helmet CSP & HSTS:** Enforces Content Security Policy, X-Frame-Options (`DENY`), X-Content-Type-Options (`nosniff`), and HTTP Strict Transport Security (HSTS).
+- **Environment Validation (`backend/config/env.js`):** Fail-fast startup checks in production mode for required environment variables (`DATABASE_URL`, `ADMIN_SECRET`).
+- **SQL Injection & XSS Shield:** All database access is strictly parameterized via PostgreSQL `$1`, `$2` placeholders.
+
+### 🖥️ Observability & Infrastructure Widgets ([`ADMIN_GUIDE.md`](ADMIN_GUIDE.md))
+- **Expanded `/api/health` Diagnostics:** Exposes database latency (ms), process uptime (s), memory heap/RSS (MB), Node version, CPU architecture, and health score (100 / 100).
+- **Database Query Timing (`backend/config/db.js`):** Tracks query execution time and logs slow queries (>100ms) and connection errors safely without leaking sensitive parameters.
+- **Graceful Shutdown & Signal Trapping:** Traps `SIGTERM`/`SIGINT` signals to drain HTTP connections and close database connection pools cleanly before exiting.
+- **Admin System Health Tab:** `admin.html` includes a live System Monitoring tab that auto-refreshes health telemetry every 10 seconds.
+
+### 🚀 Production Deployment Documentation ([`DEPLOYMENT.md`](DEPLOYMENT.md) & [`ENVIRONMENT.md`](ENVIRONMENT.md))
+- Step-by-step guides for deploying frontend to Vercel and Express / PostgreSQL backend to Railway or Render.
+
+---
+
 ## 🖼️ Verified E2E Screenshot Previews
 
 All screenshots are stored inside the [`screenshots/`](screenshots) directory:

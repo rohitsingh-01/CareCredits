@@ -31,26 +31,42 @@ function getPool() {
 
 async function query(text, params) {
   const p = getPool();
+  const start = Date.now();
   try {
     const res = await p.query(text, params);
+    const duration = Date.now() - start;
+    if (duration > 100) {
+      logger.warn('⚠️ SLOW QUERY detected (%d ms): %s', duration, text.replace(/\s+/g, ' ').slice(0, 150));
+    }
     return res;
   } catch (error) {
-    logger.error('Database query error: %s [Query: %s]', error.message, text);
+    const duration = Date.now() - start;
+    logger.error('Database query error (%d ms): %s [Query: %s]', duration, error.message, text.replace(/\s+/g, ' ').slice(0, 150));
     throw error;
   }
 }
 
-async function checkHealth() {
+async function checkHealthDetailed() {
+  const start = Date.now();
   try {
     const res = await query('SELECT 1 AS alive', []);
-    return res.rows.length > 0;
+    const latency = Date.now() - start;
+    return {
+      connected: res.rows.length > 0,
+      latencyMs: latency,
+    };
   } catch (error) {
-    return false;
+    return {
+      connected: false,
+      latencyMs: Date.now() - start,
+      error: error.message,
+    };
   }
 }
 
 module.exports = {
   getPool,
   query,
-  checkHealth,
+  checkHealth: async () => (await checkHealthDetailed()).connected,
+  checkHealthDetailed,
 };

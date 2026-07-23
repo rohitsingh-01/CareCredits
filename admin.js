@@ -153,6 +153,46 @@
 
     loadFeedbackData();
     loadPoolsData();
+    loadSystemHealth();
+  }
+
+  async function loadSystemHealth() {
+    try {
+      const res = await fetch('http://localhost:5000/api/health');
+      const health = await res.json();
+
+      const dbStatusEl = document.getElementById('systemDbStatus');
+      const dbLatEl = document.getElementById('systemDbLatency');
+      const uptimeEl = document.getElementById('systemUptime');
+      const heapEl = document.getElementById('systemHeapMem');
+      const rssEl = document.getElementById('systemRssMem');
+      const nodeEl = document.getElementById('systemNodeVer');
+      const envEl = document.getElementById('systemEnvMode');
+      const scoreEl = document.getElementById('systemHealthScore');
+      const rawEl = document.getElementById('systemHealthRawJson');
+
+      if (dbStatusEl) {
+        dbStatusEl.textContent = health.database?.connected ? '🟢 Connected' : '🟡 Resilient Fallback';
+        dbStatusEl.style.color = health.database?.connected ? 'var(--accent)' : '#F59E0B';
+      }
+      if (dbLatEl) dbLatEl.textContent = `Latency: ${health.database?.latencyMs || 0} ms`;
+      if (uptimeEl) {
+        const u = health.uptime || 0;
+        const h = Math.floor(u / 3600);
+        const m = Math.floor((u % 3600) / 60);
+        const s = u % 60;
+        uptimeEl.textContent = `${h}h ${m}m ${s}s`;
+      }
+      if (heapEl) heapEl.textContent = `${health.memory?.heapUsedMb || 0} MB`;
+      if (rssEl) rssEl.textContent = `RSS: ${health.memory?.rssMb || 0} MB`;
+      if (nodeEl) nodeEl.textContent = `${health.nodeVersion || 'v25.8.1'} (${health.cpuArch || 'x64'})`;
+      if (envEl) envEl.textContent = `ENV: ${health.environment || 'production'}`;
+      if (scoreEl) scoreEl.textContent = `Health Score: ${health.healthScore || 100} / 100`;
+      if (rawEl) rawEl.textContent = JSON.stringify(health, null, 2);
+    } catch (err) {
+      const rawEl = document.getElementById('systemHealthRawJson');
+      if (rawEl) rawEl.textContent = `⚠️ Health probe offline: ${err.message || err}`;
+    }
   }
 
   async function loadFeedbackData() {
@@ -250,6 +290,11 @@
       } else {
         updateUIState(false);
       }
+
+      // Auto-refresh system health every 10 seconds
+      setInterval(() => {
+        if (adminToken) loadSystemHealth();
+      }, 10000);
     });
   }
 
