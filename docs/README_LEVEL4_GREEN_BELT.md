@@ -222,10 +222,10 @@ All screenshots are stored in the [`screenshots/`](../screenshots) directory:
 | Feature / Journey | Screenshot Preview | Relative Path |
 |---|---|---|
 | **Home Page** | ![Home Page](../screenshots/home-page.png) | `screenshots/home-page.png` |
-| **Wallet Connection & Balance** | ![Wallet Connection](../screenshots/wallet-connection.png) | `screenshots/wallet-connection.png` |
+| **Wallet Connection & Balance** | ![Wallet Connection](../screenshots/wallet-connected.png) | `screenshots/wallet-connected.png` |
 | **Caregiver Directory** | ![Caregiver Directory](../screenshots/caregiver-directory.png) | `screenshots/caregiver-directory.png` |
 | **Donation Flow** | ![Donation Flow](../screenshots/donation-flow.png) | `screenshots/donation-flow.png` |
-| **Pool Contribution** | ![Pool Contribution](../screenshots/pool-contribution.png) | `screenshots/pool-contribution.png` |
+| **Pool Contribution** | ![Pool Contribution](../screenshots/pool-loaded.png) | `screenshots/pool-loaded.png` |
 | **Onboarding Modal Flow** | ![Onboarding Modal](../screenshots/onboarding-modal.png) | `screenshots/onboarding-modal.png` |
 | **Feedback Experience Center** | ![Feedback Modal](../screenshots/feedback-modal.png) | `screenshots/feedback-modal.png` |
 | **Admin Overview Dashboard** | ![Admin Dashboard](../screenshots/admin-dashboard.png) | `screenshots/admin-dashboard.png` |

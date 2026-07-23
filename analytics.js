@@ -28,6 +28,7 @@
   }
 
   const CareAnalytics = {
+    postEvent: postEvent,
     trackConnect: function (walletAddress, metadata = {}) {
       if (!walletAddress) return;
       postEvent('/connect', {
