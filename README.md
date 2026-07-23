@@ -250,6 +250,31 @@ Logged non-blockingly to the Milestone 2 backend:
 
 ---
 
+## 💬 User Experience Center & Feedback Collection System (Level 4 - Milestone 4)
+
+CareCredits includes a production-quality User Experience Center (`feedback.js`, Express `/api/feedback`, PostgreSQL `feedback_submissions`) that captures rich user sentiment, 5-star ratings, category tags, optional feedback text, and automated environment metadata across key application milestones.
+
+### 🧭 4-Step Guided Feedback Flow
+1. **Step 1 (Star Rating):** 1-5 interactive star selector (⭐⭐⭐⭐⭐) with hover effects and accessible keyboard navigation.
+2. **Step 2 (Category Selection):** Categorize insights into `UI/UX`, `Wallet`, `Donation`, `Caregiver`, `Performance`, `Bug Report`, `Suggestion`, or `Other`.
+3. **Step 3 (Detailed Thoughts):** Multiline textarea for optional comments ("Tell us more...") + auto-captured environment metadata (browser userAgent, page URL, platform OS, app version, connected wallet address).
+4. **Step 4 (Thank You):** Animated thank-you screen ("Thank you for helping improve CareCredits ❤️") with 2.5s auto-close.
+
+### ⚡ Automated & Manual Triggers
+- **Post-Donation Popup:** Automatically triggers after successful caregiver or pool payment.
+- **Post-Withdrawal Popup:** Automatically triggers after caregiver pool withdrawal.
+- **Post-Onboarding Popup:** Automatically triggers after completing the onboarding tour.
+- **Permanent Navbar Button:** "💬 Feedback" button available on all pages.
+
+### 🗄️ Database Schema & API
+- **SQL Table:** `feedback_submissions` (`002_create_feedback_submissions.sql`).
+- **REST Endpoints:**
+  - `POST /api/feedback` — Submit feedback entry (rate limited, sanitized, fallback store supported).
+  - `GET /api/feedback/recent` — Retrieve recent feedback submissions.
+- **Analytics Events:** `feedback_opened`, `feedback_skipped`, `feedback_submitted`, `feedback_category`, `feedback_rating`, `feedback_error`.
+
+---
+
 ## 🖼️ Verified E2E Screenshot Previews
 
 All screenshots are stored inside the [`screenshots/`](screenshots) directory:

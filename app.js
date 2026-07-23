@@ -214,6 +214,9 @@ async function sendPayment() {
     );
 
     await refreshBalance();
+    if (window.CareFeedback) {
+      setTimeout(() => window.CareFeedback.open('donation_success'), 1200);
+    }
   } catch (err) {
     const details = err?.response?.data?.extras?.result_codes
       ? JSON.stringify(err.response.data.extras.result_codes)

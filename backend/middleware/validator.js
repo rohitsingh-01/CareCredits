@@ -14,7 +14,24 @@ const ALLOWED_EVENT_TYPES = [
   'step_3_completed',
   'wallet_connected_during_onboarding',
   'onboarding_skipped',
-  'onboarding_completed'
+  'onboarding_completed',
+  'feedback_opened',
+  'feedback_skipped',
+  'feedback_submitted',
+  'feedback_category',
+  'feedback_rating',
+  'feedback_error'
+];
+
+const ALLOWED_FEEDBACK_CATEGORIES = [
+  'UI/UX',
+  'Wallet',
+  'Donation',
+  'Caregiver',
+  'Performance',
+  'Bug Report',
+  'Suggestion',
+  'Other'
 ];
 
 const ALLOWED_STATUSES = ['success', 'failed', 'pending'];
@@ -27,11 +44,8 @@ function validateAnalyticsInput(req, res, next) {
     req.body.event_type = 'wallet_connected';
   }
 
-  // If onboarding event has no wallet_address, populate with anonymous placeholder
-  if (req.body.event_type && req.body.event_type.includes('onboarding') && !req.body.wallet_address) {
-    req.body.wallet_address = DUMMY_ANONYMOUS_ADDRESS;
-  }
-  if (req.body.event_type && req.body.event_type.startsWith('step_') && !req.body.wallet_address) {
+  // If onboarding/feedback event has no wallet_address, populate with anonymous placeholder
+  if (req.body.event_type && (req.body.event_type.includes('onboarding') || req.body.event_type.includes('feedback') || req.body.event_type.startsWith('step_')) && !req.body.wallet_address) {
     req.body.wallet_address = DUMMY_ANONYMOUS_ADDRESS;
   }
 
@@ -83,8 +97,47 @@ function validateAnalyticsInput(req, res, next) {
   next();
 }
 
+function validateFeedbackInput(req, res, next) {
+  const { rating, category, wallet_address, message } = req.body;
+
+  // Validate rating (1-5)
+  const numRating = parseInt(rating, 10);
+  if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid rating. Must be an integer between 1 and 5.',
+    });
+  }
+
+  // Validate category
+  if (!category || typeof category !== 'string' || !ALLOWED_FEEDBACK_CATEGORIES.includes(category)) {
+    return res.status(400).json({
+      success: false,
+      error: `Invalid category. Allowed categories: ${ALLOWED_FEEDBACK_CATEGORIES.join(', ')}`,
+    });
+  }
+
+  // Validate wallet address if provided
+  if (wallet_address && (typeof wallet_address !== 'string' || (!STELLAR_ADDRESS_REGEX.test(wallet_address) && wallet_address !== DUMMY_ANONYMOUS_ADDRESS))) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid wallet_address format.',
+    });
+  }
+
+  // Sanitize message if provided
+  if (message && typeof message === 'string' && message.length > 2000) {
+    req.body.message = message.slice(0, 2000);
+  }
+
+  next();
+}
+
 module.exports = {
   validateAnalyticsInput,
+  validateFeedbackInput,
   ALLOWED_EVENT_TYPES,
+  ALLOWED_FEEDBACK_CATEGORIES,
   STELLAR_ADDRESS_REGEX,
 };
+

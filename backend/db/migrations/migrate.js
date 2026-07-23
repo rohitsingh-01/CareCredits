@@ -6,11 +6,17 @@ const logger = require('../../utils/logger');
 async function runMigrations() {
   logger.info('Starting PostgreSQL database migrations...');
   try {
-    const migrationFile = path.join(__dirname, '001_create_wallet_interactions.sql');
-    const sql = fs.readFileSync(migrationFile, 'utf8');
+    const migrationFiles = [
+      '001_create_wallet_interactions.sql',
+      '002_create_feedback_submissions.sql',
+    ];
 
-    await db.query(sql, []);
-    logger.info('Successfully executed migration: 001_create_wallet_interactions.sql');
+    for (const file of migrationFiles) {
+      const filePath = path.join(__dirname, file);
+      const sql = fs.readFileSync(filePath, 'utf8');
+      await db.query(sql, []);
+      logger.info('Successfully executed migration: %s', file);
+    }
   } catch (error) {
     logger.error('Migration failed: %s', error.message);
     process.exit(1);

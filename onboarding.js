@@ -320,6 +320,9 @@
       }
       markOnboarded();
       transitionTo(STATES.COMPLETED);
+      if (window.CareFeedback) {
+        setTimeout(() => window.CareFeedback.open('onboarding_completed'), 400);
+      }
     }
   }
 

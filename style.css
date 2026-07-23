@@ -1588,3 +1588,297 @@ input:focus-visible {
   }
 }
 
+/* ==========================================================================
+   Milestone 4 — User Experience Center & Feedback Collection Modal
+   ========================================================================== */
+
+.feedback-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+}
+
+.feedback-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.feedback-modal {
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3);
+  width: 100%;
+  max-width: 540px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.94) translateY(12px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.feedback-overlay.active .feedback-modal {
+  transform: scale(1) translateY(0);
+}
+
+.feedback-header {
+  padding: 24px 28px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+}
+
+.feedback-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.feedback-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.feedback-close-btn:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.feedback-body {
+  padding: 28px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.feedback-step-pane {
+  display: none;
+  animation: feedbackPaneFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.feedback-step-pane.active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@keyframes feedbackPaneFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  width: fit-content;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.feedback-step-title {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.feedback-step-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* Star Rating Controls */
+.feedback-stars-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0 10px;
+}
+
+.feedback-star {
+  background: transparent;
+  border: none;
+  font-size: 2.8rem;
+  color: #CBD5E1;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+  padding: 4px;
+}
+
+.feedback-star:hover,
+.feedback-star.highlighted,
+.feedback-star.selected {
+  color: #F59E0B;
+  transform: scale(1.22);
+}
+
+.feedback-rating-label {
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-height: 24px;
+}
+
+/* Category Grid */
+.feedback-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.feedback-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.feedback-category-btn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.feedback-category-btn.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Textarea Comments */
+.feedback-textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--bg);
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.feedback-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.feedback-comment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.feedback-char-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Heart Pulse Animation for Thank You Screen */
+@keyframes heartPulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.18); }
+}
+
+/* Footer Nav */
+.feedback-footer {
+  padding: 16px 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  background: rgba(248, 250, 252, 0.5);
+}
+
+.feedback-btn-skip {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.feedback-btn-skip:hover {
+  color: var(--text);
+  background: rgba(226, 232, 240, 0.5);
+}
+
+/* Responsive Breakdown */
+@media (max-width: 768px) {
+  .feedback-modal {
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+  }
+  .feedback-header, .feedback-body, .feedback-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .feedback-star {
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .feedback-categories-grid {
+    grid-template-columns: 1fr;
+  }
+  .feedback-star {
+    font-size: 2.1rem;
+  }
+}
+
+

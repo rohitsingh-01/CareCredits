@@ -376,6 +376,10 @@ async function contributeToPool() {
         origin: { y: 0.7 }
       });
     }
+
+    if (window.CareFeedback) {
+      setTimeout(() => window.CareFeedback.open('donation_success'), 1200);
+    }
   } catch (err) {
     if (window.CareAnalytics) window.CareAnalytics.trackContributeFailed(connectedAddress, amount, err.message);
     showErrorBanner("contributeStatus", err);
@@ -396,6 +400,9 @@ async function withdrawFromPool() {
     updateWithdrawUI();
     setStatus("withdrawStatus", "✅ Withdrawal successful (Mock).", "success");
     hideLoading();
+    if (window.CareFeedback) {
+      setTimeout(() => window.CareFeedback.open('withdrawal_success'), 1200);
+    }
     return;
   }
 
@@ -421,6 +428,10 @@ async function withdrawFromPool() {
     raisedAmount = 0; // Set local raised amount to 0 since it has been withdrawn
     updateProgressUI();
     updateWithdrawUI();
+
+    if (window.CareFeedback) {
+      setTimeout(() => window.CareFeedback.open('withdrawal_success'), 1200);
+    }
   } catch (err) {
     if (window.CareAnalytics) window.CareAnalytics.trackWithdrawFailed(connectedAddress, raisedAmount, err.message);
     showErrorBanner("withdrawStatus", err);
