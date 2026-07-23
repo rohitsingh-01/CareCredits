@@ -6,6 +6,7 @@ const config = require('./config/env');
 const logger = require('./utils/logger');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const healthRoutes = require('./routes/healthRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -34,16 +35,18 @@ app.use(morgan('combined', {
 // Mount Routes
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api', healthRoutes);
 
 // Root Endpoint
 app.get('/', (req, res) => {
   res.status(200).json({
-    service: 'CareCredits Analytics & Feedback API Server',
+    service: 'CareCredits Analytics, Feedback & Admin API Server',
     status: 'online',
     healthCheck: '/api/health',
     analytics: '/api/analytics/recent',
     feedback: '/api/feedback/recent',
+    adminDashboard: '/api/admin/dashboard',
   });
 });
 

@@ -275,6 +275,33 @@ CareCredits includes a production-quality User Experience Center (`feedback.js`,
 
 ---
 
+## ⚙️ Admin Console & Multi-Pool Registry System (Level 4 - Milestone 5)
+
+CareCredits includes a secure, responsive Administrator Console (`admin.html`, `admin.js`, Express `/api/admin/*`) providing operational visibility into platform analytics, user feedback, caregiver statuses, and multi-pool management.
+
+### 🔒 Admin Security & Token Authentication
+- **Authentication:** Environment-configurable credentials (`ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_SECRET`).
+- **Session Protection:** Token-based bearer authentication with automatic 15-minute inactivity session expiration.
+- **Protected Routes:** All `/api/admin/*` endpoints require `Authorization: Bearer <token>` authorization headers.
+
+### 🏊 Multi-Pool Support & Registry (`pools.js`)
+- **Dynamic Multi-Pool Registry:** Manages active pool contract IDs on Stellar Testnet (Primary Family Fund Pool, Hospice Relief Fund, Pediatric Emergency Relief Pool).
+- **Frontend Pool Switcher:** Interactive dropdown in `pool.html` (`#poolSelectorDropdown`) allows switching active pools, updating raised balances, caregiver metadata, and goal progress bars.
+- **Backward Compatibility:** Preserves existing primary contract (`CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN`) as default.
+
+### 🗄️ Admin REST Endpoints & Database Schema
+- **SQL Tables:** `admin_audit_logs` and `registered_pools` (`003_create_admin_tables.sql`).
+- **REST API Endpoints:**
+  - `POST /api/admin/login` — Authenticate admin credentials and generate bearer token.
+  - `POST /api/admin/logout` — Revoke active admin session token.
+  - `GET /api/admin/dashboard` — Operational summary metrics (total XLM volume, tx count, connected wallets, avg feedback rating).
+  - `GET /api/admin/analytics` — Time-series analytics payload for daily donation trends and wallet connections.
+  - `GET /api/admin/feedback` — Filterable feedback submission table with search query and star rating filters.
+  - `GET /api/admin/caregivers` — List of registered and verified caregivers.
+  - `GET /api/admin/pools` — List of active funding pool instances.
+
+---
+
 ## 🖼️ Verified E2E Screenshot Previews
 
 All screenshots are stored inside the [`screenshots/`](screenshots) directory:

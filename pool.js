@@ -672,8 +672,22 @@ $("loadPoolBtn").addEventListener("click", loadPool);
 $("contributeBtn").addEventListener("click", contributeToPool);
 $("withdrawBtn").addEventListener("click", withdrawFromPool);
 
-// Pre-fill fields with Level 3 Contract ID
-if (isTestMode) {
+// Multi-Pool Registry Integration
+const poolDropdown = $("poolSelectorDropdown");
+if (poolDropdown && window.CarePools) {
+  const activePool = window.CarePools.getActivePool();
+  if (activePool) {
+    poolDropdown.value = activePool.id;
+    $("contractInput").value = activePool.id;
+  }
+
+  poolDropdown.addEventListener("change", (e) => {
+    const selectedId = e.target.value;
+    window.CarePools.setActivePool(selectedId);
+    $("contractInput").value = selectedId;
+    loadPool();
+  });
+} else if (isTestMode) {
   $("contractInput").value = "CD3BFFX7DTNJAGDVVM5RYGGQQNURZTH4VSBLWF55YXY3L6T2WWZK57EI";
 } else {
   $("contractInput").value = "CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN";

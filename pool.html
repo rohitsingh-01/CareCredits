@@ -55,6 +55,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="wallet.html">Wallet</a></li>
         <li><a href="pool.html" class="active">Fund Pool</a></li>
+        <li><a href="admin.html">⚙️ Admin</a></li>
         <li><button id="openOnboardingBtn" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.82rem; border-color: var(--border);">❓ Tour</button></li>
         <li><button id="openFeedbackBtn" class="btn btn-outline open-feedback-btn" style="padding: 6px 12px; font-size: 0.82rem; border-color: var(--border);">💬 Feedback</button></li>
       </ul>
@@ -85,13 +86,23 @@
     <div class="grid">
       <!-- Config / Load Pool Card -->
       <section class="card wide">
-        <h2>🔧 Pool Contract Configuration</h2>
-        <p class="hint" style="margin-bottom: 16px;">Specify the active Soroban Smart Contract ID to load target raised details and sync events.</p>
+        <h2>🔧 Active Funding Pool Registry</h2>
+        <p class="hint" style="margin-bottom: 16px;">Select an active family funding pool from the registry or specify a custom Soroban Contract ID.</p>
+        
+        <div style="margin-bottom: 16px;">
+          <label style="font-weight: 700; display: block; margin-bottom: 6px; font-size: 0.9rem;">Select Active Funding Pool</label>
+          <select id="poolSelectorDropdown" class="feedback-textarea" style="height: 48px; cursor: pointer; font-weight: 600;">
+            <option value="CDSBFPVCUE6V7HAEMUYY5RSOXV34TIC5EKJZMBEG3J3XKXIERA2EV6CN">💙 Primary Family Support Pool (Default)</option>
+            <option value="CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224">🌿 Hospice Caregiver Relief Fund</option>
+            <option value="CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC">👶 Pediatric Emergency Care Pool</option>
+          </select>
+        </div>
+
         <div class="config-form">
           <label style="flex: 1; margin-bottom: 0;">Contract ID
             <input id="contractInput" type="text" placeholder="C... contract address" />
           </label>
-          <button id="loadPoolBtn" class="btn btn-accent" style="height: 48px;">Load Pool</button>
+          <button id="loadPoolBtn" class="btn btn-accent" style="height: 48px;">Load Selected Pool</button>
         </div>
         <p id="configStatus" class="status" style="text-align: left; margin-top: 12px; min-height: 0;" aria-live="polite"></p>
       </section>
@@ -180,6 +191,7 @@
 
   <!-- Scripts -->
   <script src="analytics.js"></script>
+  <script src="pools.js"></script>
   <script src="onboarding.js"></script>
   <script src="feedback.js"></script>
   <script type="module" src="pool.js"></script>

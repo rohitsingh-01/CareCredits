@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareCredits — Administrator Console & Operational Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-radial">
+
+  <!-- Navbar -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand-mark-logo">💙</span> CareCredits <span style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: 12px; margin-left: 6px;">ADMIN</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="wallet.html">Wallet</a></li>
+        <li><a href="pool.html">Fund Pool</a></li>
+        <li><a href="admin.html" class="active">⚙️ Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Login Modal Overlay (Displayed if unauthenticated) -->
+  <div id="adminLoginOverlay" class="onboarding-overlay active">
+    <div class="onboarding-modal" style="max-width: 440px;">
+      <div class="onboarding-header">
+        <div class="onboarding-brand">
+          <span>🔒</span> Admin Authentication
+        </div>
+      </div>
+      <div class="onboarding-body" style="min-height: 260px;">
+        <h2 class="onboarding-step-title" style="font-size: 1.4rem;">CareCredits Admin Access</h2>
+        <p class="onboarding-step-desc" style="margin-bottom: 16px;">Enter operational credentials to manage platform analytics, feedback, and funding pools.</p>
+
+        <form id="adminLoginForm">
+          <div style="margin-bottom: 12px;">
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 4px;">Username</label>
+            <input id="adminUsernameInput" type="text" class="feedback-textarea" style="height: 44px; padding: 10px;" value="admin" required />
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 4px;">Password</label>
+            <input id="adminPasswordInput" type="password" class="feedback-textarea" style="height: 44px; padding: 10px;" value="carecredits2026" required />
+          </div>
+          <button type="submit" id="adminLoginBtn" class="btn btn-primary" style="width: 100%; height: 48px;">Login to Admin Console →</button>
+          <p id="adminLoginError" class="status error hidden" style="margin-top: 12px; font-size: 0.85rem;"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Admin Dashboard Area -->
+  <div id="adminDashboardContent" class="container section hidden">
+    
+    <!-- Admin Header Bar -->
+    <header style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h1 style="font-size: 1.8rem; margin: 0;">Operational Administrator Console</h1>
+        <p class="hint" style="margin: 4px 0 0;">Stellar Testnet Live Operational Visibility & Multi-Pool Management</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span id="adminSessionStatus" style="font-size: 0.85rem; color: var(--accent); font-weight: 600; background: var(--accent-light); padding: 6px 12px; border-radius: 20px;">
+          🟢 Session Active
+        </span>
+        <button id="adminLogoutBtn" class="btn btn-outline" style="padding: 8px 16px;">Logout</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div style="display: flex; gap: 8px; border-bottom: 2px solid var(--border); margin-bottom: 28px; overflow-x: auto;">
+      <button class="admin-tab-btn active" data-tab="overview">📊 Overview</button>
+      <button class="admin-tab-btn" data-tab="analytics">📈 Time-Series Analytics</button>
+      <button class="admin-tab-btn" data-tab="feedback">💬 Feedback Submissions</button>
+      <button class="admin-tab-btn" data-tab="caregivers">👩‍⚕️ Caregiver Directory</button>
+      <button class="admin-tab-btn" data-tab="pools">🏊 Funding Pools</button>
+    </div>
+
+    <!-- Tab 1: Overview -->
+    <div id="adminTabOverview" class="admin-tab-pane active">
+      <!-- Metric Cards Grid -->
+      <div class="caregiver-meta-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+        <div class="meta-item-card" style="padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total XLM Volume</div>
+          <div id="metricTotalVolume" style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-top: 6px;">142.5 XLM</div>
+          <div style="font-size: 0.78rem; color: var(--accent); margin-top: 4px;">⚡ 100% On-Chain Settled</div>
+        </div>
+
+        <div class="meta-item-card" style="padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Total Transactions</div>
+          <div id="metricTotalTx" style="font-size: 1.8rem; font-weight: 800; color: var(--text); margin-top: 6px;">24</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Soroban Contract Invocations</div>
+        </div>
+
+        <div class="meta-item-card" style="padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Connected Wallets</div>
+          <div id="metricConnectedWallets" style="font-size: 1.8rem; font-weight: 800; color: var(--primary); margin-top: 6px;">12</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Unique Freighter Keys</div>
+        </div>
+
+        <div class="meta-item-card" style="padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Average Feedback Rating</div>
+          <div id="metricAvgRating" style="font-size: 1.8rem; font-weight: 800; color: #F59E0B; margin-top: 6px;">4.8 ★</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">From User Experience Center</div>
+        </div>
+
+        <div class="meta-item-card" style="padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Active Pools</div>
+          <div id="metricActivePools" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-top: 6px;">3</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Registered Contract Pools</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Time-Series Analytics -->
+    <div id="adminTabAnalytics" class="admin-tab-pane">
+      <div class="grid">
+        <section class="card wide">
+          <h3>📈 Daily Contribution Volume (XLM)</h3>
+          <p class="hint">Live daily aggregated donations across all active funding pools.</p>
+          <div style="height: 240px; margin-top: 16px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: flex-end; gap: 16px;">
+            <!-- Simple Lightweight SVG/CSS Bar Chart -->
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 20%; background: var(--primary-light); border-top: 3px solid var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 17</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 35%; background: var(--primary-light); border-top: 3px solid var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 18</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 28%; background: var(--primary-light); border-top: 3px solid var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 19</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 50%; background: var(--primary-light); border-top: 3px solid var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 20</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 65%; background: var(--primary-light); border-top: 3px solid var(--primary); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 21</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 85%; background: var(--accent-light); border-top: 3px solid var(--accent); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 22</span>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+              <div style="margin-top: auto; width: 100%; max-width: 40px; height: 100%; background: var(--accent-light); border-top: 3px solid var(--accent); border-radius: 4px 4px 0 0;"></div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Jul 23</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Tab 3: Feedback Submissions -->
+    <div id="adminTabFeedback" class="admin-tab-pane">
+      <section class="card wide">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <h3>💬 User Experience Center Submissions</h3>
+          <div style="display: flex; gap: 10px;">
+            <input id="adminFeedbackSearchInput" type="text" class="feedback-textarea" style="height: 38px; width: 200px; padding: 6px 12px; font-size: 0.85rem;" placeholder="Search feedback..." />
+            <select id="adminFeedbackRatingFilter" class="feedback-textarea" style="height: 38px; padding: 6px 12px; font-size: 0.85rem;">
+              <option value="1">All Ratings (1-5 ★)</option>
+              <option value="4">4+ Stars Only</option>
+              <option value="5">5 Stars Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted);">
+                <th style="padding: 10px;">ID</th>
+                <th style="padding: 10px;">Rating</th>
+                <th style="padding: 10px;">Category</th>
+                <th style="padding: 10px;">Message / Comment</th>
+                <th style="padding: 10px;">Page</th>
+                <th style="padding: 10px;">Date</th>
+              </tr>
+            </thead>
+            <tbody id="adminFeedbackTableBody">
+              <tr>
+                <td colspan="6" style="padding: 16px; text-align: center; color: var(--text-muted);">Loading feedback entries...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Tab 4: Caregiver Directory -->
+    <div id="adminTabCaregivers" class="admin-tab-pane">
+      <section class="card wide">
+        <h3>👩‍⚕️ Registered & Verified Caregivers</h3>
+        <p class="hint" style="margin-bottom: 16px;">Caregiver authorization records managed via `CareRegistry` smart contract.</p>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted);">
+                <th style="padding: 10px;">Caregiver Name</th>
+                <th style="padding: 10px;">Organization</th>
+                <th style="padding: 10px;">Stellar Address</th>
+                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px;">Assigned Pool ID</th>
+              </tr>
+            </thead>
+            <tbody id="adminCaregiversTableBody">
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">Sarah Jenkins, RN</td>
+                <td style="padding: 12px;">St. Jude Community Hospice</td>
+                <td style="padding: 12px; font-family: monospace;">GCX7XQS7...GGMV</td>
+                <td style="padding: 12px;"><span style="background: var(--accent-light); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Verified</span></td>
+                <td style="padding: 12px; font-family: monospace; font-size: 0.8rem;">CDSBFPVC...2EV6CN</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">Marcus Vance</td>
+                <td style="padding: 12px;">Grace Elderly Care</td>
+                <td style="padding: 12px; font-family: monospace;">GA3IGBR6...VWXYZ</td>
+                <td style="padding: 12px;"><span style="background: var(--accent-light); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Verified</span></td>
+                <td style="padding: 12px; font-family: monospace; font-size: 0.8rem;">CDYIHXTJ...JZHE4224</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Tab 5: Funding Pools -->
+    <div id="adminTabPools" class="admin-tab-pane">
+      <section class="card wide">
+        <h3>🏊 Multi-Pool Registry Management</h3>
+        <p class="hint" style="margin-bottom: 16px;">Active family funding pools deployed on Stellar Testnet.</p>
+
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted);">
+                <th style="padding: 10px;">Pool Title</th>
+                <th style="padding: 10px;">Contract ID</th>
+                <th style="padding: 10px;">Caregiver</th>
+                <th style="padding: 10px;">Target Goal</th>
+                <th style="padding: 10px;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminPoolsTableBody">
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">💙 Primary Family Support Pool</td>
+                <td style="padding: 12px; font-family: monospace; font-size: 0.8rem;">CDSBFPVC...2EV6CN</td>
+                <td style="padding: 12px; font-family: monospace;">GCX7XQS7...GGMV</td>
+                <td style="padding: 12px; font-weight: 700; color: var(--primary);">50.0 XLM</td>
+                <td style="padding: 12px;"><span style="background: var(--accent-light); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Active</span></td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">🌿 Hospice Caregiver Relief Fund</td>
+                <td style="padding: 12px; font-family: monospace; font-size: 0.8rem;">CDYIHXTJ...JZHE4224</td>
+                <td style="padding: 12px; font-family: monospace;">GA3IGBR6...VWXYZ</td>
+                <td style="padding: 12px; font-weight: 700; color: var(--primary);">100.0 XLM</td>
+                <td style="padding: 12px;"><span style="background: var(--accent-light); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Active</span></td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-weight: 700;">👶 Pediatric Emergency Care Pool</td>
+                <td style="padding: 12px; font-family: monospace; font-size: 0.8rem;">CDLZFC3S...HHGCYSC</td>
+                <td style="padding: 12px; font-family: monospace;">GBDTF5W4...B4C</td>
+                <td style="padding: 12px; font-weight: 700; color: var(--primary);">75.0 XLM</td>
+                <td style="padding: 12px;"><span style="background: var(--accent-light); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-weight: 600;">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="analytics.js"></script>
+  <script src="pools.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

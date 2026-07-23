@@ -9,6 +9,7 @@ async function runMigrations() {
     const migrationFiles = [
       '001_create_wallet_interactions.sql',
       '002_create_feedback_submissions.sql',
+      '003_create_admin_tables.sql',
     ];
 
     for (const file of migrationFiles) {
