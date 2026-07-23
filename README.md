@@ -218,6 +218,38 @@ npm --prefix backend test
 
 ---
 
+## 🚀 Interactive User Onboarding System (Level 4 - Milestone 3)
+
+CareCredits provides a 3-step interactive onboarding modal (`onboarding.js`) for first-time visitors to educate them on decentralized healthcare funding and guide them through wallet connection.
+
+### 🧭 3-Step Guided Experience
+1. **Step 1 — Welcome to CareCredits:** Explains healthcare micro-funding, instant 3-second Stellar transactions, and transparent on-chain auditing.
+2. **Step 2 — Secure Wallet Setup:** Explains why a Stellar wallet is required, detects Freighter extension presence, and provides an in-modal connection trigger for Stellar Testnet.
+3. **Step 3 — Explore CareCredits:** Highlights platform features (Browse Verified Caregivers, Family Fund Pools) and provides a primary **"Enter CareCredits"** CTA.
+
+### ⚙️ State Management & FSM
+- Managed via `window.CareOnboarding` using a Finite State Machine (`IDLE`, `STEP_1`, `STEP_2`, `STEP_3`, `COMPLETED`, `SKIPPED`).
+- State is persisted in `localStorage` under the key `carecredits_onboarded = 'true'`.
+- Returning users automatically skip onboarding.
+- **Testing Reset:** Execute `CareOnboarding.reset()` in the browser developer console to clear local storage and reset state for re-testing.
+
+### ♿ Accessibility & Responsiveness
+- **Focus Control:** Traps keyboard focus (`Tab` / `Shift+Tab`) inside the active modal dialog when open.
+- **Keyboard Shortcut:** `Escape` key closes/skips the onboarding tour cleanly.
+- **Responsive Layout:** Responsive styles for `375px` (Mobile), `768px` (Tablet), `1024px`, and Desktop viewports.
+
+### 📊 Onboarding Analytics Events
+Logged non-blockingly to the Milestone 2 backend:
+- `onboarding_started` — Fired when onboarding modal opens.
+- `step_1_completed` — Fired when user completes Step 1.
+- `step_2_completed` — Fired when user completes Step 2.
+- `wallet_connected_during_onboarding` — Fired when user connects Freighter inside Step 2.
+- `step_3_completed` — Fired when user completes Step 3.
+- `onboarding_completed` — Fired when user finishes onboarding tour via "Enter CareCredits".
+- `onboarding_skipped` — Fired when user closes or skips the tour.
+
+---
+
 ## 🖼️ Verified E2E Screenshot Previews
 
 All screenshots are stored inside the [`screenshots/`](screenshots) directory:

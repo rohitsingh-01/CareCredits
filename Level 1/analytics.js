@@ -114,6 +114,47 @@
         metadata: { errorType, errorDetails },
       });
     },
+
+    trackOnboardingStart: function (walletAddress = null, metadata = {}) {
+      postEvent('/connect', {
+        wallet_address: walletAddress || 'G0000000000000000000000000000000000000000000000000000000',
+        event_type: 'onboarding_started',
+        metadata,
+      });
+    },
+
+    trackOnboardingStep: function (stepNumber, walletAddress = null, metadata = {}) {
+      postEvent('/connect', {
+        wallet_address: walletAddress || 'G0000000000000000000000000000000000000000000000000000000',
+        event_type: `step_${stepNumber}_completed`,
+        metadata,
+      });
+    },
+
+    trackOnboardingWalletConnect: function (walletAddress, metadata = {}) {
+      if (!walletAddress) return;
+      postEvent('/connect', {
+        wallet_address: walletAddress,
+        event_type: 'wallet_connected_during_onboarding',
+        metadata,
+      });
+    },
+
+    trackOnboardingSkip: function (walletAddress = null, metadata = {}) {
+      postEvent('/connect', {
+        wallet_address: walletAddress || 'G0000000000000000000000000000000000000000000000000000000',
+        event_type: 'onboarding_skipped',
+        metadata,
+      });
+    },
+
+    trackOnboardingComplete: function (walletAddress = null, metadata = {}) {
+      postEvent('/connect', {
+        wallet_address: walletAddress || 'G0000000000000000000000000000000000000000000000000000000',
+        event_type: 'onboarding_completed',
+        metadata,
+      });
+    },
   };
 
   window.CareAnalytics = CareAnalytics;

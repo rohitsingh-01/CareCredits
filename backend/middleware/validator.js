@@ -7,11 +7,19 @@ const ALLOWED_EVENT_TYPES = [
   'withdrawal_started',
   'withdrawal_success',
   'withdrawal_failed',
-  'rpc_error'
+  'rpc_error',
+  'onboarding_started',
+  'step_1_completed',
+  'step_2_completed',
+  'step_3_completed',
+  'wallet_connected_during_onboarding',
+  'onboarding_skipped',
+  'onboarding_completed'
 ];
 
 const ALLOWED_STATUSES = ['success', 'failed', 'pending'];
 const STELLAR_ADDRESS_REGEX = /^G[A-Z2-7]{55}$/;
+const DUMMY_ANONYMOUS_ADDRESS = 'G0000000000000000000000000000000000000000000000000000000';
 
 function validateAnalyticsInput(req, res, next) {
   // Set default event_type for /connect route if missing
@@ -19,10 +27,18 @@ function validateAnalyticsInput(req, res, next) {
     req.body.event_type = 'wallet_connected';
   }
 
+  // If onboarding event has no wallet_address, populate with anonymous placeholder
+  if (req.body.event_type && req.body.event_type.includes('onboarding') && !req.body.wallet_address) {
+    req.body.wallet_address = DUMMY_ANONYMOUS_ADDRESS;
+  }
+  if (req.body.event_type && req.body.event_type.startsWith('step_') && !req.body.wallet_address) {
+    req.body.wallet_address = DUMMY_ANONYMOUS_ADDRESS;
+  }
+
   const { wallet_address, event_type, status, amount, transaction_hash } = req.body;
 
   // Validate wallet address
-  if (!wallet_address || typeof wallet_address !== 'string' || !STELLAR_ADDRESS_REGEX.test(wallet_address)) {
+  if (!wallet_address || typeof wallet_address !== 'string' || (!STELLAR_ADDRESS_REGEX.test(wallet_address) && wallet_address !== DUMMY_ANONYMOUS_ADDRESS)) {
     return res.status(400).json({
       success: false,
       error: 'Invalid wallet_address format. Must be a valid 56-character Stellar Ed25519 public key starting with G.',
