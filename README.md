@@ -3,39 +3,40 @@
 [![CI Pipeline](https://github.com/rohitsingh-01/CareCredits/actions/workflows/ci.yml/badge.svg)](https://github.com/rohitsingh-01/CareCredits/actions/workflows/ci.yml)
 [![Vercel Deployment](https://img.shields.io/badge/deployment-vercel-blue)](https://care-credits.vercel.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Belt Claimed: Orange](https://img.shields.io/badge/Belt%20Claimed-Orange%20(Level%203)-orange)](#-submission-portals-journey-to-mastery)
+[![Belt Claimed: Green](https://img.shields.io/badge/Belt%20Claimed-Green%20(Level%204)-emerald)](#-submission-portals-journey-to-mastery)
 
 CareCredits is an open-source, healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network with on-chain compliance controls.
 
-## Level 1 (White Belt) — Wallet Integration
-*   **[Level 1/wallet.html](Level%201/wallet.html):** The primary user interface for peer-to-peer care credit direct transfers.
-*   **[Level 1/app.js](Level%201/app.js):** Production logic implementing Freighter wallet connection, account balance fetching, and transaction signing.
-*   **[Level 1/index.html](Level%201/index.html):** The landing page displaying the caregiver directory.
+## 🟢 Level 4 (Green Belt) — Complete Production Platform & Infrastructure
+* **Milestone 1:** Soroban Smart Contract Security Audit & Testnet Redeployment (`initialize()` authorization fix).
+* **Milestone 2:** Production Analytics Backend (Express + PostgreSQL `/api/analytics` telemetry).
+* **Milestone 3:** Interactive User Onboarding System (`onboarding.js` 3-step modal & FSM).
+* **Milestone 4:** User Experience Center & Feedback Collection (`feedback.js` 4-step modal & Express `/api/feedback`).
+* **Milestone 5:** Admin Dashboard & Multi-Pool Support (`admin.html`, `admin.js`, `pools.js`, `/api/admin/*`).
+* **Milestone 6:** Production Hardening, Helmet CSP, Graceful Shutdown, & System Monitoring.
+* **Milestone 7:** Comprehensive Testing (58/58 tests passing), Architecture Documentation, & Release Readiness.
 
 ---
 
 ## 🌐 Live Resources & Portals
 
-*   **Live Application:** [https://care-credits.vercel.app](https://care-credits.vercel.app)
-*   **Demo Video Walkthrough:** [CareCredits Walkthrough (YouTube)](https://youtu.be/UgHnk698BJw?si=XiN6-4QFzVk9UR-i)
-*   **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
+* **Live Application:** [https://care-credits.vercel.app](https://care-credits.vercel.app)
+* **Demo Video Walkthrough:** [CareCredits Walkthrough (YouTube)](https://youtu.be/UgHnk698BJw?si=XiN6-4QFzVk9UR-i)
+* **GitHub Repository:** [https://github.com/rohitsingh-01/CareCredits](https://github.com/rohitsingh-01/CareCredits)
 
 ---
 
-## 🥋 Submission Portals (Journey to Mastery)
+## 🥋 Submission Portals & Documentation Index
 
-For detailed evidence, step-by-step requirements, screenshots, and security analyses, use the following navigation index:
-
-| Documentation | Description |
+| Documentation Guide | Description |
 |---|---|
-| **[README_WHITE_BELT.md](docs/README_WHITE_BELT.md)** | White Belt implementation |
-| **[README_YELLOW_BELT.md](docs/README_YELLOW_BELT.md)** | Yellow Belt implementation |
-| **[README_ORANGE_BELT.md](docs/README_ORANGE_BELT.md)** | Orange Belt implementation |
-| **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System architecture |
-| **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** | Deployment guide |
-| **[SECURITY.md](docs/SECURITY.md)** | Security model |
-| **[CONTRIBUTING.md](CONTRIBUTING.md)** | Contribution guide |
-| **[LICENSE](LICENSE)** | Open-source MIT License |
+| **[`ARCHITECTURE.md`](ARCHITECTURE.md)** | Technical system architecture with Mermaid diagrams |
+| **[`SECURITY.md`](SECURITY.md)** | Security architecture report & Helmet protections |
+| **[`DEPLOYMENT.md`](DEPLOYMENT.md)** | Production deployment guide (Vercel, Railway, PostgreSQL) |
+| **[`ENVIRONMENT.md`](ENVIRONMENT.md)** | Environment variable specification |
+| **[`ADMIN_GUIDE.md`](ADMIN_GUIDE.md)** | Operator manual for platform administrators |
+| **[`CONTRIBUTING.md`](CONTRIBUTING.md)** | Open-source contributor guidelines |
+| **[`LICENSE`](LICENSE)** | Open-source MIT License |
 
 ---
 
