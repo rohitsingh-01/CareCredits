@@ -5,7 +5,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Belt Claimed: Green](https://img.shields.io/badge/Belt%20Claimed-Green%20(Level%204)-emerald)](#-submission-portals-journey-to-mastery)
 
+**Judged path for current submission: repository root (`/`).**
+
 CareCredits is an open-source, healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network with on-chain compliance controls.
+
+## ⚪ Level 1 (White Belt) — Wallet Integration (Canonical Location: `/`)
+* **[index.html](index.html):** Landing page and caregiver directory.
+* **[wallet.html](wallet.html):** Primary user interface for peer-to-peer care credit direct transfers.
+* **[app.js](app.js):** Production logic implementing Freighter wallet connection, account balance fetching, transaction building, and testnet submission.
 
 ## 🟢 Level 4 (Green Belt) — Complete Production Platform & Infrastructure
 * **Milestone 1:** Soroban Smart Contract Security Audit & Testnet Redeployment (`initialize()` authorization fix).
