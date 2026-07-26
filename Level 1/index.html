@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareCredits — On-Chain Caregiver Funding on Stellar (Level 1 White Belt)</title>
+  <meta name="description" content="CareCredits allows families to support caregivers directly and transparently through Stellar Testnet blockchain." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Nav Bar -->
+  <nav class="site-nav">
+    <div class="container">
+      <a href="index.html" class="brand">
+        <span class="brand-mark-logo">💙</span> CareCredits
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="wallet.html">Wallet Integration</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="eyebrow">
+          Level 1 — White Belt Submission
+        </span>
+        <h1>Send care credits directly to verified caregivers on Stellar.</h1>
+        <p class="lede">
+          CareCredits turns payments into transparent, on-chain top-ups—enabling families to support caregivers with public, verifiable transactions.
+        </p>
+        <div class="hero-actions">
+          <a href="wallet.html" class="btn btn-primary">Open Wallet Integration</a>
+          <a href="#directory" class="btn btn-outline">Browse Caregivers</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Directory Section -->
+  <section class="section" id="directory">
+    <div class="container">
+      <div class="section-header">
+        <h2>👩‍⚕️ Caregiver Directory</h2>
+        <p>Select a caregiver below to load their public key directly into the Freighter wallet payment form.</p>
+      </div>
+      <div id="caregiverGrid" class="caregiver-grid">
+        <!-- Renders dynamically from directory.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>Stellar Testnet Only · CareCredits · Level 1 White Belt Submission</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="directory.js"></script>
+</body>
+</html>

@@ -6,6 +6,10 @@ This document details the features, setup, and compliance evidence for the **Whi
 
 ## 📋 Level 1 Project Overview
 
+> **Judged Code Location:**  
+> - **Level 1 Folder:** [`Level 1/wallet.html`](../Level%201/wallet.html), [`Level 1/app.js`](../Level%201/app.js), [`Level 1/index.html`](../Level%201/index.html)  
+> - **Repository Root:** [`wallet.html`](../wallet.html), [`app.js`](../app.js), [`index.html`](../index.html)
+
 The White Belt submission focuses on establishing a direct peer-to-peer Care Credit transfer utilizing the official Freighter Wallet extension. This allows families to send direct, immediate native XLM payments with descriptive memos directly to caregivers, establishing a public, verifiable transaction on the Stellar Testnet ledger.
 
 ---

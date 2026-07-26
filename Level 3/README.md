@@ -1,13 +1,20 @@
-# 🥋 Level 3 (Orange Belt) — Submission Location Marker
+# 🥋 Level 3 (Orange Belt) — Submission Documentation & Smart Contract Integration
 
-> **Judged path for current submission: repository root (`/`).**
+> **Judged File Path:** This directory (`Level 3/`) AND the repository root (`/`) contain complete, self-contained, fully-functional Orange Belt smart contract and fund pool integration files.
 
-The canonical source code for Level 3 (Orange Belt) — including `pool.html`, `pool.js`, `pools.js`, `contracts/`, `wallet.html`, and `app.js` — is maintained directly at the repository root:
+---
 
-- **Root Fund Pool Page:** [`pool.html`](../pool.html)
-- **Root Fund Pool Logic:** [`pool.js`](../pool.js)
-- **Root Wallet Page:** [`wallet.html`](../wallet.html)
+## 📁 Level 3 File Map
+
+- **Fund Pool Interface:** [`Level 3/pool.html`](pool.html) (or root [`pool.html`](../pool.html))
+- **Fund Pool Logic:** [`Level 3/pool.js`](pool.js) (or root [`pool.js`](../pool.js))
+- **Multi-Pool Registry:** [`Level 3/pools.js`](pools.js) (or root [`pools.js`](../pools.js))
+- **Wallet Page:** [`Level 3/wallet.html`](wallet.html)
 - **Soroban Contracts:** [`contracts/`](../contracts)
-- **Orange Belt Requirement Writeup:** [`docs/README_ORANGE_BELT.md`](../docs/README_ORANGE_BELT.md)
+  - `contracts/registry/` (`CareRegistry` smart contract)
+  - `contracts/fund_pool/` (`CareFundPool` smart contract)
 
-All Level 3 requirements (Soroban smart contracts, pool funding, caregiver withdrawals, and multi-pool registry) are fully functional at the repository root level.
+---
+
+## 📄 Complete Requirement Writeup
+For the complete step-by-step audit, transaction proofs, and screenshot evidence, see [`docs/README_ORANGE_BELT.md`](../docs/README_ORANGE_BELT.md).

@@ -5,14 +5,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Belt Claimed: Green](https://img.shields.io/badge/Belt%20Claimed-Green%20(Level%204)-emerald)](#-submission-portals-journey-to-mastery)
 
-**Judged path for current submission: repository root (`/`).**
+**Judged paths for submission: repository root (`/`) AND `/Level 1/` subfolder.**
 
 CareCredits is an open-source, healthcare-focused Web3 platform where families can collectively fund caregiver expenses and send direct care credit payments through the Stellar network with on-chain compliance controls.
 
-## ⚪ Level 1 (White Belt) — Wallet Integration (Canonical Location: `/`)
-* **[index.html](index.html):** Landing page and caregiver directory.
-* **[wallet.html](wallet.html):** Primary user interface for peer-to-peer care credit direct transfers.
-* **[app.js](app.js):** Production logic implementing Freighter wallet connection, account balance fetching, transaction building, and testnet submission.
+## ⚪ Level 1 (White Belt) — Wallet Integration
+* **Root Location (`/`):** [`index.html`](index.html), [`wallet.html`](wallet.html), [`app.js`](app.js)
+* **Level 1 Subfolder (`/Level 1/`):** [`Level 1/index.html`](Level%201/index.html), [`Level 1/wallet.html`](Level%201/wallet.html), [`Level 1/app.js`](Level%201/app.js)
+* **White Belt Feature Guide:** [`docs/README_WHITE_BELT.md`](docs/README_WHITE_BELT.md)
+* **Key Features:** Freighter wallet connection via `@stellar/freighter-api`, account balance retrieval via Horizon API, XLM payment operation formulation, transaction signing & submission to Stellar Testnet, and StellarExpert audit links.
 
 ## 🟢 Level 4 (Green Belt) — Complete Production Platform & Infrastructure
 * **Milestone 1:** Soroban Smart Contract Security Audit & Testnet Redeployment (`initialize()` authorization fix).
