@@ -1,3 +1,5 @@
+// AUTO-SYNCED SNAPSHOT — DO NOT EDIT DIRECTLY. Source of truth: repo root. Run 'npm run sync-belt-folders' after changing root files.
+
 /**
  * directory.js — Renders the Caregiver Directory on index.html from the
  * shared data in caregivers.js, and links each "Select" button to

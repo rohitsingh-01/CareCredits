@@ -52,6 +52,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Verify Belt Folder Sync Status
+        run: npm run check-belt-sync
+
       - name: Run Frontend Tests
         run: node --test "tests/**/*.test.js"
 

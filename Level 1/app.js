@@ -1,12 +1,19 @@
+// AUTO-SYNCED SNAPSHOT — DO NOT EDIT DIRECTLY. Source of truth: repo root. Run 'npm run sync-belt-folders' after changing root files.
+
 /**
  * app.js — CareCredits Wallet Page
  * Stellar Journey to Mastery — Level 1 (White Belt)
  *
- * Implements all White Belt requirements:
- *   1. Wallet Setup       — Freighter API, Stellar Testnet
- *   2. Wallet Connection  — connect + disconnect handlers
- *   3. Balance Handling   — Horizon fetch + display connected wallet's XLM balance
- *   4. Transaction Flow   — build, sign, & submit XLM payment on Stellar Testnet
+ * Implements all Level 1 requirements (unchanged from the original
+ * submission — only the surrounding UI/theme changed):
+ *   1. Wallet Setup       — Freighter, Stellar Testnet
+ *   2. Wallet Connection  — connect + disconnect
+ *   3. Balance Handling   — fetch + display connected wallet's XLM balance
+ *   4. Transaction Flow   — send an XLM payment, show success/failure + tx hash
+ *
+ * NEW in this version: reads a `?care=<id>` query param (set when the
+ * user clicks "Select" on a caregiver card on index.html) and
+ * pre-fills the recipient address + memo accordingly.
  */
 
 import StellarSdk from "https://esm.sh/@stellar/stellar-sdk@14.0.0";
@@ -17,7 +24,7 @@ const HORIZON_URL = "https://horizon-testnet.stellar.org";
 const NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET;
 let server = new StellarSdk.Horizon.Server(HORIZON_URL);
 
-// Testmode support for offline evaluation / automated test runners
+// Mock mode for testing without extension - Gated to local development or ?testmode=1 URL param
 const urlParams = new URLSearchParams(window.location.search);
 const isTestMode = urlParams.has("testmode") && (
   window.location.hostname === "localhost" || 
@@ -54,23 +61,21 @@ const $ = (id) => document.getElementById(id);
 
 function setStatus(elId, message, kind = "") {
   const el = $(elId);
-  if (!el) return;
   el.textContent = message;
   el.className = `status ${kind}`;
 }
 
 function setResultPanel(html, kind) {
   const el = $("resultPanel");
-  if (!el) return;
   el.innerHTML = html;
   el.className = `result-panel ${kind}`;
 }
 
 function updateWalletUI(connected) {
-  if ($("connectBtn")) $("connectBtn").classList.toggle("hidden", connected);
-  if ($("disconnectBtn")) $("disconnectBtn").classList.toggle("hidden", !connected);
-  if ($("refreshBalanceBtn")) $("refreshBalanceBtn").disabled = !connected;
-  if ($("sendBtn")) $("sendBtn").disabled = !connected;
+  $("connectBtn").classList.toggle("hidden", connected);
+  $("disconnectBtn").classList.toggle("hidden", !connected);
+  $("refreshBalanceBtn").disabled = !connected;
+  $("sendBtn").disabled = !connected;
 }
 
 // ---------- Pre-fill from Caregiver Directory selection ----------
@@ -82,14 +87,12 @@ function applyCaregiverPrefill() {
   const caregiver = findCaregiverById(careId);
   if (!caregiver) return;
 
-  if ($("destinationInput")) $("destinationInput").value = caregiver.publicKey;
-  if ($("memoInput")) $("memoInput").value = `Care credit for ${caregiver.name}`.slice(0, 28);
+  $("destinationInput").value = caregiver.publicKey;
+  $("memoInput").value = `Care credit for ${caregiver.name}`.slice(0, 28);
 
   const banner = $("prefillBanner");
-  if (banner) {
-    banner.textContent = `${caregiver.emoji} Sending to ${caregiver.name} (${caregiver.role}) — connect your wallet below to continue.`;
-    banner.classList.remove("hidden");
-  }
+  banner.textContent = `${caregiver.emoji} Sending to ${caregiver.name} (${caregiver.role}) — connect your wallet below to continue.`;
+  banner.classList.remove("hidden");
 }
 
 // ---------- 1 & 2. Wallet Setup + Connect/Disconnect ----------
@@ -133,17 +136,21 @@ async function connectWallet() {
       "success"
     );
 
+    if (window.CareAnalytics) window.CareAnalytics.trackConnect(connectedAddress);
+
     await refreshBalance();
   } catch (err) {
+    if (window.CareAnalytics && connectedAddress) window.CareAnalytics.trackError(connectedAddress, "connection_error", { message: err.message });
     setStatus("walletStatus", `Connection failed: ${err.message || err}`, "error");
   }
 }
 
 function disconnectWallet() {
+  if (connectedAddress && window.CareAnalytics) window.CareAnalytics.trackDisconnect(connectedAddress);
   connectedAddress = null;
   updateWalletUI(false);
   setStatus("walletStatus", "Not connected", "");
-  if ($("balanceValue")) $("balanceValue").textContent = "—";
+  $("balanceValue").textContent = "—";
   setStatus("balanceStatus", "", "");
   setResultPanel("No transaction submitted yet.", "empty");
 }
@@ -155,11 +162,11 @@ async function refreshBalance() {
     setStatus("balanceStatus", "Fetching balance...");
     const account = await server.loadAccount(connectedAddress);
     const nativeBalance = account.balances.find((b) => b.asset_type === "native");
-    if ($("balanceValue")) $("balanceValue").textContent = nativeBalance ? Number(nativeBalance.balance).toFixed(4) : "0.0000";
+    $("balanceValue").textContent = nativeBalance ? Number(nativeBalance.balance).toFixed(4) : "0.0000";
     setStatus("balanceStatus", "Balance up to date.", "success");
   } catch (err) {
     if (err?.response?.status === 404) {
-      if ($("balanceValue")) $("balanceValue").textContent = "0.0000";
+      $("balanceValue").textContent = "0.0000";
       setStatus(
         "balanceStatus",
         "Account not found on Testnet yet — fund it via Friendbot first.",
@@ -173,9 +180,9 @@ async function refreshBalance() {
 
 // ---------- 4. Transaction Flow ----------
 async function sendPayment() {
-  const destination = $("destinationInput") ? $("destinationInput").value.trim() : "";
-  const amount = $("amountInput") ? $("amountInput").value.trim() : "";
-  const memoText = $("memoInput") ? $("memoInput").value.trim() : "";
+  const destination = $("destinationInput").value.trim();
+  const amount = $("amountInput").value.trim();
+  const memoText = $("memoInput").value.trim();
 
   if (!connectedAddress) {
     setStatus("sendStatus", "Connect your wallet first.", "error");
@@ -192,6 +199,7 @@ async function sendPayment() {
 
   try {
     setStatus("sendStatus", "Building transaction...");
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeStart(connectedAddress, amount);
 
     const sourceAccount = await server.loadAccount(connectedAddress);
 
@@ -223,6 +231,8 @@ async function sendPayment() {
     setStatus("sendStatus", "Submitting to Stellar Testnet...");
     const result = await server.submitTransaction(signedTransaction);
 
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeSuccess(connectedAddress, amount, result.hash);
+
     setStatus("sendStatus", "✅ Payment sent!", "success");
     setResultPanel(
       `✅ SUCCESS\n\n` +
@@ -236,10 +246,15 @@ async function sendPayment() {
     );
 
     await refreshBalance();
+    if (window.CareFeedback) {
+      setTimeout(() => window.CareFeedback.open('donation_success'), 1200);
+    }
   } catch (err) {
     const details = err?.response?.data?.extras?.result_codes
       ? JSON.stringify(err.response.data.extras.result_codes)
       : err.message || String(err);
+
+    if (window.CareAnalytics) window.CareAnalytics.trackContributeFailed(connectedAddress, amount, details);
 
     setStatus("sendStatus", "❌ Payment failed.", "error");
     setResultPanel(`❌ FAILURE\n\nReason: ${details}`, "error");
@@ -247,10 +262,8 @@ async function sendPayment() {
 }
 
 // ---------- Wire up ----------
-document.addEventListener("DOMContentLoaded", () => {
-  applyCaregiverPrefill();
-  if ($("connectBtn")) $("connectBtn").addEventListener("click", connectWallet);
-  if ($("disconnectBtn")) $("disconnectBtn").addEventListener("click", disconnectWallet);
-  if ($("refreshBalanceBtn")) $("refreshBalanceBtn").addEventListener("click", refreshBalance);
-  if ($("sendBtn")) $("sendBtn").addEventListener("click", sendPayment);
-});
+applyCaregiverPrefill();
+$("connectBtn").addEventListener("click", connectWallet);
+$("disconnectBtn").addEventListener("click", disconnectWallet);
+$("refreshBalanceBtn").addEventListener("click", refreshBalance);
+$("sendBtn").addEventListener("click", sendPayment);

@@ -50,6 +50,28 @@ Before submitting a pull request, ensure all test suites pass cleanly:
 
 ---
 
+## 🔄 Single Source of Truth & Belt Folder Synchronization
+
+To support automated evaluators during the **Stellar Journey to Mastery** belt reviews without manual duplicate file maintenance:
+
+- **Source of Truth:** All canonical frontend files (`index.html`, `wallet.html`, `pool.html`, `app.js`, `pool.js`, `pools.js`, `style.css`, `utils.js`, `directory.js`, `caregivers.js`) live directly at the **repository root (`/`)**.
+- **Auto-Synced Folders:** The subfolders `/Level 1/` and `/Level 3/` contain auto-synced snapshots of these root files for evaluator path compatibility.
+
+### Sync Workflow
+Whenever you make changes to root frontend files, run the sync script before committing:
+
+```bash
+# Sync canonical root files into /Level 1/ and /Level 3/
+npm run sync-belt-folders
+
+# Verify sync status (Runs automatically in CI)
+npm run check-belt-sync
+```
+
+> **Note:** Continuous Integration (`.github/workflows/ci.yml`) automatically executes `npm run check-belt-sync` on every commit and will fail the build if `/Level 1/` or `/Level 3/` files drift out of sync.
+
+---
+
 ## 🚀 Submitting Pull Requests
 
 1. Create a feature branch (`git checkout -b feature/my-feature`).

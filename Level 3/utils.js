@@ -1,3 +1,5 @@
+// AUTO-SYNCED SNAPSHOT — DO NOT EDIT DIRECTLY. Source of truth: repo root. Run 'npm run sync-belt-folders' after changing root files.
+
 // Pure helper functions for CareCredits frontend
 
 /**

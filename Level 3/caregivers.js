@@ -1,3 +1,5 @@
+// AUTO-SYNCED SNAPSHOT — DO NOT EDIT DIRECTLY. Source of truth: repo root. Run 'npm run sync-belt-folders' after changing root files.
+
 /**
  * caregivers.js — Shared caregiver directory data.
  * CareCredits — Level 3 (Orange Belt)

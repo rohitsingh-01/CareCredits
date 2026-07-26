@@ -4,9 +4,11 @@
   "description": "On-Chain Caregiver Funding & Compliance on Stellar",
   "type": "module",
   "scripts": {
+    "sync-belt-folders": "node scripts/sync_belt_folders.cjs",
+    "check-belt-sync": "node scripts/sync_belt_folders.cjs --check",
     "test:frontend": "node --test tests/**/*.test.js",
     "test:backend": "npm --prefix backend test",
-    "test": "node --test tests/**/*.test.js && npm --prefix backend test"
+    "test": "node scripts/sync_belt_folders.cjs --check && node --test tests/**/*.test.js && npm --prefix backend test"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "^1.1.2",
