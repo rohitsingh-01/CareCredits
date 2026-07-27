@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const feedbackCode = fs.readFileSync(path.join(__dirname, '../feedback.js'), 'utf8');
+const feedbackCode = fs.readFileSync(path.join(__dirname, '../src/components/feedback.js'), 'utf8');
 
 // Mock browser DOM and LocalStorage environment for CareFeedback test execution
 function setupMockBrowser() {
@@ -92,7 +92,7 @@ function setupMockBrowser() {
   };
 
   const mockWindow = {
-    location: { pathname: '/wallet.html' },
+    location: { pathname: '/wallet' },
     addEventListener: () => {},
   };
   mockWindow.window = mockWindow;

@@ -8,15 +8,15 @@ import {
   xlmToStroops,
   calculateProgressPercent,
   truncateAddress,
-} from '../utils.js';
-import { CAREGIVERS, findCaregiverById } from '../caregivers.js';
+} from '../src/lib/utils.js';
+import { CAREGIVERS, findCaregiverById } from '../src/data/caregivers.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const onboardingCode = fs.readFileSync(path.join(__dirname, '../onboarding.js'), 'utf8');
-const feedbackCode = fs.readFileSync(path.join(__dirname, '../feedback.js'), 'utf8');
-const poolsCode = fs.readFileSync(path.join(__dirname, '../pools.js'), 'utf8');
+const onboardingCode = fs.readFileSync(path.join(__dirname, '../src/components/onboarding.js'), 'utf8');
+const feedbackCode = fs.readFileSync(path.join(__dirname, '../src/components/feedback.js'), 'utf8');
+const poolsCode = fs.readFileSync(path.join(__dirname, '../src/data/pools.js'), 'utf8');
 
 function setupMockEnvironment() {
   const store = {};
@@ -75,7 +75,7 @@ function setupMockEnvironment() {
 
   const mockWindow = {
     addEventListener: () => {},
-    location: { href: 'http://localhost:3000/index.html', search: '' },
+    location: { href: 'http://localhost:5173/', pathname: '/', search: '' },
     navigator: { userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
     document: mockDocument,
     fetch: async () => ({ ok: true, json: async () => ({ success: true }) }),

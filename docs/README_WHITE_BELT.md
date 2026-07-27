@@ -1,88 +1,84 @@
-# White Belt (Level 1) Documentation — Direct Care Transfer
+# White Belt (Level 1) Submission - Direct XLM Payment dApp
 
-This document details the features, setup, and compliance evidence for the **White Belt (Level 1)** submission of the CareCredits platform.
+## Resubmission Fix
 
----
+The earlier review rejected the submission because the judged files did not expose a frontend wallet app and because the project used invalid belt folders/static HTML pages. The current submission fixes that:
 
-## 📋 Level 1 Project Overview
+- The app is a single root Vite project.
+- There is no `/Level 1/` folder and no `/Level 3/` folder.
+- There is no standalone `wallet.html`; `/wallet` is a Vite route.
+- The wallet code is in judged source files under `src/`.
+- `@stellar/freighter-api` and `@stellar/stellar-sdk` are npm dependencies.
 
-> **Judged Code Location:**  
-> - **Level 1 Folder:** [`Level 1/wallet.html`](../Level%201/wallet.html), [`Level 1/app.js`](../Level%201/app.js), [`Level 1/index.html`](../Level%201/index.html)  
-> - **Repository Root:** [`wallet.html`](../wallet.html), [`app.js`](../app.js), [`index.html`](../index.html)
+## Project Description
 
-The White Belt submission focuses on establishing a direct peer-to-peer Care Credit transfer utilizing the official Freighter Wallet extension. This allows families to send direct, immediate native XLM payments with descriptive memos directly to caregivers, establishing a public, verifiable transaction on the Stellar Testnet ledger.
+CareCredits White Belt is a simple Stellar Testnet payment dApp. A user connects Freighter, verifies the wallet is on Testnet, sees their XLM balance, enters a recipient and amount, signs the transaction in Freighter, and receives success/failure feedback with a transaction hash.
 
----
+## Run Locally
 
-## ⚙️ 1. Wallet Setup & Integration
+```bash
+npm install
+npm run dev
+```
 
-The application integrates the official `@stellar/freighter-api` package to securely communicate with the Freighter browser extension without exposing or handling user private keys.
+Open:
 
-### Prerequisites
-*   Install the [Freighter Wallet Browser Extension](https://www.freighter.app/).
-*   Open Freighter, navigate to Network settings, and ensure the active network is set to **Testnet**.
-*   Utilize the Stellar Friendbot to fund your test account with test XLM.
+```text
+http://localhost:5173/wallet
+```
 
----
+For UI-only local testing:
 
-## 🔌 2. Connection Management (Connect / Disconnect)
+```text
+http://localhost:5173/wallet?testmode=true
+```
 
-*   **Connect Wallet:** Clicking **Connect Freighter Wallet** triggers a request to the browser extension:
-    -   Calls `window.freighterApi.requestAccess()` to gain user permission.
-    -   Calls `window.freighterApi.getAddress()` to fetch the active account address.
-*   **Wallet Display:** Once authorized, the UI displays the full public key and a shortened version (truncated for premium visual layout).
-*   **Disconnect Wallet:** Clicking **Disconnect** clears all local user data, stops active session listeners, and resets the UI to the initial landing state.
+## Judged Source Files
 
----
+| Purpose | File |
+|---|---|
+| Wallet UI and flow | [`src/pages/wallet.js`](../src/pages/wallet.js) |
+| Freighter connect/disconnect/signing | [`src/lib/freighterWallet.js`](../src/lib/freighterWallet.js) |
+| Horizon Testnet, balance, payment transaction | [`src/lib/stellar.js`](../src/lib/stellar.js) |
+| Error helpers | [`src/lib/utils.js`](../src/lib/utils.js) |
+| Responsive styling | [`src/styles/style.css`](../src/styles/style.css) |
+| Vite app bootstrap | [`src/main.js`](../src/main.js) and [`src/router.js`](../src/router.js) |
 
-## 📊 3. Horizon Balance Fetching & Display
+## Requirement Checklist
 
-*   **Horizon Query:** The application utilizes the native `StellarSdk.Horizon.Server("https://horizon-testnet.stellar.org")` client to query connected accounts.
-*   **Balance Rendering:** The account's native XLM balance is formatted to exactly four decimal places for premium visual consistency.
-*   **Edge Case Handling:**
-    -   *Unfunded Accounts:* If the connected account does not exist on Testnet (HTTP 404), the UI handles the error gracefully and displays a link to fund the account via the Testnet Friendbot.
-    -   *No Extension:* If the Freighter extension is missing, the application disables connection targets and alerts the user to install the wallet.
+| White Belt Requirement | Implementation |
+|---|---|
+| Set up Freighter wallet | `src/lib/freighterWallet.js` imports `isConnected`, `requestAccess`, `getAddress`, `getNetwork`, and `signTransaction` from `@stellar/freighter-api`. |
+| Use Stellar Testnet | `src/lib/stellar.js` sets `NETWORK_PASSPHRASE = StellarSdk.Networks.TESTNET` and Horizon URL `https://horizon-testnet.stellar.org`. |
+| Connect wallet | `connectFreighterWallet()` requests access and returns the public key; `/wallet` has a **Connect Freighter Wallet** button. |
+| Disconnect wallet | `disconnectFreighterWallet()` clears local wallet state; `/wallet` has a **Disconnect** button. |
+| Fetch XLM balance | `fetchNativeBalance()` calls Horizon `loadAccount(address)`. |
+| Display balance clearly | `/wallet` renders a Wallet Balance panel showing the XLM value. |
+| Send XLM transaction | `buildNativePaymentTransaction()` creates a native payment operation. |
+| Sign transaction | `signWithFreighter()` sends the transaction XDR to Freighter for user approval. |
+| Submit on Testnet | `submitClassicTransaction()` submits the signed envelope to Horizon Testnet. |
+| Show success/failure | `/wallet` updates status text for building, signing, submitting, success, and failure. |
+| Show transaction hash | Success panel prints the hash and links to StellarExpert Testnet. |
+| Error handling | Missing wallet, wrong network, invalid address, unfunded account, rejected signing, and failed submit are handled in UI states. |
 
----
+## Screenshots Required By Checklist
 
-## 💸 4. Send XLM & Transaction Flow
+| Checklist Item | Screenshot |
+|---|---|
+| Wallet connected state | ![Wallet Connected](../screenshots/wallet-connected.png) |
+| Balance displayed | ![Balance Displayed](../screenshots/balance-displayed.png) |
+| Successful Testnet transaction | ![Transaction Success](../screenshots/transaction-success.png) |
+| Transaction result shown to user | ![Transaction Result](../screenshots/transaction-result.png) |
 
-*   **Transaction Formulation:** Users enter a caregiver's public address and the amount of XLM to send.
-*   **Directory Prefills:** If the URL query parameter `?care=sarah-jenkins` is present, the app automatically pre-populates Sarah's verified public key in the address input field.
-*   **Memo Integration:** Supports attaching an optional text memo of up to 28 characters to describe the care transaction.
-*   **Submission Sequence:**
-    1.  Builds a native Stellar payment operation.
-    2.  Requests signature via `window.freighterApi.signTransaction(xdr)`.
-    3.  Submits the signed envelope to the Horizon Testnet network.
-*   **Status Indicators:** Updates the UI through a complete state transition:
-    `Idle -> Preparing -> Waiting for Signature -> Submitting -> Confirmed (Success) / Failed`
+## Verified Testnet Payment
 
----
+- Transaction hash: `5e5fa276e036e4f3a67d9834162e08df6ae5c3c92f93a56418d985d65cfedbc0`
+- Explorer: [StellarExpert Testnet transaction](https://stellar.expert/explorer/testnet/tx/5e5fa276e036e4f3a67d9834162e08df6ae5c3c92f93a56418d985d65cfedbc0)
 
-## 🖼️ 5. White Belt Screenshots Reference
+## Verification Commands
 
-All E2E states of the direct transfer flow can be verified on the live site:
-
-| State / Screen | Screenshot | Screenshot Description |
-|---|---|---|
-| **Freighter Wallet Connected** | ![Wallet Connected](../screenshots/wallet-connected.png) | Displays connected account public address and UI layout. |
-| **XLM Balance Loaded** | ![Balance Displayed](../screenshots/balance-displayed.png) | Displays formatted native XLM balance. |
-| **Payment Success State** | ![Payment Success](../screenshots/transaction-success.png) | Displays green success notification and feedback panel. |
-| **Transaction Audit Result** | ![Audit Trail](../screenshots/transaction-result.png) | Renders the transaction hash and a clickable link to StellarExpert. |
-
----
-
-## 🔒 6. Verification Checklist & Transaction Proofs
-
-### Stellar Expert Verification Hash
-Below is a verified on-chain direct payment transaction hash on the Stellar Testnet:
-*   **Payment Hash:** `5e5fa276e036e4f3a67d9834162e08df6ae5c3c92f93a56418d985d65cfedbc0`
-*   **Link:** [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/5e5fa276e036e4f3a67d9834162e08df6ae5c3c92f93a56418d985d65cfedbc0)
-
-### Compliance Checklist
-*   [x] Freighter wallet presence checks on load.
-*   [x] Active testnet network check.
-*   [x] Safe connect/disconnect session state controls.
-*   [x] Graceful 404 unfunded balance checks.
-*   [x] Interactive transaction panels showing pending, success, and error outcomes.
-*   [x] Clickable StellarExpert audit trails.
+```bash
+npm run build
+npm run test:frontend
+npm test
+```

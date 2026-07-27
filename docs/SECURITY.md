@@ -83,5 +83,5 @@ Soroban contracts require rent fees to maintain data in ledger state. CareCredit
 
 ## 💻 5. Frontend & Wallet Integration Security
 
-*   **Secure Multi-Wallet Modal:** The frontend integrates `@creit.tech/stellar-wallets-kit`, allowing secure user authorization through native extensions (Freighter, xBull, Albedo). Private keys are never handled, stored, or transmitted by the application code.
+*   **Secure Freighter Wallet Flow:** The frontend integrates `@stellar/freighter-api`, allowing secure user authorization through the Freighter extension. Private keys are never handled, stored, or transmitted by the application code.
 *   **Browser Sandbox Audits:** Development mock checks (`?testmode=true`) are fully isolated from production ledger calls. Production code uses strict `isTestMode` routing to guarantee that live accounts only sign and submit genuine transactions on the Stellar Testnet.

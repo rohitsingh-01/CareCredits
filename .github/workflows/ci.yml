@@ -52,8 +52,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Verify Belt Folder Sync Status
-        run: npm run check-belt-sync
+      - name: Install Frontend Dependencies
+        run: npm install
+
+      - name: Build Vite Frontend
+        run: npm run build
 
       - name: Run Frontend Tests
         run: node --test "tests/**/*.test.js"

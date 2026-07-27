@@ -1,12 +1,8 @@
-// AUTO-SYNCED SNAPSHOT — DO NOT EDIT DIRECTLY. Source of truth: repo root. Run 'npm run sync-belt-folders' after changing root files.
-
 /**
  * caregivers.js — Shared caregiver directory data.
- * CareCredits — Level 3 (Orange Belt)
+ * CareCredits caregiver directory data.
  *
- * Single source of truth used by both index.html (renders the
- * directory cards) and wallet.html (looks up a caregiver's display
- * name when arriving via a "Select" link with a `?care=<id>` param).
+ * Single source of truth used by the Vite home, wallet, and pool routes.
  */
 
 export const REGISTRY_CONTRACT_ID = "CDYIHXTJFHHL4RFDEDIJ4CA2LTTYDQXAPIKJ4KRRQYJYFGCPJZHE4224";

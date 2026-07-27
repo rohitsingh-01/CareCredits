@@ -1,83 +1,63 @@
-# Yellow Belt (Level 2) Documentation — Family Fund Pool
+# Yellow Belt (Level 2) Submission - Family Fund Pool
 
-This document details the features, smart contracts, integrations, and compliance evidence for the **Yellow Belt (Level 2)** submission of the CareCredits platform.
+Status: Approved on July 9, 2026.
 
----
+## Overview
 
-## 📋 Level 2 Project Overview
+Level 2 builds on the White Belt wallet flow by adding a deployed Soroban funding pool, contract reads/writes from the frontend, transaction status tracking, error handling, and live event updates.
 
-The Yellow Belt submission moves beyond simple direct payments to introduce shared community pool funding. It features the deployment and integration of a Soroban smart contract (`CareFundPool`) that aggregates public contributions and gates withdrawals until goals are met, accompanied by multi-wallet support and real-time ledger event streaming.
+The current implementation is part of the same root Vite app:
 
----
+- Frontend route: `/pool`
+- Source file: [`src/pages/pool.js`](../src/pages/pool.js)
+- Shared Stellar helpers: [`src/lib/stellar.js`](../src/lib/stellar.js)
+- Error helpers: [`src/lib/utils.js`](../src/lib/utils.js)
+- Pool registry data: [`src/data/pools.js`](../src/data/pools.js)
 
-## ⛓️ 1. Smart Contract Details (Stellar Testnet)
+## Requirement Checklist
 
-The `CareFundPool` contract manages contributions and withdrawal assertions directly on the Stellar Testnet ledger.
+| Yellow Belt Requirement | Implementation |
+|---|---|
+| 3 error types handled | `src/lib/utils.js` classifies `WALLET_NOT_FOUND`, `USER_REJECTED`, and `INSUFFICIENT_BALANCE`. |
+| Contract deployed on Testnet | CareFundPool contract and initialization transaction are listed below. |
+| Contract called from frontend | `src/pages/pool.js` simulates, prepares, signs, submits, and confirms Soroban calls. |
+| Read contract state | `/pool` reads `total_raised`, `goal`, and `caregiver`. |
+| Write contract state | `/pool` calls `contribute(contributor, amount)` and `withdraw(caregiver)`. |
+| Event listening and sync | `/pool` polls Soroban RPC events and updates the activity feed. |
+| Transaction status visible | UI shows loading, simulating, waiting for signature, submitting, confirming, success, and failure states. |
+| Meaningful commits | Repository history contains the staged Level 2 implementation work. |
 
-*   **CareFundPool Contract ID (V2):** `CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`
-    *   *Link:* [StellarExpert Contract Explorer](https://stellar.expert/explorer/testnet/contract/CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO)
-*   **Asset Token ID (Native XLM SAC):** `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`
-    *   *Link:* [StellarExpert Token Explorer](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC)
-*   **Initialization Transaction Hash:** `cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679`
-    *   *Link:* [StellarExpert Transaction](https://stellar.expert/explorer/testnet/tx/cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679)
+## Testnet Contract Evidence
 
----
+- CareFundPool Contract ID: [`CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO`](https://stellar.expert/explorer/testnet/contract/CDYFFYP2EZE6BHSJDQJSMK6CIYBHUYHOG7GLS22EO457C32C4KPG77WO)
+- Native XLM SAC Token ID: [`CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC`](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC)
+- Initialization transaction: [`cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679`](https://stellar.expert/explorer/testnet/tx/cb729fb3e895be941910adcebe241315b633bf07e6005dd959bc2c4765d79679)
 
-## 🔌 2. StellarWalletsKit Multi-Wallet Integration
+## Screenshots
 
-We integrate `@creit.tech/stellar-wallets-kit` to allow users to connect with multiple wallet providers seamlessly:
-*   **Supported Modules:** Configured with `allowAllModules()` to support Freighter, xBull, Albedo, and other extension wallets.
-*   **Modal Selector:** Clicking **Connect Wallet** launches a unified modal for selection.
-*   **Integration Wrapper:** Implements `invokeContractViaKit` to bridge user-signed envelopes with Soroban's transaction simulation and preparation pipelines.
+| Evidence | Screenshot |
+|---|---|
+| Wallet connected | ![Wallet Connected](../screenshots/pool-connected.png) |
+| Funding pool loaded | ![Pool Loaded](../screenshots/pool-loaded.png) |
+| Contribution success | ![Contribution Success](../screenshots/contribute-success.png) |
+| Caregiver withdraw state | ![Withdraw Loaded](../screenshots/withdraw-loaded.png) |
+| Withdrawal success | ![Withdraw Success](../screenshots/withdraw-success.png) |
 
----
+## Run Locally
 
-## 🔄 3. Contract Interactions (Read / Write)
+```bash
+npm install
+npm run dev
+```
 
-*   **Read-Only Operations:** The client calls `simulateTransaction` on the Soroban RPC server to fetch critical pool metrics without gas fees:
-    -   `total_raised`: The accumulated contributions.
-    -   `goal`: The funding target.
-    -   `caregiver`: The designated withdrawer.
-*   **Write Operations:** Invokes write transactions to execute operations on the contract:
-    -   `contribute(contributor, amount)`: Allows any user to send XLM to the contract.
-    -   `withdraw(caregiver)`: Allows only the designated, verified caregiver to withdraw the total pooled funds.
+Open:
 
----
+```text
+http://localhost:5173/pool
+```
 
-## 📡 4. Real-Time Event Polling & UI Sync
+For UI-only local testing:
 
-The application implements a 5-second polling loop using `rpcServer.getEvents`:
-*   **Event Capture:** Listens for `contrib` and `withdraw` events emitted by the `CareFundPool` contract.
-*   **UI Updates:** Automatically updates the SVG circular progress ring, recalculates percentages, and adds entries to the live activity feed.
-
----
-
-## 🛠️ 5. Error Classification & UX Gating
-
-We implement robust error classification inside `utils.js`:
-*   `WALLET_NOT_FOUND`: Directs the user to download a supported wallet extension.
-*   `USER_REJECTED`: Handles connection or signing cancels gracefully without freezing loading indicators.
-*   `INSUFFICIENT_BALANCE`: Proactively compares the user's balance with the target amount and transaction fee reserves.
-
----
-
-## 🖼️ 6. Yellow Belt Screenshots Reference
-
-All E2E states of the pool interaction flow can be verified on the live site:
-
-| State / Step | Screenshot | Screenshot Description |
-|---|---|---|
-| **StellarWalletsKit Modal Options** | ![Wallet Options Modal](../screenshots/wallet-options.png) | Displays multi-wallet connection modal overlay. |
-| **Wallet Connected** | ![Wallet Connected](../screenshots/pool-connected.png) | Displays connected account and active caregiver interface. |
-| **Funding Pool Details Loaded** | ![Pool Details Loaded](../screenshots/pool-loaded.png) | Renders goal, raised amounts, and the SVG circular progress ring. |
-| **Contribution Success & Feed Event** | ![Contribution Success](../screenshots/contribute-success.png) | Displays the success confetti explosion and live event feed item. |
-| **Caregiver Mode Active** | ![Caregiver Mode Loaded](../screenshots/withdraw-loaded.png) | Renders the caregiver-specific "Withdraw Funds" action button. |
-| **Withdrawal Success & Transfer** | ![Withdrawal Success](../screenshots/withdraw-success.png) | Displays transaction success confirmation for the withdrawal. |
-
----
-
-## 🧪 7. Local Testing
-
-We write comprehensive unit tests to verify the math and utility functions supporting the Yellow Belt UI:
-*   **Frontend Tests:** Located in `tests/utils.test.js`.
-*   **Execution:** Run `node --test "tests/**/*.test.js"` to run the 6 unit test blocks (verifying stroop conversions, error classification, and percentage bounds).
+```text
+http://localhost:5173/pool?testmode=true
+```

@@ -7,7 +7,7 @@ import {
   truncateAddress,
   classifyError,
   errorMessageFor
-} from '../utils.js';
+} from '../src/lib/utils.js';
 
 test('utils.js unit tests', async (t) => {
   await t.test('stroopsToXlm conversion', () => {

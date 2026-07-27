@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const onboardingCode = fs.readFileSync(path.join(__dirname, '../onboarding.js'), 'utf8');
+const onboardingCode = fs.readFileSync(path.join(__dirname, '../src/components/onboarding.js'), 'utf8');
 
 // Mock browser DOM and LocalStorage environment for CareOnboarding test execution
 function setupMockBrowser() {

@@ -11,7 +11,7 @@ CareCredits utilizes a decoupled two-contract architecture to separate business 
 ```
                  +------------------------------------------+
                  |            User Browser (UI)             |
-                 |     (index.html / pool.js / app.js)      |
+                 |      Vite SPA routes under /src/pages    |
                  +------------------------------------------+
                    /                                      \
                   / (1. load state)                        \ (2. submit tx)
@@ -37,7 +37,7 @@ CareCredits utilizes a decoupled two-contract architecture to separate business 
 ```
 
 ### Components:
-1.  **Frontend Client:** A vanilla HTML5/JS single-page web interface utilizing the `StellarSdk` and `StellarWalletsKit` to handle wallet connections, ledger subscriptions, and state updates.
+1.  **Frontend Client:** A root Vite single-page application using `@stellar/stellar-sdk` and `@stellar/freighter-api` to handle Freighter wallet connections, balance reads, transaction signing, ledger submissions, and state updates.
 2.  **`CareRegistry` Smart Contract:** Stores admin-controlled configuration and mappings for caregiver validation status (`is_verified`) and temporary block controls (`is_paused`).
 3.  **`CareFundPool` Smart Contract (V2):** Orchestrates individual pool raising, goal validation, and token releases. It dynamically queries the registry contract before executing any withdrawal.
 
@@ -53,16 +53,16 @@ sequenceDiagram
     actor Contributor
     actor Admin
     actor Caregiver
-    participant Frontend as Frontend (pool.js / directory.js)
-    participant Kit as StellarWalletsKit
+    participant Frontend as Vite Frontend (/pool route)
+    participant Freighter as Freighter Wallet
     participant Pool as CareFundPool Contract
     participant Registry as CareRegistry Contract
 
-    Note over Frontend, Kit: 1. Wallet Connection Flow
+    Note over Frontend, Freighter: 1. Wallet Connection Flow
     Contributor->>Frontend: Click "Connect Wallet"
-    Frontend->>Kit: openModal()
-    Kit->>Contributor: Wallet Selection Modal (Freighter / Albedo)
-    Contributor-->>Frontend: Wallet Connected Address
+    Frontend->>Freighter: requestAccess() and getAddress()
+    Freighter->>Contributor: Wallet approval prompt
+    Contributor-->>Frontend: Freighter connected address
 
     Note over Frontend, Registry: 2. Initial State Loading & Badges
     Frontend->>Registry: simulateReadOnly (is_verified / is_paused)
@@ -72,13 +72,17 @@ sequenceDiagram
 
     Note over Contributor, Pool: 3. Contribution Flow
     Contributor->>Frontend: Input Amount & Click "Contribute"
-    Frontend->>Pool: invokeContractViaKit (contribute)
+    Frontend->>Freighter: signTransaction(prepared contribution XDR)
+    Freighter-->>Frontend: Signed transaction XDR
+    Frontend->>Pool: sendTransaction(contribute)
     Pool-->>Frontend: Return transaction hash & raised sum
     Pool->>Pool: Emit event ("contrib", contributor, amount)
 
     Note over Caregiver, Registry: 4. Gated Withdrawal Flow
     Caregiver->>Frontend: Click "Withdraw"
-    Frontend->>Pool: invokeContractViaKit (withdraw)
+    Frontend->>Freighter: signTransaction(prepared withdrawal XDR)
+    Freighter-->>Frontend: Signed transaction XDR
+    Frontend->>Pool: sendTransaction(withdraw)
     activate Pool
     Note over Pool, Registry: Real-Time Cross-Contract Call (Typed)
     Pool->>Registry: is_verified(caregiver)

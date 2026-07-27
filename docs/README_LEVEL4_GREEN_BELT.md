@@ -58,7 +58,7 @@ The **Green Belt (Level 4)** engineering objectives require transitioning CareCr
 - **Production Analytics Backend:** Implement Express REST API and PostgreSQL database schema for non-blocking interaction telemetry.
 - **User Onboarding System:** Create a responsive, accessible 3-step onboarding tour with state persistence.
 - **User Experience Center:** Build a 4-step guided feedback modal with 5-star ratings, category tags, and browser metadata.
-- **Admin Console & Multi-Pool Support:** Build a secure administrator dashboard (`admin.html`) and client-side multi-pool switcher (`pools.js`).
+- **Admin Console & Multi-Pool Support:** Build a secure administrator dashboard (`src/pages/admin.js`) and client-side multi-pool switcher (`src/data/pools.js`).
 - **Production Hardening & Observability:** Implement Helmet CSP, HSTS, query latency tracking, expanded `/api/health` diagnostics, and graceful shutdown handlers.
 - **Quality Assurance & Documentation:** Achieve 100% test pass rate (58/58 tests) and publish complete technical documentation.
 
@@ -72,7 +72,7 @@ During Level 4, the engineering team completed seven comprehensive milestones:
 - **Analytics Service:** Built an Express + PostgreSQL backend (`/api/analytics`) tracking wallet connections, contributions, withdrawals, and RPC errors with non-blocking fallback stores.
 - **Interactive Onboarding (`onboarding.js`):** Built a 3-step interactive tour with Finite State Machine (FSM) state tracking, keyboard focus trapping, and `localStorage` persistence.
 - **User Experience Center (`feedback.js`):** Implemented a 4-step feedback modal capturing 5-star ratings, category pills (`UI/UX`, `Wallet`, `Donation`, `Caregiver`, etc.), multiline comments, and browser environment metadata.
-- **Admin Console & Multi-Pool Switcher (`admin.html`, `admin.js`, `pools.js`):** Created a session-authenticated admin dashboard with 6 operational tabs and dynamic multi-pool contract switching.
+- **Admin Console & Multi-Pool Switcher (`src/pages/admin.js`, `src/pages/pool.js`, `src/data/pools.js`):** Created a session-authenticated admin dashboard with operational tabs and dynamic multi-pool contract switching.
 - **Production Hardening & Monitoring:** Added Helmet CSP, HSTS, rate limiters, response compression, database query execution timing, `/api/health` system diagnostics, and graceful shutdown signal handlers.
 - **Comprehensive Testing & Documentation:** Developed 9 test suites (58/58 passing) and authored `ARCHITECTURE.md`, `SECURITY.md`, `DEPLOYMENT.md`, `ENVIRONMENT.md`, and `ADMIN_GUIDE.md`.
 
@@ -86,7 +86,7 @@ During Level 4, the engineering team completed seven comprehensive milestones:
 | **Milestone 2** | Production Analytics Backend | ✅ Completed | Express `/api/analytics`, PostgreSQL `wallet_interactions` table |
 | **Milestone 3** | Interactive User Onboarding System | ✅ Completed | `onboarding.js` 3-step modal FSM, `tests/onboarding.test.js` |
 | **Milestone 4** | User Experience Center & Feedback | ✅ Completed | `feedback.js` 4-step modal, PostgreSQL `feedback_submissions` table |
-| **Milestone 5** | Admin Dashboard & Multi-Pool Support | ✅ Completed | `admin.html`, `admin.js`, `pools.js`, `/api/admin/*` endpoints |
+| **Milestone 5** | Admin Dashboard & Multi-Pool Support | ✅ Completed | `src/pages/admin.js`, `src/data/pools.js`, `/api/admin/*` endpoints |
 | **Milestone 6** | Production Hardening & System Monitoring | ✅ Completed | Helmet CSP, HSTS, `/api/health` diagnostics, `SECURITY.md` |
 | **Milestone 7** | Comprehensive Testing & Documentation | ✅ Completed | 58/58 Tests Passing, `ARCHITECTURE.md`, `DEPLOYMENT.md` |
 
@@ -114,7 +114,7 @@ graph TD
   end
 
   subgraph "Admin & Observability Console"
-    Admin[⚙️ Platform Administrator] -->|Bearer Token Session| AdminConsole["📊 Admin Console (admin.html)"]
+    Admin[⚙️ Platform Administrator] -->|Bearer Token Session| AdminConsole["📊 Admin Console (/admin Vite route)"]
     AdminConsole -->|HTTP Bearer GET| ExpressAPI
   end
 ```
@@ -163,11 +163,11 @@ The backend service is powered by Node.js, Express, Winston logging, PostgreSQL,
 
 ## 🌐 Frontend Features & FSMs
 
-- **Wallet Integration:** Seamless integration with Freighter, xBull, and Albedo wallets via `@stellar/freighter-api` and `@creit.tech/stellar-wallets-kit`.
+- **Wallet Integration:** Freighter wallet integration via `@stellar/freighter-api`, with signing and Stellar Testnet network validation handled in the Vite frontend.
 - **Caregiver Directory:** Interactive caregiver discovery with verification badges and pre-filled funding links (`?care=<id>`).
-- **Multi-Pool Switcher (`pools.js`):** Allows users to switch between active Stellar Testnet funding pools from a dropdown without reloading the application.
-- **Onboarding FSM (`onboarding.js`):** 3-step modal (`STEP_1` -> `STEP_2` -> `STEP_3` -> `COMPLETED`) with keyboard focus trapping and `localStorage` persistence.
-- **User Experience Center (`feedback.js`):** 4-step modal (`STEP_RATING` -> `STEP_CATEGORY` -> `STEP_COMMENT` -> `THANK_YOU`).
+- **Multi-Pool Switcher (`src/data/pools.js`):** Allows users to switch between active Stellar Testnet funding pools from a dropdown without reloading the application.
+- **Onboarding FSM (`src/components/onboarding.js`):** 3-step modal (`STEP_1` -> `STEP_2` -> `STEP_3` -> `COMPLETED`) with keyboard focus trapping and `localStorage` persistence.
+- **User Experience Center (`src/components/feedback.js`):** 4-step modal (`STEP_RATING` -> `STEP_CATEGORY` -> `STEP_COMMENT` -> `THANK_YOU`).
 
 ---
 

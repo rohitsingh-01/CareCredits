@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const poolsCode = fs.readFileSync(path.join(__dirname, '../pools.js'), 'utf8');
+const poolsCode = fs.readFileSync(path.join(__dirname, '../src/data/pools.js'), 'utf8');
 
 function setupMockBrowser() {
   const store = {};
