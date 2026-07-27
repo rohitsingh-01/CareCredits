@@ -89,17 +89,17 @@ mod test {
         let client = CareRegistryClient::new(&env, &contract_id);
         client.initialize(&admin);
 
-        assert_eq!(client.is_verified(&caregiver), false);
-        assert_eq!(client.is_paused(&caregiver), false);
+        assert!(!client.is_verified(&caregiver));
+        assert!(!client.is_paused(&caregiver));
 
         client.set_verified(&admin, &caregiver, &true);
-        assert_eq!(client.is_verified(&caregiver), true);
+        assert!(client.is_verified(&caregiver));
 
         client.set_paused(&admin, &caregiver, &true);
-        assert_eq!(client.is_paused(&caregiver), true);
+        assert!(client.is_paused(&caregiver));
 
         client.set_paused(&admin, &caregiver, &false);
-        assert_eq!(client.is_paused(&caregiver), false);
+        assert!(!client.is_paused(&caregiver));
     }
 
     #[test]

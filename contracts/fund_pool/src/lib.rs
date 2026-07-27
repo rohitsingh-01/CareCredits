@@ -153,7 +153,7 @@ impl CareFundPool {
 mod test {
     use super::{CareFundPool, CareFundPoolClient};
     use care_registry::{CareRegistry, CareRegistryClient};
-    use soroban_sdk::{testutils::Address as _, Env};
+    use soroban_sdk::{testutils::Address as _, Address, Env};
 
     #[test]
     fn test_contribute_and_withdraw() {
@@ -178,7 +178,7 @@ mod test {
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
         let token_client = soroban_sdk::token::Client::new(&env, &token_address);
-        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        let token_admin = soroban_sdk::token::StellarAssetClient::new(&env, &token_address);
 
         // Fund contributors
         token_admin.mint(&contributor_1, &1000);
@@ -192,13 +192,13 @@ mod test {
         assert_eq!(client.goal(), 1200);
         assert_eq!(client.caregiver(), caregiver);
         assert_eq!(client.total_raised(), 0);
-        assert_eq!(client.is_goal_reached(), false);
+        assert!(!client.is_goal_reached());
 
         // Contributor 1 contributes 800
         let raised = client.contribute(&contributor_1, &800);
         assert_eq!(raised, 800);
         assert_eq!(client.total_raised(), 800);
-        assert_eq!(client.is_goal_reached(), false);
+        assert!(!client.is_goal_reached());
         assert_eq!(token_client.balance(&contributor_1), 200);
         assert_eq!(token_client.balance(&contract_id), 800);
 
@@ -206,7 +206,7 @@ mod test {
         let raised = client.contribute(&contributor_2, &400);
         assert_eq!(raised, 1200);
         assert_eq!(client.total_raised(), 1200);
-        assert_eq!(client.is_goal_reached(), true);
+        assert!(client.is_goal_reached());
         assert_eq!(token_client.balance(&contributor_2), 100);
         assert_eq!(token_client.balance(&contract_id), 1200);
 
@@ -236,7 +236,7 @@ mod test {
         let token_address = env
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
-        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        let token_admin = soroban_sdk::token::StellarAssetClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register_contract(None, CareFundPool);
@@ -267,7 +267,7 @@ mod test {
         let token_address = env
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
-        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        let token_admin = soroban_sdk::token::StellarAssetClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register_contract(None, CareFundPool);
@@ -301,7 +301,7 @@ mod test {
         let token_address = env
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
-        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        let token_admin = soroban_sdk::token::StellarAssetClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register_contract(None, CareFundPool);
@@ -333,7 +333,7 @@ mod test {
         let token_address = env
             .register_stellar_asset_contract_v2(admin.clone())
             .address();
-        let token_admin = soroban_sdk::token::StellarAssetContractClient::new(&env, &token_address);
+        let token_admin = soroban_sdk::token::StellarAssetClient::new(&env, &token_address);
         token_admin.mint(&contributor, &500);
 
         let contract_id = env.register_contract(None, CareFundPool);
