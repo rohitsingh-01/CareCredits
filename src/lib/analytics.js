@@ -7,7 +7,7 @@
  */
 
 (function (window) {
-  const DEFAULT_BACKEND_URL = window.CARE_ANALYTICS_URL || 'http://localhost:5000/api/analytics';
+  const DEFAULT_BACKEND_URL = window.CARE_ANALYTICS_URL || '/api/analytics';
 
   async function postEvent(endpoint, payload) {
     try {

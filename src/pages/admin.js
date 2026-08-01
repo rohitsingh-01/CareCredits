@@ -1,6 +1,6 @@
 import { initPageChrome, renderShell } from "../components/layout.js";
 
-const BACKEND_ADMIN_URL = "http://localhost:5000/api/admin";
+const BACKEND_ADMIN_URL = "/api/admin";
 const TOKEN_KEY = "carecredits_admin_token";
 const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000;
 
@@ -115,7 +115,7 @@ async function loadDashboardData() {
 
 async function loadSystemHealth() {
   try {
-    const response = await fetch("http://localhost:5000/api/health");
+    const response = await fetch("/api/health");
     const health = await response.json();
     $("systemDbStatus").textContent = health.database?.connected ? "Connected" : "Fallback";
     $("systemDbLatency").textContent = `Latency: ${health.database?.latencyMs || 0} ms`;

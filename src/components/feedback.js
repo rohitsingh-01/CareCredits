@@ -13,7 +13,7 @@
  */
 
 (function (window) {
-  const BACKEND_FEEDBACK_URL = 'http://localhost:5000/api/feedback';
+  const BACKEND_FEEDBACK_URL = '/api/feedback';
 
   const STATES = {
     IDLE: 'IDLE',
