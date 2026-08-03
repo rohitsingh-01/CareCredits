@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "functions": {
     "api/index.cjs": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     }
   },
   "headers": [
