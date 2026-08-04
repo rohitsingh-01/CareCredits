@@ -64,6 +64,7 @@ export async function signWithFreighter(transactionXdr, address) {
   const result = await signTransaction(transactionXdr, {
     networkPassphrase: NETWORK_PASSPHRASE,
     network: "TESTNET",
+    accountToSign: address,
     address,
   });
 
