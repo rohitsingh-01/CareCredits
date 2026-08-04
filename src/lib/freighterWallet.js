@@ -63,9 +63,18 @@ export function disconnectFreighterWallet() {
 export async function signWithFreighter(transactionXdr, address) {
   const result = await signTransaction(transactionXdr, {
     networkPassphrase: NETWORK_PASSPHRASE,
+    network: "TESTNET",
     address,
   });
+
   if (result?.error) throw new Error(getErrorMessage(result.error));
-  if (!result?.signedTxXdr) throw new Error("Freighter did not return a signed transaction.");
-  return result.signedTxXdr;
+
+  const signedTxXdr = typeof result === "string"
+    ? result
+    : (result?.signedTxXdr || result?.signedXdr || result?.xdr);
+
+  if (!signedTxXdr) {
+    throw new Error("Freighter did not return a signed transaction.");
+  }
+  return signedTxXdr;
 }
