@@ -1,5 +1,5 @@
 import {
-  getAddress,
+  getPublicKey,
   getNetwork,
   isConnected,
   requestAccess,
@@ -27,15 +27,21 @@ export async function connectFreighterWallet() {
   const access = await requestAccess();
   if (access?.error) throw new Error(getErrorMessage(access.error));
 
-  const addressResult = await getAddress();
-  if (addressResult?.error) throw new Error(getErrorMessage(addressResult.error));
-  const address = access?.address || addressResult?.address;
+  let address = typeof access === "string" ? access : access?.address;
+
+  if (!address) {
+    const keyResult = await getPublicKey();
+    if (keyResult?.error) throw new Error(getErrorMessage(keyResult.error));
+    address = typeof keyResult === "string" ? keyResult : keyResult?.address;
+  }
+
   if (!address) throw new Error("Freighter did not return a public address.");
 
   const networkResult = await getNetwork();
   if (networkResult?.error) throw new Error(getErrorMessage(networkResult.error));
-  const network = networkResult?.network;
-  if (network !== "TESTNET") {
+  const network = typeof networkResult === "string" ? networkResult : networkResult?.network;
+
+  if (network && network.toUpperCase() !== "TESTNET") {
     throw new Error(`Freighter is set to ${network || "an unknown network"}. Switch Freighter to TESTNET and reconnect.`);
   }
 
